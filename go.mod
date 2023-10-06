@@ -1,4 +1,4 @@
-module zera-network-grpc
+module ZeraNetworkGrpc
 
 go 1.21.1
 

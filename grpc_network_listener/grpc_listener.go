@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	zera_txn "zera-network-grpc/zera_txn"
-	zera_validator "zera-network-grpc/zera_validator"
+	zera_txn "github.com/ZeraVision/ZeraNetworkGrpc/zera_txn"
+	zera_validator "github.com/ZeraVision/ZeraNetworkGrpc/zera_validator"
 )
 
 // struct for server implementation of grpcs
@@ -48,7 +48,7 @@ func (s *ValidatorNetworkServer) Broadcast(ctx context.Context, block *zera_vali
 	// }
 
 	// // Block being sent from server doesn't contain hash (fixed in dev), so sync blocks for now // TODO network
-	// go block_processing_sync.DoBlockSync(database.GetEnv())
+	//go block_processing_sync.DoBlockSync(database.GetEnv())
 
 	//go block_processing_insert.RecieveNewBlock()
 

@@ -7,8 +7,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"zera-network-grpc/zera_txn"
-	zera_validator "zera-network-grpc/zera_validator"
+	"github.com/ZeraVision/ZeraNetworkGrpc/zera_txn"
+	zera_validator "github.com/ZeraVision/ZeraNetworkGrpc/zera_validator"
 )
 
 const GRPC_NETWORK_HIT_ADDRESS = "dev-validator-grpc.zera.vision:50051"

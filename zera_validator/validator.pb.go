@@ -7,7 +7,7 @@
 package zera_validator
 
 import (
-	zera_txn "zera-network-grpc/zera_txn"
+	zera_txn "github.com/ZeraVision/ZeraNetworkGrpc/zera_txn"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"

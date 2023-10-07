@@ -7,7 +7,7 @@
 package zera_validator
 
 import (
-	zera_txn "zera-network-grpc/zera_txn"
+	zera_txn "github.com/ZeraVision/ZeraNetworkGrpc/zera_txn"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"

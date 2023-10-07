@@ -1,0 +1,254 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package zera_txn;
+
+option go_package = "./zera_txn";
+
+option optimize_for = SPEED;
+
+service TXNService{
+    rpc Coin(CoinTXN) returns (google.protobuf.Empty);
+    rpc Mint(MintTXN) returns (google.protobuf.Empty);
+    rpc ItemMint(ItemizedMintTXN) returns (google.protobuf.Empty);
+    rpc Contract(InstrumentContract) returns (google.protobuf.Empty); 
+    rpc GovernProposal(GovernanceProposal) returns (google.protobuf.Empty);
+    rpc GovernVote(GovernanceVote) returns (google.protobuf.Empty);
+    rpc SmartContract(SmartContractTXN) returns (google.protobuf.Empty);
+    rpc SmartContractExecute(SmartContractExecuteTXN) returns (google.protobuf.Empty);
+    rpc CurrencyEquiv(SelfCurrencyEquiv) returns (google.protobuf.Empty);
+    rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
+    rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty);
+}
+
+enum TXN_STATUS{
+    OK = 0;
+    INSUFFICIENT_AMOUNT = 1;
+    INSUFFICIENT_CONTRACT_FEES = 2;
+    AUTHORIZED_INSUFFICIENT_FEES = 3;
+    AUTHORIZED_INSUFFICIENT_CONTRACT_FEES = 4;
+    INVALID_CONTRACT = 5;
+    INVALID_AUTH_KEY = 6;
+    INVALID_WALLET_ADDRESS = 7;
+    INVALID_MULTI_TRANSACTION = 8;
+    INVALID_CONTRACT_PARAMETERS = 9;
+    INVALID_CONTRACT_FEE_ID = 11;
+}
+
+//ENUMS
+enum LANGUAGE{
+    CPLUSPLUS = 0;
+    RUST = 1;
+    PYTHON = 2;
+    JAVASCRIPT = 3;
+}
+
+enum VARIABLE_TYPE{
+    INT = 0;
+    SHORT = 1;
+    LONG = 2;
+    LONG_LONG = 3;
+    BOOL = 4;
+    STRING = 5;
+}
+//SUB MESSAGES
+enum CONTRACT_FEE_TYPE{
+    FIXED = 0;
+    CUR_EQUIVALENT = 1;
+    PERCENTAGE= 2;
+}
+enum GOVERNANCE_TYPE{
+    STAGED = 0;
+    CYCLE = 1;
+    STAGGERED = 2;
+}
+enum CONTRACT_TYPE{
+    TOKEN = 0;
+    NFT = 1;
+    SBT = 2;
+}
+
+message Governance{
+    GOVERNANCE_TYPE type = 1;
+    uint32 regular_quorum = 2;
+    uint32 fast_quorum = 3;
+    string voting_instrument = 4;
+}
+message CoinDenomination{
+    string denomination_name = 5;
+    string amount = 6;
+}
+message SoulBound{
+    repeated bytes revoke_keys = 7;
+}
+message ContractFees{
+    string fee = 8;
+    optional bytes fee_address = 9;
+    string burn = 10;
+    string validator = 11;
+    repeated string allowed_fee_instrument = 12;
+    CONTRACT_FEE_TYPE contract_fee_type = 13;
+}
+message RestrictedKey{
+    int64 time_delay = 1;
+    bool global = 2;
+    bool update_contract = 3;
+    bool transfer = 4 ;
+    bool quash = 5;
+    bool mint = 6;
+    bool vote = 7;
+    bool propose = 8;
+    optional bool expense_ratio = 9;
+    optional bool cur_equiv = 10;
+    optional bool revoke = 11;
+}
+message ExpenseRatioTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    repeated bytes addresses = 3;
+}
+message PreMintWallet{
+    bytes address = 16;
+    string amount = 17;
+}
+message DictionaryString{
+    map<string, string> entries = 18;
+}
+message Transfer{
+    bytes recipient_address = 27;
+    string amount = 28;
+    string contract_id = 29;
+    optional string contract_fee_amount = 30;
+    optional string contract_fee_id = 31;
+    string base_fee_amount = 32;
+    string base_fee_id = 33;
+    optional string memo = 35;
+}
+message BaseTXN{
+    optional bytes public_key = 19;
+    google.protobuf.Timestamp timestamp = 20; 
+    string fee_amount = 21;
+    string fee_id = 22;
+    optional bytes signature = 23;
+    optional bytes hash = 24;
+    repeated bytes multi_public_key = 25;
+    repeated bytes multi_signature = 26;
+    string contract_fee = 27;
+    optional string memo = 28;
+}
+message SelfCurrencyEquiv{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string cur_equiv = 3;
+}
+message AuthorizedCurrencyEquiv{
+    BaseTXN base = 1;
+    map<string, string> cur_equiv = 2;
+}
+//MAIN TXN MESSAGES
+message CoinTXN{
+    BaseTXN base = 34;
+    repeated Transfer transfers = 35;
+}
+message MintTXN{
+    BaseTXN base = 1;
+    string contract_id = 39;
+    string amount = 40;
+    bytes recipient_address = 41;
+}
+message ItemizedMintTXN{
+    BaseTXN base = 1;
+    string contract_id = 43;
+    string item_id = 44;
+    bytes recipient_address = 45; 
+    optional string voting_weight = 46;
+    map <string, string> parameters = 47; 
+}
+message InstrumentContract{
+    BaseTXN base = 1; 
+    uint64 contract_version = 2;
+    string symbol = 3; 
+    string name = 4;
+    optional Governance governance = 5;
+    map <string, RestrictedKey> restricted_keys = 6; 
+    optional SoulBound soul_bound = 7;
+    bool is_itemized = 8;
+    optional string max_supply = 9;
+    optional ContractFees contract_fees = 10;
+    repeated PreMintWallet premint_wallets = 11;
+    optional CoinDenomination coin_denomination = 12;
+    map <string, string> custom_parameters = 13; 
+    string contract_id = 14; 
+    map<string, uint32> expense_ratio = 15;
+    CONTRACT_TYPE type = 16;
+}
+message GovernanceVote{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    bool support = 3;
+}
+message GovernanceProposal{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string title = 3;
+    string synopsis = 4;
+    string body = 5;
+}
+message SmartContractTXN{
+    BaseTXN base = 1;
+    string raw_code = 2;
+    LANGUAGE language = 3;
+    repeated SmartContractParameter variable_type = 4;
+}
+message SmartContractExecuteTXN{
+    BaseTXN base = 1;
+    bytes smart_contract_id = 2;
+    repeated SmartContractParameter parameters = 3;
+}
+message SmartContractParameter{
+    uint32 index = 75;
+    VARIABLE_TYPE type = 76;
+    optional string value = 77;
+}
+message TXNS{
+    repeated CoinTXN coin_txns = 1;
+    repeated MintTXN mint_txns = 2;
+    repeated ItemizedMintTXN item_mint_txns = 3;
+    repeated InstrumentContract contract_txns = 4;
+    repeated GovernanceVote governance_votes = 5;
+    repeated GovernanceProposal governance_proposals = 6;
+    repeated SmartContractTXN smart_contracts = 7;
+    repeated SmartContractExecuteTXN smart_contract_exectutes = 8;
+    repeated SelfCurrencyEquiv self_cur_equivs = 9;
+    repeated AuthorizedCurrencyEquiv auth_cur_equivs = 10;
+    repeated ExpenseRatioTXN expense_ratios = 11;
+    map<string, TXNStatusFees> txn_fees_and_status = 12;
+}
+
+message TXNStatusFees{
+    TXN_STATUS status = 85;
+    repeated string base_fees = 86;
+    repeated string base_contract_id = 87;
+    repeated string contract_fees = 88;
+    repeated string contract_contract_id = 89;
+    optional string approved_votes = 90;
+    optional string against_votes = 91;
+}
+
+message TXNWrapper{
+    oneof payload{
+        CoinTXN coin_txn = 1;
+        MintTXN mint_txn = 2;
+        ItemizedMintTXN item_mint_txn = 3;
+        InstrumentContract contract_txn = 4;
+        GovernanceVote governance_vote = 5;
+        GovernanceProposal governance_proposal = 6;
+        SmartContractTXN smart_contract = 7;
+        SmartContractExecuteTXN smart_contract_exectute = 8;
+        SelfCurrencyEquiv self_cur_equivs = 9;
+        AuthorizedCurrencyEquiv auth_cur_equivs = 10;
+        ExpenseRatioTXN expense_ratios = 11;
+    }
+}

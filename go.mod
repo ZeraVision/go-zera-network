@@ -1,4 +1,4 @@
-module github.com/ZeraVision/zera-network-grpc
+module github.com/ZeraVision/go-zera-network-grpc
 
 go 1.21.1
 

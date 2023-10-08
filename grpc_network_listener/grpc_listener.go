@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	zera_grpc "github.com/ZeraVision/zera-network-grpc/zera-grpc"
+	zera_grpc "github.com/ZeraVision/go-zera-network-grpc/zera-grpc"
 )
 
 // struct for server implementation of grpcs

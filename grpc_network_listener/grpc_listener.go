@@ -16,7 +16,7 @@ type ValidatorNetworkServer struct {
 	zera_grpc.UnimplementedValidatorServiceServer //! TODO from network?
 }
 
-func StartgRPCService() {
+func StartGrpcService() {
 	// Create a gRPC server
 	server := grpc.NewServer()
 	validatorNetworkServer := &ValidatorNetworkServer{}

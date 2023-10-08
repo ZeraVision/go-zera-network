@@ -8,13 +8,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	zera_txn "github.com/ZeraVision/ZeraNetworkGrpc/zera_txn"
-	zera_validator "github.com/ZeraVision/ZeraNetworkGrpc/zera_validator"
+	zera_grpc "github.com/ZeraVision/zera-network-grpc/zera-grpc"
 )
 
 // struct for server implementation of grpcs
 type ValidatorNetworkServer struct {
-	zera_validator.UnimplementedValidatorServiceServer //! TODO from network?
+	zera_grpc.UnimplementedValidatorServiceServer //! TODO from network?
 }
 
 func StartgRPCService() {
@@ -23,7 +22,7 @@ func StartgRPCService() {
 	validatorNetworkServer := &ValidatorNetworkServer{}
 
 	// Register the ValidatorNetworkServer with the gRPC server
-	zera_validator.RegisterValidatorServiceServer(server, validatorNetworkServer) //! TODO from network?
+	zera_grpc.RegisterValidatorServiceServer(server, validatorNetworkServer) //! TODO from network?
 
 	// Start listening on port 50051
 	listener, err := net.Listen("tcp", ":50051")
@@ -40,7 +39,7 @@ func StartgRPCService() {
 }
 
 // listener service for broadcasts (new blocks)
-func (s *ValidatorNetworkServer) Broadcast(ctx context.Context, block *zera_validator.Block) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) Broadcast(ctx context.Context, block *zera_grpc.Block) (*emptypb.Empty, error) {
 
 	//TODO abstract to not take input method and not require db connection
 	// if block_processing_vars.IsBlockSyncActive() {
@@ -72,44 +71,44 @@ func (s *ValidatorNetworkServer) Broadcast(ctx context.Context, block *zera_vali
 }
 
 // listener service for new validators
-func (s *ValidatorNetworkServer) ValidatorRegistration(ctx context.Context, valReg *zera_validator.ValidatorRegistrationMessage) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) ValidatorRegistration(ctx context.Context, valReg *zera_grpc.ValidatorRegistrationMessage) (*emptypb.Empty, error) {
 	// TODO: Implement the logic for the ValidatorRegistration RPC
 	return &emptypb.Empty{}, nil
 }
 
 //TODO - May need to delete, dont think we need this functionality
 
-// func (s *ValidatorNetworkServer) SyncValidatorList(context.Context, *zera_validator.ValidatorSyncRequest) (*zera_validator.ValidatorSync, error) {
+// func (s *ValidatorNetworkServer) SyncValidatorList(context.Context, *zera_grpc.ValidatorSyncRequest) (*zera_grpc.ValidatorSync, error) {
 // 	// TODO: Implement the logic for the SyncValidatorList RPC
-// 	return &zera_validator.ValidatorSync{}, nil
+// 	return &zera_grpc.ValidatorSync{}, nil
 // }
 
 // listener service for coin txns
-func (s *ValidatorNetworkServer) ValidatorCoin(ctx context.Context, txn *zera_txn.CoinTXN) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) ValidatorCoin(ctx context.Context, txn *zera_grpc.CoinTXN) (*emptypb.Empty, error) {
 	// TODO: Implement the logic for the ValidatorCoin RPC
 	return &emptypb.Empty{}, nil
 }
 
 //TODO - Will add this service when functionality is complete on validator side
 
-func (s *ValidatorNetworkServer) ValidatorMint(ctx context.Context, txn *zera_txn.MintTXN) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) ValidatorMint(ctx context.Context, txn *zera_grpc.MintTXN) (*emptypb.Empty, error) {
 	// TODO: Implement the logic for the ValidatorMint RPC
 	return &emptypb.Empty{}, nil
 }
 
 //TODO - Will add this service when functionality is complete on validator side
 
-func (s *ValidatorNetworkServer) ValidatorContract(ctx context.Context, txn *zera_txn.InstrumentContract) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) ValidatorContract(ctx context.Context, txn *zera_grpc.InstrumentContract) (*emptypb.Empty, error) {
 	// TODO: Implement the logic for the ValidatorContract RPC
 	return &emptypb.Empty{}, nil
 }
 
-func (s *ValidatorNetworkServer) ValidatorGovernProposal(ctx context.Context, txn *zera_txn.GovernanceProposal) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) ValidatorGovernProposal(ctx context.Context, txn *zera_grpc.GovernanceProposal) (*emptypb.Empty, error) {
 	// TODO: Implement the logic for the ValidatorContract RPC
 	return &emptypb.Empty{}, nil
 }
 
-func (s *ValidatorNetworkServer) ValidatorGovernVoting(ctx context.Context, txn *zera_txn.GovernanceVote) (*emptypb.Empty, error) {
+func (s *ValidatorNetworkServer) ValidatorGovernVoting(ctx context.Context, txn *zera_grpc.GovernanceVote) (*emptypb.Empty, error) {
 	// TODO: Implement the logic for the ValidatorContract RPC
 	return &emptypb.Empty{}, nil
 }

@@ -5,7 +5,7 @@ import "google/protobuf/empty.proto";
 
 package zera_txn;
 
-option go_package = "./zera_txn";
+option go_package = "./zera-grpc";
 
 option optimize_for = SPEED;
 

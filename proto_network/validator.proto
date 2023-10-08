@@ -6,7 +6,7 @@ import "txn.proto";
 
 package zera_validator;
 
-option go_package = "./zera_validator";
+option go_package = "./zera-grpc";
 
 option optimize_for = SPEED;
 

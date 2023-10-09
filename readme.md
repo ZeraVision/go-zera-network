@@ -32,7 +32,7 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 ## Generating proto/gRPC files
 > Run from repository root.
 ```bash
-protoc --go_out=. --go-grpc_out=. --proto_path=./proto_network  ./proto_network/*.proto
+protoc --go_out=. --go-grpc_out=. --proto_path=./grpc/proto  ./grpc/proto/*.proto
 ```
 
 ## Pushing New Version to Github

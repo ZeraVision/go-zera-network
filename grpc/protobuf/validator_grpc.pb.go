@@ -4,7 +4,7 @@
 // - protoc             v4.24.4
 // source: validator.proto
 
-package zera_grpc
+package protobuf
 
 import (
 	context "context"

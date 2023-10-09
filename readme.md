@@ -1,4 +1,4 @@
-# go-zera-network-grpc
+# go-zera-network
 At set of Zera Network packages in Go using GRPC to communicate.
 
 ## Setup

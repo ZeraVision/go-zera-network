@@ -70,6 +70,17 @@ enum CONTRACT_TYPE{
     SBT = 2;
 }
 
+//trade in for maps
+message ExpenseRatio{
+    string date = 1;
+    uint32 percent = 2;
+}
+message KeyValuePair{
+    string key = 1;
+    string value = 2;
+}
+
+
 message Governance{
     GOVERNANCE_TYPE type = 1;
     uint32 regular_quorum = 2;
@@ -92,17 +103,18 @@ message ContractFees{
     CONTRACT_FEE_TYPE contract_fee_type = 13;
 }
 message RestrictedKey{
-    int64 time_delay = 1;
-    bool global = 2;
-    bool update_contract = 3;
-    bool transfer = 4 ;
-    bool quash = 5;
-    bool mint = 6;
-    bool vote = 7;
-    bool propose = 8;
-    optional bool expense_ratio = 9;
-    optional bool cur_equiv = 10;
-    optional bool revoke = 11;
+    bytes public_key = 1;
+    int64 time_delay = 2;
+    bool global = 3;
+    bool update_contract = 4;
+    bool transfer = 5;
+    bool quash = 6;
+    bool mint = 7;
+    bool vote = 8;
+    bool propose = 9;
+    optional bool expense_ratio = 10;
+    optional bool cur_equiv = 11;
+    optional bool revoke = 12;
 }
 message ExpenseRatioTXN{
     BaseTXN base = 1;
@@ -113,9 +125,7 @@ message PreMintWallet{
     bytes address = 16;
     string amount = 17;
 }
-message DictionaryString{
-    map<string, string> entries = 18;
-}
+
 message Transfer{
     bytes recipient_address = 27;
     string amount = 28;
@@ -135,17 +145,20 @@ message BaseTXN{
     optional bytes hash = 24;
     repeated bytes multi_public_key = 25;
     repeated bytes multi_signature = 26;
-    string contract_fee = 27;
-    optional string memo = 28;
+    optional string memo = 27;
 }
 message SelfCurrencyEquiv{
     BaseTXN base = 1;
     string contract_id = 2;
     string cur_equiv = 3;
 }
+message CurrencyEquiv{
+    string contract_id = 1;
+    string value = 2;
+}
 message AuthorizedCurrencyEquiv{
     BaseTXN base = 1;
-    map<string, string> cur_equiv = 2;
+    repeated KeyValuePair cur_equiv = 2;
 }
 //MAIN TXN MESSAGES
 message CoinTXN{
@@ -158,30 +171,32 @@ message MintTXN{
     string amount = 40;
     bytes recipient_address = 41;
 }
+
 message ItemizedMintTXN{
     BaseTXN base = 1;
     string contract_id = 43;
     string item_id = 44;
     bytes recipient_address = 45; 
     optional string voting_weight = 46;
-    map <string, string> parameters = 47; 
+    repeated KeyValuePair parameters = 47; 
 }
+
 message InstrumentContract{
     BaseTXN base = 1; 
     uint64 contract_version = 2;
     string symbol = 3; 
     string name = 4;
     optional Governance governance = 5;
-    map <string, RestrictedKey> restricted_keys = 6; 
+    repeated RestrictedKey restricted_keys = 6;
     optional SoulBound soul_bound = 7;
     bool is_itemized = 8;
     optional string max_supply = 9;
     optional ContractFees contract_fees = 10;
     repeated PreMintWallet premint_wallets = 11;
     optional CoinDenomination coin_denomination = 12;
-    map <string, string> custom_parameters = 13; 
+    repeated KeyValuePair custom_parameters = 13; 
     string contract_id = 14; 
-    map<string, uint32> expense_ratio = 15;
+    repeated ExpenseRatio expense_ratio = 15;
     CONTRACT_TYPE type = 16;
 }
 message GovernanceVote{
@@ -220,21 +235,22 @@ message TXNS{
     repeated GovernanceVote governance_votes = 5;
     repeated GovernanceProposal governance_proposals = 6;
     repeated SmartContractTXN smart_contracts = 7;
-    repeated SmartContractExecuteTXN smart_contract_exectutes = 8;
+    repeated SmartContractExecuteTXN smart_contract_executes = 8;
     repeated SelfCurrencyEquiv self_cur_equivs = 9;
     repeated AuthorizedCurrencyEquiv auth_cur_equivs = 10;
     repeated ExpenseRatioTXN expense_ratios = 11;
-    map<string, TXNStatusFees> txn_fees_and_status = 12;
+    repeated TXNStatusFees txn_fees_and_status = 12;
 }
 
 message TXNStatusFees{
-    TXN_STATUS status = 85;
-    repeated string base_fees = 86;
-    repeated string base_contract_id = 87;
-    repeated string contract_fees = 88;
-    repeated string contract_contract_id = 89;
-    optional string approved_votes = 90;
-    optional string against_votes = 91;
+    bytes txn_hash = 1;
+    TXN_STATUS status = 2;
+    repeated string base_fees = 3;
+    repeated string base_contract_id = 4;
+    repeated string contract_fees = 5;
+    repeated string contract_contract_id = 6;
+    optional string approved_votes = 7;
+    optional string against_votes = 8;
 }
 
 message TXNWrapper{
@@ -246,7 +262,7 @@ message TXNWrapper{
         GovernanceVote governance_vote = 5;
         GovernanceProposal governance_proposal = 6;
         SmartContractTXN smart_contract = 7;
-        SmartContractExecuteTXN smart_contract_exectute = 8;
+        SmartContractExecuteTXN smart_contract_execute = 8;
         SelfCurrencyEquiv self_cur_equivs = 9;
         AuthorizedCurrencyEquiv auth_cur_equivs = 10;
         ExpenseRatioTXN expense_ratios = 11;

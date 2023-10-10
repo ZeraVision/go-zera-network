@@ -10,8 +10,6 @@ import (
 	zera_pb "github.com/ZeraVision/go-zera-network/grpc/protobuf"
 )
 
-const GRPC_NETWORK_HIT_ADDRESS = "dev-validator-grpc.zera.vision:50051"
-
 // struct for client implementation of grpcs
 type ValidatorNetworkClient struct {
 	client zera_pb.ValidatorServiceClient
@@ -35,9 +33,9 @@ func NewValidatorNetworkClient(conn *grpc.ClientConn) *ValidatorNetworkClient {
 }
 
 // SendBlocksyncRequest sends a block sync request and returns the received block batch.
-func SendBlocksyncRequest(blockSync *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {
+func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_pb.BlockBatch, error) {
 	// Create a gRPC connection to the server
-	conn, err := grpc.Dial(GRPC_NETWORK_HIT_ADDRESS, grpc.WithInsecure()) // 137.184.181.31 dev // 146.190.163.205 proto // 146.190.139.36
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure()) // 137.184.181.31 dev // 146.190.163.205 proto // 146.190.139.36
 	if err != nil {
 		log.Fatalf("Failed to connect to the server: %v", err)
 		return nil, err
@@ -63,9 +61,9 @@ func (v *ValidatorNetworkClient) SyncBlockchain(ctx context.Context, request *ze
 }
 
 // SendMintTXN sends a mint txn and returns an empty response.
-func SendMintTXN(mintTXN *zera_pb.MintTXN) (*emptypb.Empty, error) {
+func SendMintTXN(mintTXN *zera_pb.MintTXN, destAddr string) (*emptypb.Empty, error) {
 	// Create a gRPC connection to the server
-	conn, err := grpc.Dial("proto-txn-sender-v2.zera.vision:50052", grpc.WithInsecure())
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect to the server: %v", err)
 		return nil, err

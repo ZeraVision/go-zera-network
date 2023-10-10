@@ -1,4 +1,4 @@
-package grpc_network_listener
+package listener
 
 import (
 	"context"

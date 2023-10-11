@@ -240,8 +240,13 @@ message TXNS{
     repeated AuthorizedCurrencyEquiv auth_cur_equivs = 10;
     repeated ExpenseRatioTXN expense_ratios = 11;
     repeated TXNStatusFees txn_fees_and_status = 12;
+    repeated TokenFees token_fees = 13;
 }
-
+message TokenFees{
+    string address = 1;
+    string contract_id = 2;
+    string amount = 3;
+}
 message TXNStatusFees{
     bytes txn_hash = 1;
     TXN_STATUS status = 2;

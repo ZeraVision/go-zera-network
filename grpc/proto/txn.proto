@@ -242,10 +242,13 @@ message TXNS{
     repeated TXNStatusFees txn_fees_and_status = 12;
     repeated TokenFees token_fees = 13;
 }
+message Token{
+    string contract_id = 1;
+    string amount = 2;
+}
 message TokenFees{
     string address = 1;
-    string contract_id = 2;
-    string amount = 3;
+    repeated Token tokens = 2;
 }
 message TXNStatusFees{
     bytes txn_hash = 1;

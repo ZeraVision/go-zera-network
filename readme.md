@@ -6,20 +6,20 @@ At set of Zera Network packages in Go using GRPC to communicate.
 
 How to install latest version on go project
 ```bash
-go get -u github.com/ZeraVision/go-zera-network-grpc
+go get -u github.com/ZeraVision/go-zera-network
 ```
 
 ### Troubleshooting
 In the event `go get` returns a 404 error:
 1. Ensure that your machine is using the correct Personal Access Token or is authenticated with Github correctly.
-2. Temporarily adjust the environment variable to include the repository URL by setting `GOPRIVATE` to `github.com/ZeraVision/go-zera-network-grpc`.
+2. Temporarily adjust the environment variable to include the repository URL by setting `GOPRIVATE` to `github.com/ZeraVision/go-zera-network`.
    #### Powershell
    ```powershell
-   $env:GOPRIVATE="github.com/ZeraVision/go-zera-network-grpc"
+   $env:GOPRIVATE="github.com/ZeraVision/go-zera-network"
    ```
    #### ZSH Bash
    ```bash
-   export GOPRIVATE=github.com/ZeraVision/go-zera-network-grpc
+   export GOPRIVATE=github.com/ZeraVision/go-zera-network
    ```
 
 # Development
@@ -32,7 +32,7 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 ## Generating proto/gRPC files
 > Run from repository root.
 ```bash
-protoc --go_out=. --go-grpc_out=. --proto_path=./proto_network  ./proto_network/*.proto
+protoc --go_out=. --go-grpc_out=. --proto_path=./grpc/proto  ./grpc/proto/*.proto
 ```
 
 ## Pushing New Version to Github

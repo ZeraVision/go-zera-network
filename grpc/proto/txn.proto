@@ -247,7 +247,7 @@ message Token{
     string amount = 2;
 }
 message TokenFees{
-    string address = 1;
+    bytes address = 1;
     repeated Token tokens = 2;
 }
 message TXNStatusFees{

@@ -81,3 +81,25 @@ func SendMintTXN(mintTXN *zera_pb.MintTXN, destAddr string) (*emptypb.Empty, err
 
 	return response, nil
 }
+
+// SendCoinTxn sends a coinTxn txn and returns an empty response.
+func SendCoinTXN(coinTxn *zera_protobuf.CoinTXN, destAddr string) (*emptypb.Empty, error) {
+	// Create a gRPC connection to the server
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Failed to connect to the server: %v", err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	// Create a new instance of ValidatorNetworkClient
+	client := NewNetworkClient(conn)
+
+	response, err := client.client.Coin(context.Background(), coinTxn)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}

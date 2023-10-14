@@ -77,7 +77,6 @@ func NewValidatorService() *ValidatorService {
 }
 
 // Implement each of the methods by delegating to the corresponding handler functions.
-
 func (c *ValidatorService) Broadcast(ctx context.Context, in *zera_pb.Block) (*emptypb.Empty, error) {
 	if c == nil {
 		return nil, errors.New("ValidatorService is not initialized")

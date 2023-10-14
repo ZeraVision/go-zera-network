@@ -85,98 +85,98 @@ func (c *ValidatorService) Broadcast(ctx context.Context, in *zera_pb.Block) (*e
 }
 
 func (c *ValidatorService) SyncBlockchain(ctx context.Context, in *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {
-	if c == nil {
+	if c.HandleSyncBlockchain == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleSyncBlockchain(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorRegistration(ctx context.Context, in *zera_pb.ValidatorRegistrationMessage) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorRegistration == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorRegistration(ctx, in)
 }
 
 func (c *ValidatorService) SyncValidatorList(ctx context.Context, in *zera_pb.ValidatorSyncRequest) (*zera_pb.ValidatorSync, error) {
-	if c == nil {
+	if c.HandleSyncValidatorList == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleSyncValidatorList(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorCoin(ctx context.Context, in *zera_pb.CoinTXN) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorCoin == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorCoin(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorMint(ctx context.Context, in *zera_pb.MintTXN) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorMint == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorMint(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorItemMint(ctx context.Context, in *zera_pb.ItemizedMintTXN) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorItemMint == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorItemMint(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorContract(ctx context.Context, in *zera_pb.InstrumentContract) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorContract == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorContract(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorGovernProposal(ctx context.Context, in *zera_pb.GovernanceProposal) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorGovernProposal == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorGovernProposal(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorGovernVote(ctx context.Context, in *zera_pb.GovernanceVote) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorGovernVote == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorGovernVote(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorSmartContract(ctx context.Context, in *zera_pb.SmartContractTXN) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorSmartContract == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorSmartContract(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorSmartContractExecute(ctx context.Context, in *zera_pb.SmartContractExecuteTXN) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorSmartContractExec == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorSmartContractExec(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorCurrencyEquiv(ctx context.Context, in *zera_pb.SelfCurrencyEquiv) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorCurrencyEquiv == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorCurrencyEquiv(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorAuthCurrencyEquiv(ctx context.Context, in *zera_pb.AuthorizedCurrencyEquiv) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorAuthCurrencyEquiv == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorAuthCurrencyEquiv(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorExpenseRatio(ctx context.Context, in *zera_pb.ExpenseRatioTXN) (*emptypb.Empty, error) {
-	if c == nil {
+	if c.HandleValidatorExpenseRatio == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorExpenseRatio(ctx, in)

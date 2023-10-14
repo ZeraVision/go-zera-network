@@ -1,6 +1,6 @@
 module github.com/ZeraVision/go-zera-network
 
-go 1.21.1
+go 1.20
 
 require (
 	google.golang.org/grpc v1.58.2

@@ -50,9 +50,16 @@ type ValidatorService struct {
 	Service *grpc.Server
 }
 
+const MAX_GRPC_SIZE = 1024 * 1024 * 50 // for example, 50MB
+
 func (c *ValidatorService) StartService() {
 	// Create a gRPC server
-	c.Service = grpc.NewServer()
+	opts := []grpc.ServerOption{
+		grpc.MaxRecvMsgSize(MAX_GRPC_SIZE),
+		grpc.MaxSendMsgSize(MAX_GRPC_SIZE),
+	}
+
+	c.Service = grpc.NewServer(opts...)
 
 	// Register the ValidatorNetworkServer with the gRPC server
 	zera_pb.RegisterValidatorServiceServer(c.Service, c) //! TODO from network?

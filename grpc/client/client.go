@@ -23,14 +23,12 @@ type NetworkClient struct {
 // constructor for client implementation of grpcs
 func NewNetworkClient(conn *grpc.ClientConn) *NetworkClient {
 	client := zera_pb.NewTXNServiceClient(conn)
-	conn.SetMaxMsgSize(maxMessageSize)
 	return &NetworkClient{client: client}
 }
 
 // constructor for client implementation of grpcs
 func NewValidatorNetworkClient(conn *grpc.ClientConn) *ValidatorNetworkClient {
 	client := zera_pb.NewValidatorServiceClient(conn)
-	conn.SetMaxMsgSize(maxMessageSize)
 	return &ValidatorNetworkClient{client: client}
 }
 

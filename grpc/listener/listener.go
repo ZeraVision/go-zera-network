@@ -52,11 +52,23 @@ type ValidatorService struct {
 
 const MAX_GRPC_SIZE = 1024 * 1024 * 50 // for example, 50MB
 
+func enforceMaxMessageSize(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	const MAX_GRPC_SIZE = 1024 * 1024 * 100 // 100MB
+
+	p, ok := grpc.ServerTransportStreamFromContext(ctx)
+	if ok && p.Method() == info.FullMethod {
+		if size := p.Header().ContentLength; size > MAX_GRPC_SIZE {
+			return nil, status.Errorf(codes.ResourceExhausted, "Request too large: %d > %d", size, MAX_GRPC_SIZE)
+		}
+	}
+
+	return handler(ctx, req)
+}
+
 func (c *ValidatorService) StartService() {
 	// Create a gRPC server
 	opts := []grpc.ServerOption{
-		grpc.MaxRecvMsgSize(MAX_GRPC_SIZE),
-		grpc.MaxSendMsgSize(MAX_GRPC_SIZE),
+		grpc.UnaryInterceptor(enforceMaxMessageSize),
 	}
 
 	c.Service = grpc.NewServer(opts...)

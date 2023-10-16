@@ -2,9 +2,11 @@ package client
 
 import (
 	"context"
+	"io"
 	"log"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	zera_pb "github.com/ZeraVision/go-zera-network/grpc/protobuf"
@@ -45,41 +47,33 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 	// Create a new instance of ValidatorNetworkClient
 	client := NewValidatorNetworkClient(conn)
 
-	// Create a new stream for the SyncBlockchain RPC
-	stream, err := client.SyncBlockchain(context.Background(), blockSync)
+	stream, err := client.client.SyncBlockchain(context.Background(), blockSync)
+
 	if err != nil {
 		log.Fatalf("Failed to call SyncBlockchain: %v", err)
 		return nil, err
 	}
 
-	// Read all the BatchChunks from the stream and concatenate their data
-	var aggregatedData string
+	var aggregatedData []byte // use bytes.Buffer or similar for performance in a real-world scenario
 	for {
 		batchChunk, err := stream.Recv()
 		if err == io.EOF {
-			break // End of stream
+			break
 		}
 		if err != nil {
 			log.Fatalf("Failed to receive a batch chunk: %v", err)
 			return nil, err
 		}
-		aggregatedData += batchChunk.GetChunkData()
+		aggregatedData = append(aggregatedData, batchChunk.GetChunkData()...)
 	}
 
-	// Deserialize the concatenated data into a BlockBatch message
 	blockBatch := &zera_pb.BlockBatch{}
-	if err := proto.Unmarshal([]byte(aggregatedData), blockBatch); err != nil {
+	if err := proto.Unmarshal(aggregatedData, blockBatch); err != nil {
 		log.Fatalf("Failed to deserialize BlockBatch: %v", err)
 		return nil, err
 	}
 
 	return blockBatch, nil
-}
-
-// SyncBlockchain sends a block sync request and returns the received block batch.
-func (v *ValidatorNetworkClient) SyncBlockchain(ctx context.Context, request *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {
-	response, err := v.client.SyncBlockchain(ctx, request)
-	return response, err
 }
 
 // SendMintTXN sends a mint txn and returns an empty response.

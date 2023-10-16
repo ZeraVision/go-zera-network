@@ -102,7 +102,7 @@ func (c *validatorServiceClient) SyncBlockchain(ctx context.Context, in *BlockSy
 }
 
 type ValidatorService_SyncBlockchainClient interface {
-	Recv() (*BlockBatch, error)
+	Recv() (*BatchChunk, error)
 	grpc.ClientStream
 }
 
@@ -110,8 +110,8 @@ type validatorServiceSyncBlockchainClient struct {
 	grpc.ClientStream
 }
 
-func (x *validatorServiceSyncBlockchainClient) Recv() (*BlockBatch, error) {
-	m := new(BlockBatch)
+func (x *validatorServiceSyncBlockchainClient) Recv() (*BatchChunk, error) {
+	m := new(BatchChunk)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -368,7 +368,7 @@ func _ValidatorService_SyncBlockchain_Handler(srv interface{}, stream grpc.Serve
 }
 
 type ValidatorService_SyncBlockchainServer interface {
-	Send(*BlockBatch) error
+	Send(*BatchChunk) error
 	grpc.ServerStream
 }
 
@@ -376,7 +376,7 @@ type validatorServiceSyncBlockchainServer struct {
 	grpc.ServerStream
 }
 
-func (x *validatorServiceSyncBlockchainServer) Send(m *BlockBatch) error {
+func (x *validatorServiceSyncBlockchainServer) Send(m *BatchChunk) error {
 	return x.ServerStream.SendMsg(m)
 }
 

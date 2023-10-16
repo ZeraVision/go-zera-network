@@ -13,7 +13,7 @@ option optimize_for = SPEED;
 service ValidatorService{
     rpc StreamBroadcast(BlockChunk) returns (google.protobuf.Empty);
     rpc Broadcast(Block) returns (google.protobuf.Empty);
-    rpc SyncBlockchain(BlockSync) returns (stream BlockBatch);
+    rpc SyncBlockchain(BlockSync) returns (stream BatchChunk);
     rpc ValidatorRegistration(ValidatorRegistrationMessage) returns (google.protobuf.Empty);
     rpc SyncValidatorList(ValidatorSyncRequest) returns (ValidatorSync);
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);

@@ -43,7 +43,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 	defer conn.Close()
 
 	// Create a new instance of ValidatorNetworkClient
-	client := zera_pb.NewValidatorNetworkClient(conn)
+	client := NewValidatorNetworkClient(conn)
 
 	// Create a new stream for the SyncBlockchain RPC
 	stream, err := client.SyncBlockchain(context.Background(), blockSync)

@@ -61,7 +61,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 			break
 		}
 		if err != nil {
-			log.Fatalf("Failed to receive a batch chunk: %v", err)
+			log.Fatalf("SendBlocksyncRequest: Failed to receive a batch chunk: %v", err)
 			return nil, err
 		}
 		aggregatedData = append(aggregatedData, batchChunk.GetChunkData()...)
@@ -69,7 +69,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 
 	blockBatch := &zera_pb.BlockBatch{}
 	if err := proto.Unmarshal(aggregatedData, blockBatch); err != nil {
-		log.Fatalf("Failed to deserialize BlockBatch: %v", err)
+		log.Fatalf("SendBlocksyncRequest: Failed to deserialize BlockBatch: %v", err)
 		return nil, err
 	}
 

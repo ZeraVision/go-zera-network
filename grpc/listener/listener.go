@@ -84,12 +84,12 @@ func (c *ValidatorService) Broadcast(ctx context.Context, in *zera_pb.Block) (*e
 	return c.HandleBroadcast(ctx, in)
 }
 
-func (c *ValidatorService) SyncBlockchain(ctx context.Context, in *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {
-	if c.HandleSyncBlockchain == nil {
-		return nil, errors.New("ValidatorService is not initialized")
-	}
-	return c.HandleSyncBlockchain(ctx, in)
-}
+// // func (c *ValidatorService) SyncBlockchain(ctx context.Context, in *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {
+// // 	if c.HandleSyncBlockchain == nil {
+// // 		return nil, errors.New("ValidatorService is not initialized")
+// // 	}
+// // 	return c.HandleSyncBlockchain(ctx, in)
+// // }
 
 func (c *ValidatorService) ValidatorRegistration(ctx context.Context, in *zera_pb.ValidatorRegistrationMessage) (*emptypb.Empty, error) {
 	if c.HandleValidatorRegistration == nil {

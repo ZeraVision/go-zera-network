@@ -35,7 +35,7 @@ func NewValidatorNetworkClient(conn *grpc.ClientConn) *ValidatorNetworkClient {
 // SendBlocksyncRequest sends a block sync request and returns the received block batch.
 func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_pb.BlockBatch, error) {
 	// Create a gRPC connection to the server
-	conn, err := grpc.Dial(destAddr, grpc.WithInsecure()) // 137.184.181.31 dev // 146.190.163.205 proto // 146.190.139.36
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect to the server: %v", err)
 		return nil, err
@@ -43,12 +43,34 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 	defer conn.Close()
 
 	// Create a new instance of ValidatorNetworkClient
-	client := NewValidatorNetworkClient(conn)
+	client := zera_pb.NewValidatorNetworkClient(conn)
 
-	// Call the SyncBlockchain RPC
-	blockBatch, err := client.SyncBlockchain(context.Background(), blockSync)
+	// Create a new stream for the SyncBlockchain RPC
+	stream, err := client.SyncBlockchain(context.Background(), blockSync)
 	if err != nil {
-		return blockBatch, nil
+		log.Fatalf("Failed to call SyncBlockchain: %v", err)
+		return nil, err
+	}
+
+	// Read all the BatchChunks from the stream and concatenate their data
+	var aggregatedData string
+	for {
+		batchChunk, err := stream.Recv()
+		if err == io.EOF {
+			break // End of stream
+		}
+		if err != nil {
+			log.Fatalf("Failed to receive a batch chunk: %v", err)
+			return nil, err
+		}
+		aggregatedData += batchChunk.GetChunkData()
+	}
+
+	// Deserialize the concatenated data into a BlockBatch message
+	blockBatch := &zera_pb.BlockBatch{}
+	if err := proto.Unmarshal([]byte(aggregatedData), blockBatch); err != nil {
+		log.Fatalf("Failed to deserialize BlockBatch: %v", err)
+		return nil, err
 	}
 
 	return blockBatch, nil

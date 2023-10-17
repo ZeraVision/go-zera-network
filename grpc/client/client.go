@@ -2,8 +2,8 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"io"
-	"log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
@@ -39,7 +39,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 	// Create a gRPC connection to the server
 	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("Failed to connect to the server: %v", err)
+		fmt.Printf("Failed to connect to the server: %v", err)
 		return nil, err
 	}
 	defer conn.Close()
@@ -50,7 +50,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 	stream, err := client.client.SyncBlockchain(context.Background(), blockSync)
 
 	if err != nil {
-		log.Fatalf("Failed to call SyncBlockchain: %v", err)
+		fmt.Printf("Failed to call SyncBlockchain: %v", err)
 		return nil, err
 	}
 
@@ -61,7 +61,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 			break
 		}
 		if err != nil {
-			log.Fatalf("SendBlocksyncRequest: Failed to receive a batch chunk: %v", err)
+			fmt.Printf("SendBlocksyncRequest: Failed to receive a batch chunk: %v", err)
 			return nil, err
 		}
 		aggregatedData = append(aggregatedData, batchChunk.GetChunkData()...)
@@ -69,7 +69,7 @@ func SendBlocksyncRequest(blockSync *zera_pb.BlockSync, destAddr string) (*zera_
 
 	blockBatch := &zera_pb.BlockBatch{}
 	if err := proto.Unmarshal(aggregatedData, blockBatch); err != nil {
-		log.Fatalf("SendBlocksyncRequest: Failed to deserialize BlockBatch: %v", err)
+		fmt.Printf("SendBlocksyncRequest: Failed to deserialize BlockBatch: %v", err)
 		return nil, err
 	}
 
@@ -81,7 +81,7 @@ func SendMintTXN(mintTXN *zera_pb.MintTXN, destAddr string) (*emptypb.Empty, err
 	// Create a gRPC connection to the server
 	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("Failed to connect to the server: %v", err)
+		fmt.Printf("Failed to connect to the server: %v", err)
 		return nil, err
 	}
 	defer conn.Close()

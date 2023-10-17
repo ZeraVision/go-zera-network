@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	zera_pb "github.com/ZeraVision/go-zera-network/grpc/protobuf"
@@ -82,6 +85,33 @@ func (c *ValidatorService) Broadcast(ctx context.Context, in *zera_pb.Block) (*e
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleBroadcast(ctx, in)
+}
+
+// Implement each of the methods by delegating to the corresponding handler functions.
+func (c *ValidatorService) StreamBroadcast(stream zera_pb.ValidatorService_StreamBroadcastServer) (*emptypb.Empty, error) {
+
+	var aggregatedData []byte // use bytes.Buffer or similar for performance in a real-world scenario
+	// Listen for messages from client
+	for {
+		dataChunk, err := stream.Recv()
+		if err == io.EOF {
+			// All data has been received
+			break
+		}
+		if err != nil {
+			log.Fatalf("StreamBroadcast: Failed to receive a block chunk: %v", err)
+			return nil, err
+		}
+		aggregatedData = append(aggregatedData, dataChunk.GetChunkData()...)
+	}
+
+	block := &zera_pb.Block{}
+	if err := proto.Unmarshal(aggregatedData, block); err != nil {
+		log.Fatalf("SendBlocksyncRequest: Failed to deserialize BlockBatch: %v", err)
+		return nil, err
+	}
+
+	return c.HandleBroadcast(stream.Context(), block)
 }
 
 // // func (c *ValidatorService) SyncBlockchain(ctx context.Context, in *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {

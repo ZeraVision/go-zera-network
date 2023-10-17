@@ -11,9 +11,9 @@ option go_package = "./grpc/protobuf";
 option optimize_for = SPEED;
 
 service ValidatorService{
-    rpc StreamBroadcast(BlockChunk) returns (google.protobuf.Empty);
+    rpc StreamBroadcast(stream DataChunk) returns (google.protobuf.Empty);
     rpc Broadcast(Block) returns (google.protobuf.Empty);
-    rpc SyncBlockchain(BlockSync) returns (stream BatchChunk);
+    rpc SyncBlockchain(BlockSync) returns (stream DataChunk);
     rpc ValidatorRegistration(ValidatorRegistrationMessage) returns (google.protobuf.Empty);
     rpc SyncValidatorList(ValidatorSyncRequest) returns (ValidatorSync);
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
@@ -29,12 +29,7 @@ service ValidatorService{
     rpc ValidatorExpenseRatio(zera_txn.ExpenseRatioTXN) returns (google.protobuf.Empty);
 }
 
-message BatchChunk{
-    bytes chunk_data = 1;
-    int32 chunk_number = 2;
-    optional int32 total_chunks = 3;
-}
-message BlockChunk{
+message DataChunk{
     bytes chunk_data = 1;
     int32 chunk_number = 2;
     optional int32 total_chunks = 3;

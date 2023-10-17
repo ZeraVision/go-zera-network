@@ -88,7 +88,7 @@ func (c *ValidatorService) Broadcast(ctx context.Context, in *zera_pb.Block) (*e
 }
 
 // Implement each of the methods by delegating to the corresponding handler functions.
-func (c *ValidatorService) StreamBroadcast(stream zera_pb.ValidatorService_StreamBroadcastServer) (*emptypb.Empty, error) {
+func (c *ValidatorService) StreamBroadcast(stream zera_pb.ValidatorService_StreamBroadcastServer) error {
 
 	var aggregatedData []byte // use bytes.Buffer or similar for performance in a real-world scenario
 	// Listen for messages from client
@@ -100,18 +100,26 @@ func (c *ValidatorService) StreamBroadcast(stream zera_pb.ValidatorService_Strea
 		}
 		if err != nil {
 			log.Fatalf("StreamBroadcast: Failed to receive a block chunk: %v", err)
-			return nil, err
+			return err
 		}
 		aggregatedData = append(aggregatedData, dataChunk.GetChunkData()...)
+	}
+	// Close the stream immediately after receipt of all data
+	err := stream.SendAndClose(&emptypb.Empty{})
+	if err != nil {
+		log.Fatalf("StreamBroadcast: Failed to close the stream: %v", err)
+		return err
 	}
 
 	block := &zera_pb.Block{}
 	if err := proto.Unmarshal(aggregatedData, block); err != nil {
 		log.Fatalf("SendBlocksyncRequest: Failed to deserialize BlockBatch: %v", err)
-		return nil, err
+		return err
 	}
 
-	return c.HandleBroadcast(stream.Context(), block)
+	_, err1 := c.HandleBroadcast(stream.Context(), block)
+
+	return err1
 }
 
 // // func (c *ValidatorService) SyncBlockchain(ctx context.Context, in *zera_pb.BlockSync) (*zera_pb.BlockBatch, error) {

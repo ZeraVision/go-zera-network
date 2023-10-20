@@ -36,6 +36,8 @@ const (
 	ValidatorService_ValidatorCurrencyEquiv_FullMethodName        = "/zera_validator.ValidatorService/ValidatorCurrencyEquiv"
 	ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName    = "/zera_validator.ValidatorService/ValidatorAuthCurrencyEquiv"
 	ValidatorService_ValidatorExpenseRatio_FullMethodName         = "/zera_validator.ValidatorService/ValidatorExpenseRatio"
+	ValidatorService_ValidatorNFT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorNFT"
+	ValidatorService_ValidatorContractUpdate_FullMethodName       = "/zera_validator.ValidatorService/ValidatorContractUpdate"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -45,7 +47,7 @@ type ValidatorServiceClient interface {
 	StreamBroadcast(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBroadcastClient, error)
 	Broadcast(ctx context.Context, in *Block, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SyncBlockchain(ctx context.Context, in *BlockSync, opts ...grpc.CallOption) (ValidatorService_SyncBlockchainClient, error)
-	ValidatorRegistration(ctx context.Context, in *ValidatorRegistrationMessage, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorRegistration(ctx context.Context, in *ValidatorRegistration, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SyncValidatorList(ctx context.Context, in *ValidatorSyncRequest, opts ...grpc.CallOption) (*ValidatorSync, error)
 	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorMint(ctx context.Context, in *MintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -58,6 +60,8 @@ type ValidatorServiceClient interface {
 	ValidatorCurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorAuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -143,7 +147,7 @@ func (x *validatorServiceSyncBlockchainClient) Recv() (*DataChunk, error) {
 	return m, nil
 }
 
-func (c *validatorServiceClient) ValidatorRegistration(ctx context.Context, in *ValidatorRegistrationMessage, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorRegistration(ctx context.Context, in *ValidatorRegistration, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorRegistration_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -260,6 +264,24 @@ func (c *validatorServiceClient) ValidatorExpenseRatio(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorNFT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorContractUpdate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -267,7 +289,7 @@ type ValidatorServiceServer interface {
 	StreamBroadcast(ValidatorService_StreamBroadcastServer) error
 	Broadcast(context.Context, *Block) (*emptypb.Empty, error)
 	SyncBlockchain(*BlockSync, ValidatorService_SyncBlockchainServer) error
-	ValidatorRegistration(context.Context, *ValidatorRegistrationMessage) (*emptypb.Empty, error)
+	ValidatorRegistration(context.Context, *ValidatorRegistration) (*emptypb.Empty, error)
 	SyncValidatorList(context.Context, *ValidatorSyncRequest) (*ValidatorSync, error)
 	ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error)
 	ValidatorMint(context.Context, *MintTXN) (*emptypb.Empty, error)
@@ -280,6 +302,8 @@ type ValidatorServiceServer interface {
 	ValidatorCurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error)
 	ValidatorAuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
 	ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
+	ValidatorNFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
+	ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -296,7 +320,7 @@ func (UnimplementedValidatorServiceServer) Broadcast(context.Context, *Block) (*
 func (UnimplementedValidatorServiceServer) SyncBlockchain(*BlockSync, ValidatorService_SyncBlockchainServer) error {
 	return status.Errorf(codes.Unimplemented, "method SyncBlockchain not implemented")
 }
-func (UnimplementedValidatorServiceServer) ValidatorRegistration(context.Context, *ValidatorRegistrationMessage) (*emptypb.Empty, error) {
+func (UnimplementedValidatorServiceServer) ValidatorRegistration(context.Context, *ValidatorRegistration) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorRegistration not implemented")
 }
 func (UnimplementedValidatorServiceServer) SyncValidatorList(context.Context, *ValidatorSyncRequest) (*ValidatorSync, error) {
@@ -334,6 +358,12 @@ func (UnimplementedValidatorServiceServer) ValidatorAuthCurrencyEquiv(context.Co
 }
 func (UnimplementedValidatorServiceServer) ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorExpenseRatio not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorNFT(context.Context, *NFTTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorNFT not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorContractUpdate not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -414,7 +444,7 @@ func (x *validatorServiceSyncBlockchainServer) Send(m *DataChunk) error {
 }
 
 func _ValidatorService_ValidatorRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidatorRegistrationMessage)
+	in := new(ValidatorRegistration)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -426,7 +456,7 @@ func _ValidatorService_ValidatorRegistration_Handler(srv interface{}, ctx contex
 		FullMethod: ValidatorService_ValidatorRegistration_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorRegistration(ctx, req.(*ValidatorRegistrationMessage))
+		return srv.(ValidatorServiceServer).ValidatorRegistration(ctx, req.(*ValidatorRegistration))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -647,6 +677,42 @@ func _ValidatorService_ValidatorExpenseRatio_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorNFT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NFTTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorNFT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorNFT_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorNFT(ctx, req.(*NFTTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_ValidatorContractUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ContractUpdateTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorContractUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorContractUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorContractUpdate(ctx, req.(*ContractUpdateTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -709,6 +775,14 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorExpenseRatio",
 			Handler:    _ValidatorService_ValidatorExpenseRatio_Handler,
+		},
+		{
+			MethodName: "ValidatorNFT",
+			Handler:    _ValidatorService_ValidatorNFT_Handler,
+		},
+		{
+			MethodName: "ValidatorContractUpdate",
+			Handler:    _ValidatorService_ValidatorContractUpdate_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

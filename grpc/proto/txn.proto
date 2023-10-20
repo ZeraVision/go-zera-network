@@ -21,6 +21,8 @@ service TXNService{
     rpc CurrencyEquiv(SelfCurrencyEquiv) returns (google.protobuf.Empty);
     rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
     rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty);
+    rpc NFT(NFTTXN) returns (google.protobuf.Empty);
+    rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -38,6 +40,8 @@ enum TXN_STATUS{
     INVALID_CONTRACT_FEE_ID = 11;
     INVALID_UINT256 = 12;
     EXCEEDED_MAX_SUPPLY = 13;
+    INVALID_NFT = 14;
+    NFT_OWNERSHIP = 15;
 }
 
 //ENUMS
@@ -128,7 +132,6 @@ message PreMintWallet{
     bytes address = 16;
     string amount = 17;
 }
-
 message Transfer{
     bytes recipient_address = 27;
     string amount = 28;
@@ -174,7 +177,12 @@ message MintTXN{
     string amount = 40;
     bytes recipient_address = 41;
 }
-
+message NFTTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string item_id = 3;
+    bytes recipient_address = 4; 
+}
 message ItemizedMintTXN{
     BaseTXN base = 1;
     string contract_id = 43;
@@ -183,7 +191,18 @@ message ItemizedMintTXN{
     optional string voting_weight = 46;
     repeated KeyValuePair parameters = 47; 
 }
-
+message ContractUpdateTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    uint64 contract_version = 3;
+    optional string name = 4;
+    optional Governance governance = 5;
+    repeated RestrictedKey restricted_keys = 6;
+    optional SoulBound soul_bound = 7;
+    optional ContractFees contract_fees = 8;
+    repeated KeyValuePair custom_parameters = 9; 
+    repeated ExpenseRatio expense_ratio = 10;
+}
 message InstrumentContract{
     BaseTXN base = 1; 
     uint64 contract_version = 2;
@@ -192,15 +211,14 @@ message InstrumentContract{
     optional Governance governance = 5;
     repeated RestrictedKey restricted_keys = 6;
     optional SoulBound soul_bound = 7;
-    bool is_itemized = 8;
-    optional string max_supply = 9;
-    optional ContractFees contract_fees = 10;
-    repeated PreMintWallet premint_wallets = 11;
-    optional CoinDenomination coin_denomination = 12;
-    repeated KeyValuePair custom_parameters = 13; 
-    string contract_id = 14; 
-    repeated ExpenseRatio expense_ratio = 15;
-    CONTRACT_TYPE type = 16;
+    optional string max_supply = 8;
+    optional ContractFees contract_fees = 9;
+    repeated PreMintWallet premint_wallets = 10;
+    optional CoinDenomination coin_denomination = 11;
+    repeated KeyValuePair custom_parameters = 12; 
+    string contract_id = 13; 
+    repeated ExpenseRatio expense_ratio = 14;
+    CONTRACT_TYPE type = 15;
 }
 message GovernanceVote{
     BaseTXN base = 1;
@@ -225,6 +243,20 @@ message SmartContractExecuteTXN{
     bytes smart_contract_id = 2;
     repeated SmartContractParameter parameters = 3;
 }
+message Validator{
+    bytes public_key = 1;
+    string host = 2;
+    bytes client_port = 3; 
+    bytes validator_port = 4; 
+    uint64 benchmark = 5;
+    google.protobuf.Timestamp timestamp = 6;
+    bool lite = 7;
+}
+message ValidatorRegistration{
+    BaseTXN base = 1;
+    Validator validator = 2;
+    bool register = 3;
+}
 message SmartContractParameter{
     uint32 index = 75;
     VARIABLE_TYPE type = 76;
@@ -244,6 +276,9 @@ message TXNS{
     repeated ExpenseRatioTXN expense_ratios = 11;
     repeated TXNStatusFees txn_fees_and_status = 12;
     repeated TokenFees token_fees = 13;
+    repeated NFTTXN nft_txns = 14;
+    repeated ContractUpdateTXN contract_update_txns = 15;
+    repeated ValidatorRegistration validator_registration_txns = 16;
 }
 message Token{
     string contract_id = 1;
@@ -277,5 +312,8 @@ message TXNWrapper{
         SelfCurrencyEquiv self_cur_equivs = 9;
         AuthorizedCurrencyEquiv auth_cur_equivs = 10;
         ExpenseRatioTXN expense_ratios = 11;
+        NFTTXN nft_txn = 12;
+        ContractUpdateTXN contract_update_txn = 13;
+        ValidatorRegistration validator_registration_txn = 14;
     }
 }

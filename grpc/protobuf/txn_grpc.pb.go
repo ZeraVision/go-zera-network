@@ -31,6 +31,8 @@ const (
 	TXNService_CurrencyEquiv_FullMethodName        = "/zera_txn.TXNService/CurrencyEquiv"
 	TXNService_AuthCurrencyEquiv_FullMethodName    = "/zera_txn.TXNService/AuthCurrencyEquiv"
 	TXNService_ExpenseRatio_FullMethodName         = "/zera_txn.TXNService/ExpenseRatio"
+	TXNService_NFT_FullMethodName                  = "/zera_txn.TXNService/NFT"
+	TXNService_ContractUpdate_FullMethodName       = "/zera_txn.TXNService/ContractUpdate"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -48,6 +50,8 @@ type TXNServiceClient interface {
 	CurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type tXNServiceClient struct {
@@ -157,6 +161,24 @@ func (c *tXNServiceClient) ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN
 	return out, nil
 }
 
+func (c *tXNServiceClient) NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_NFT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tXNServiceClient) ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_ContractUpdate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXNServiceServer is the server API for TXNService service.
 // All implementations must embed UnimplementedTXNServiceServer
 // for forward compatibility
@@ -172,6 +194,8 @@ type TXNServiceServer interface {
 	CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error)
 	AuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
 	ExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
+	NFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
+	ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
 
@@ -211,6 +235,12 @@ func (UnimplementedTXNServiceServer) AuthCurrencyEquiv(context.Context, *Authori
 }
 func (UnimplementedTXNServiceServer) ExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExpenseRatio not implemented")
+}
+func (UnimplementedTXNServiceServer) NFT(context.Context, *NFTTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NFT not implemented")
+}
+func (UnimplementedTXNServiceServer) ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ContractUpdate not implemented")
 }
 func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
 
@@ -423,6 +453,42 @@ func _TXNService_ExpenseRatio_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXNService_NFT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NFTTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).NFT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_NFT_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).NFT(ctx, req.(*NFTTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TXNService_ContractUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ContractUpdateTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).ContractUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_ContractUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).ContractUpdate(ctx, req.(*ContractUpdateTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -473,6 +539,14 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ExpenseRatio",
 			Handler:    _TXNService_ExpenseRatio_Handler,
+		},
+		{
+			MethodName: "NFT",
+			Handler:    _TXNService_NFT_Handler,
+		},
+		{
+			MethodName: "ContractUpdate",
+			Handler:    _TXNService_ContractUpdate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

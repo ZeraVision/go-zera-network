@@ -15,11 +15,11 @@ In the event `go get` returns a 404 error:
 2. Temporarily adjust the environment variable to include the repository URL by setting `GOPRIVATE` to `github.com/ZeraVision/go-zera-network`.
    #### Powershell
    ```powershell
-   $env:GOPRIVATE="github.com/ZeraVision/go-zera-network"
+   $env:GOPRIVATE="github.com/*"
    ```
    #### ZSH Bash
    ```bash
-   export GOPRIVATE=github.com/ZeraVision/go-zera-network
+   export GOPRIVATE=github.com/*
    ```
 
 # Development

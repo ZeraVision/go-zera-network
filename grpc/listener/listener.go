@@ -18,7 +18,7 @@ import (
 // Define handler functions for each gRPC method.
 type BroadcastHandler func(ctx context.Context, block *zera_pb.Block) (*emptypb.Empty, error)
 type SyncBlockchainHandler func(ctx context.Context, blockSync *zera_pb.BlockSync) (*zera_pb.BlockBatch, error)
-type ValidatorRegistrationHandler func(ctx context.Context, message *zera_pb.ValidatorRegistrationMessage) (*emptypb.Empty, error)
+type ValidatorRegistrationHandler func(ctx context.Context, message *zera_pb.ValidatorRegistration) (*emptypb.Empty, error)
 type SyncValidatorListHandler func(ctx context.Context, request *zera_pb.ValidatorSyncRequest) (*zera_pb.ValidatorSync, error)
 type ValidatorCoinHandler func(ctx context.Context, txn *zera_pb.CoinTXN) (*emptypb.Empty, error)
 type ValidatorMintHandler func(ctx context.Context, txn *zera_pb.MintTXN) (*emptypb.Empty, error)
@@ -129,7 +129,7 @@ func (c *ValidatorService) StreamBroadcast(stream zera_pb.ValidatorService_Strea
 // // 	return c.HandleSyncBlockchain(ctx, in)
 // // }
 
-func (c *ValidatorService) ValidatorRegistration(ctx context.Context, in *zera_pb.ValidatorRegistrationMessage) (*emptypb.Empty, error) {
+func (c *ValidatorService) ValidatorRegistration(ctx context.Context, in *zera_pb.ValidatorRegistration) (*emptypb.Empty, error) {
 	if c.HandleValidatorRegistration == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}

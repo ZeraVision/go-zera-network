@@ -712,8 +712,8 @@ var file_validator_proto_rawDesc = []byte{
 	0x49, 0x64, 0x12, 0x28, 0x0a, 0x0d, 0x76, 0x6f, 0x74, 0x69, 0x6e, 0x67, 0x5f, 0x77, 0x65, 0x69,
 	0x67, 0x68, 0x74, 0x18, 0x2e, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x0c, 0x76, 0x6f, 0x74,
 	0x69, 0x6e, 0x67, 0x57, 0x65, 0x69, 0x67, 0x68, 0x74, 0x88, 0x01, 0x01, 0x42, 0x10, 0x0a, 0x0e,
-	0x5f, 0x76, 0x6f, 0x74, 0x69, 0x6e, 0x67, 0x5f, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x32, 0xd9,
-	0x0a, 0x0a, 0x10, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x53, 0x65, 0x72, 0x76,
+	0x5f, 0x76, 0x6f, 0x74, 0x69, 0x6e, 0x67, 0x5f, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x32, 0xa5,
+	0x0b, 0x0a, 0x10, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x53, 0x65, 0x72, 0x76,
 	0x69, 0x63, 0x65, 0x12, 0x46, 0x0a, 0x0f, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x42, 0x72, 0x6f,
 	0x61, 0x64, 0x63, 0x61, 0x73, 0x74, 0x12, 0x19, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x76, 0x61,
 	0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x2e, 0x44, 0x61, 0x74, 0x61, 0x43, 0x68, 0x75, 0x6e,
@@ -798,9 +798,14 @@ var file_validator_proto_rawDesc = []byte{
 	0x70, 0x64, 0x61, 0x74, 0x65, 0x12, 0x1b, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e,
 	0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54,
 	0x58, 0x4e, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x13, 0x48, 0x01, 0x5a, 0x0f,
-	0x2e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x4a, 0x0a, 0x12, 0x56, 0x61,
+	0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74,
+	0x12, 0x1c, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x56, 0x61, 0x6c, 0x69,
+	0x64, 0x61, 0x74, 0x6f, 0x72, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x1a, 0x16,
+	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
+	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x13, 0x48, 0x01, 0x5a, 0x0f, 0x2e, 0x2f, 0x67, 0x72,
+	0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -842,7 +847,8 @@ var file_validator_proto_goTypes = []interface{}{
 	(*ExpenseRatioTXN)(nil),         // 22: zera_txn.ExpenseRatioTXN
 	(*NFTTXN)(nil),                  // 23: zera_txn.NFTTXN
 	(*ContractUpdateTXN)(nil),       // 24: zera_txn.ContractUpdateTXN
-	(*emptypb.Empty)(nil),           // 25: google.protobuf.Empty
+	(*ValidatorHeartbeat)(nil),      // 25: zera_txn.ValidatorHeartbeat
+	(*emptypb.Empty)(nil),           // 26: google.protobuf.Empty
 }
 var file_validator_proto_depIdxs = []int32{
 	8,  // 0: zera_validator.ValidatorSync.validators:type_name -> zera_txn.Validator
@@ -868,26 +874,28 @@ var file_validator_proto_depIdxs = []int32{
 	22, // 20: zera_validator.ValidatorService.ValidatorExpenseRatio:input_type -> zera_txn.ExpenseRatioTXN
 	23, // 21: zera_validator.ValidatorService.ValidatorNFT:input_type -> zera_txn.NFTTXN
 	24, // 22: zera_validator.ValidatorService.ValidatorContractUpdate:input_type -> zera_txn.ContractUpdateTXN
-	25, // 23: zera_validator.ValidatorService.StreamBroadcast:output_type -> google.protobuf.Empty
-	25, // 24: zera_validator.ValidatorService.Broadcast:output_type -> google.protobuf.Empty
-	0,  // 25: zera_validator.ValidatorService.SyncBlockchain:output_type -> zera_validator.DataChunk
-	25, // 26: zera_validator.ValidatorService.ValidatorRegistration:output_type -> google.protobuf.Empty
-	2,  // 27: zera_validator.ValidatorService.SyncValidatorList:output_type -> zera_validator.ValidatorSync
-	25, // 28: zera_validator.ValidatorService.ValidatorCoin:output_type -> google.protobuf.Empty
-	25, // 29: zera_validator.ValidatorService.ValidatorMint:output_type -> google.protobuf.Empty
-	25, // 30: zera_validator.ValidatorService.ValidatorItemMint:output_type -> google.protobuf.Empty
-	25, // 31: zera_validator.ValidatorService.ValidatorContract:output_type -> google.protobuf.Empty
-	25, // 32: zera_validator.ValidatorService.ValidatorGovernProposal:output_type -> google.protobuf.Empty
-	25, // 33: zera_validator.ValidatorService.ValidatorGovernVote:output_type -> google.protobuf.Empty
-	25, // 34: zera_validator.ValidatorService.ValidatorSmartContract:output_type -> google.protobuf.Empty
-	25, // 35: zera_validator.ValidatorService.ValidatorSmartContractExecute:output_type -> google.protobuf.Empty
-	25, // 36: zera_validator.ValidatorService.ValidatorCurrencyEquiv:output_type -> google.protobuf.Empty
-	25, // 37: zera_validator.ValidatorService.ValidatorAuthCurrencyEquiv:output_type -> google.protobuf.Empty
-	25, // 38: zera_validator.ValidatorService.ValidatorExpenseRatio:output_type -> google.protobuf.Empty
-	25, // 39: zera_validator.ValidatorService.ValidatorNFT:output_type -> google.protobuf.Empty
-	25, // 40: zera_validator.ValidatorService.ValidatorContractUpdate:output_type -> google.protobuf.Empty
-	23, // [23:41] is the sub-list for method output_type
-	5,  // [5:23] is the sub-list for method input_type
+	25, // 23: zera_validator.ValidatorService.ValidatorHeartbeat:input_type -> zera_txn.ValidatorHeartbeat
+	26, // 24: zera_validator.ValidatorService.StreamBroadcast:output_type -> google.protobuf.Empty
+	26, // 25: zera_validator.ValidatorService.Broadcast:output_type -> google.protobuf.Empty
+	0,  // 26: zera_validator.ValidatorService.SyncBlockchain:output_type -> zera_validator.DataChunk
+	26, // 27: zera_validator.ValidatorService.ValidatorRegistration:output_type -> google.protobuf.Empty
+	2,  // 28: zera_validator.ValidatorService.SyncValidatorList:output_type -> zera_validator.ValidatorSync
+	26, // 29: zera_validator.ValidatorService.ValidatorCoin:output_type -> google.protobuf.Empty
+	26, // 30: zera_validator.ValidatorService.ValidatorMint:output_type -> google.protobuf.Empty
+	26, // 31: zera_validator.ValidatorService.ValidatorItemMint:output_type -> google.protobuf.Empty
+	26, // 32: zera_validator.ValidatorService.ValidatorContract:output_type -> google.protobuf.Empty
+	26, // 33: zera_validator.ValidatorService.ValidatorGovernProposal:output_type -> google.protobuf.Empty
+	26, // 34: zera_validator.ValidatorService.ValidatorGovernVote:output_type -> google.protobuf.Empty
+	26, // 35: zera_validator.ValidatorService.ValidatorSmartContract:output_type -> google.protobuf.Empty
+	26, // 36: zera_validator.ValidatorService.ValidatorSmartContractExecute:output_type -> google.protobuf.Empty
+	26, // 37: zera_validator.ValidatorService.ValidatorCurrencyEquiv:output_type -> google.protobuf.Empty
+	26, // 38: zera_validator.ValidatorService.ValidatorAuthCurrencyEquiv:output_type -> google.protobuf.Empty
+	26, // 39: zera_validator.ValidatorService.ValidatorExpenseRatio:output_type -> google.protobuf.Empty
+	26, // 40: zera_validator.ValidatorService.ValidatorNFT:output_type -> google.protobuf.Empty
+	26, // 41: zera_validator.ValidatorService.ValidatorContractUpdate:output_type -> google.protobuf.Empty
+	26, // 42: zera_validator.ValidatorService.ValidatorHeartbeat:output_type -> google.protobuf.Empty
+	24, // [24:43] is the sub-list for method output_type
+	5,  // [5:24] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name

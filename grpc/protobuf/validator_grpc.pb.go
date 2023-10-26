@@ -38,6 +38,7 @@ const (
 	ValidatorService_ValidatorExpenseRatio_FullMethodName         = "/zera_validator.ValidatorService/ValidatorExpenseRatio"
 	ValidatorService_ValidatorNFT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorNFT"
 	ValidatorService_ValidatorContractUpdate_FullMethodName       = "/zera_validator.ValidatorService/ValidatorContractUpdate"
+	ValidatorService_ValidatorHeartbeat_FullMethodName            = "/zera_validator.ValidatorService/ValidatorHeartbeat"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -62,6 +63,7 @@ type ValidatorServiceClient interface {
 	ValidatorExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -282,6 +284,15 @@ func (c *validatorServiceClient) ValidatorContractUpdate(ctx context.Context, in
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorHeartbeat_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -304,6 +315,7 @@ type ValidatorServiceServer interface {
 	ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
 	ValidatorNFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
 	ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
+	ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -364,6 +376,9 @@ func (UnimplementedValidatorServiceServer) ValidatorNFT(context.Context, *NFTTXN
 }
 func (UnimplementedValidatorServiceServer) ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorContractUpdate not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorHeartbeat not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -713,6 +728,24 @@ func _ValidatorService_ValidatorContractUpdate_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidatorHeartbeat)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorHeartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorHeartbeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorHeartbeat(ctx, req.(*ValidatorHeartbeat))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -783,6 +816,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorContractUpdate",
 			Handler:    _ValidatorService_ValidatorContractUpdate_Handler,
+		},
+		{
+			MethodName: "ValidatorHeartbeat",
+			Handler:    _ValidatorService_ValidatorHeartbeat_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

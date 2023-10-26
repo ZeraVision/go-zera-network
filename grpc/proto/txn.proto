@@ -42,6 +42,7 @@ enum TXN_STATUS{
     EXCEEDED_MAX_SUPPLY = 13;
     INVALID_NFT = 14;
     NFT_OWNERSHIP = 15;
+    VALIDATOR_ADDRESS = 16;
 }
 
 //ENUMS
@@ -70,13 +71,13 @@ enum GOVERNANCE_TYPE{
     STAGED = 0;
     CYCLE = 1;
     STAGGERED = 2;
+    ADAPTIVE = 3;
 }
 enum CONTRACT_TYPE{
     TOKEN = 0;
     NFT = 1;
     SBT = 2;
 }
-
 //trade in for maps
 message ExpenseRatio{
     string date = 1;
@@ -87,12 +88,14 @@ message KeyValuePair{
     string value = 2;
 }
 
-
 message Governance{
     GOVERNANCE_TYPE type = 1;
     uint32 regular_quorum = 2;
     uint32 fast_quorum = 3;
-    string voting_instrument = 4;
+    repeated string voting_instrument = 4;
+    uint32 threshold = 5;    // threshold of participation of holders needed to be accepted
+    bool chicken_dinner = 6; // winner not over threshold
+    bool allow_multi = 7;    // allow multipl
 }
 message CoinDenomination{
     string denomination_name = 5;
@@ -223,7 +226,8 @@ message InstrumentContract{
 message GovernanceVote{
     BaseTXN base = 1;
     string contract_id = 2;
-    bool support = 3;
+    optional bool support = 3;
+
 }
 message GovernanceProposal{
     BaseTXN base = 1;
@@ -231,6 +235,8 @@ message GovernanceProposal{
     string title = 3;
     string synopsis = 4;
     string body = 5;
+    repeated string options = 6;
+    optional uint64 adaptive_time = 7;
 }
 message SmartContractTXN{
     BaseTXN base = 1;
@@ -251,11 +257,16 @@ message Validator{
     uint64 benchmark = 5;
     google.protobuf.Timestamp timestamp = 6;
     bool lite = 7;
+    bool online = 8;
 }
 message ValidatorRegistration{
     BaseTXN base = 1;
     Validator validator = 2;
     bool register = 3;
+}
+message ValidatorHeartbeat{
+    BaseTXN base = 1;
+    bool online = 2;
 }
 message SmartContractParameter{
     uint32 index = 75;
@@ -279,6 +290,7 @@ message TXNS{
     repeated NFTTXN nft_txns = 14;
     repeated ContractUpdateTXN contract_update_txns = 15;
     repeated ValidatorRegistration validator_registration_txns = 16;
+    repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
 }
 message Token{
     string contract_id = 1;
@@ -315,5 +327,6 @@ message TXNWrapper{
         NFTTXN nft_txn = 12;
         ContractUpdateTXN contract_update_txn = 13;
         ValidatorRegistration validator_registration_txn = 14;
+        ValidatorHeartbeat validator_heartbeat_txn = 15;
     }
 }

@@ -29,6 +29,7 @@ service ValidatorService{
     rpc ValidatorExpenseRatio(zera_txn.ExpenseRatioTXN) returns (google.protobuf.Empty);
     rpc ValidatorNFT(zera_txn.NFTTXN) returns (google.protobuf.Empty);
     rpc ValidatorContractUpdate(zera_txn.ContractUpdateTXN) returns (google.protobuf.Empty);
+    rpc ValidatorHeartbeat(zera_txn.ValidatorHeartbeat) returns (google.protobuf.Empty);
 }
 
 message DataChunk{

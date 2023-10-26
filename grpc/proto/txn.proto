@@ -111,6 +111,7 @@ message ContractFees{
     string validator = 11;
     repeated string allowed_fee_instrument = 12;
     CONTRACT_FEE_TYPE contract_fee_type = 13;
+    repeated string allowed_proposal_instrument = 14;
 }
 message RestrictedKey{
     bytes public_key = 1;
@@ -222,6 +223,7 @@ message InstrumentContract{
     string contract_id = 13; 
     repeated ExpenseRatio expense_ratio = 14;
     CONTRACT_TYPE type = 15;
+    bool update_contract = 16;
 }
 message GovernanceVote{
     BaseTXN base = 1;

@@ -53,6 +53,11 @@ enum LANGUAGE{
     JAVASCRIPT = 3;
 }
 
+enum PROPOSAL_PERIOD{
+    DAYS = 0;
+    MONTHS = 1;
+}
+
 enum VARIABLE_TYPE{
     INT = 0;
     SHORT = 1;
@@ -68,10 +73,10 @@ enum CONTRACT_FEE_TYPE{
     PERCENTAGE= 2;
 }
 enum GOVERNANCE_TYPE{
-    STAGED = 0;
-    CYCLE = 1;
-    STAGGERED = 2;
-    ADAPTIVE = 3;
+    STAGED = 0;    //Multiple stages of governance, must pass regular quorum to get to next stage. Up to 99 stages specified by contract creator (in days)
+    CYCLE = 1;     //1 specified voting stage based on days repeat this process once the cycle is complete (in days)
+    STAGGERED = 2; //Every proposal has the same voting period length and starts when proposal is made (in days)
+    ADAPTIVE = 3;  //Every proposal has its own specified voting period (in days)
 }
 enum CONTRACT_TYPE{
     TOKEN = 0;
@@ -87,15 +92,21 @@ message KeyValuePair{
     string key = 1;
     string value = 2;
 }
-
+message STAGED_VOTING{
+    PROPOSAL_PERIOD proposal_period = 1; // Is the total_period in months or days? months will start then cycle on the 1st of a month, days will start it on any day.
+    uint32 total_period = 2;             // length of entire cycle based on proposal period
+    repeated uint32 stage_length = 3;    // this determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
+}
 message Governance{
-    GOVERNANCE_TYPE type = 1;
-    uint32 regular_quorum = 2;
-    uint32 fast_quorum = 3;
-    repeated string voting_instrument = 4;
-    uint32 threshold = 5;    // threshold of participation of holders needed to be accepted
-    bool chicken_dinner = 6; // winner not over threshold
-    bool allow_multi = 7;    // allow multipl
+    GOVERNANCE_TYPE type = 1;         //read GOVERNANCE_TYPE above
+    uint32 regular_quorum = 2;        // % of yes votes to pass at the end of cycle (still needs to pass threshhold)
+    uint32 fast_quorum = 3;           // % of yes votes to instantly pass (% is based off max supply)
+    repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
+    uint32 threshold = 5;             // threshold of participation of holders needed to be accepted
+    bool chicken_dinner = 6;          // winner not over threshold
+    bool allow_multi = 7;             // allow multiple choice proposals
+    optional STAGED_VOTING staged_voting = 8; // To set up the stages of a cycle if the governance type is staged (has to be present if type is stage) | (cannot be present if not staged) 
+    optional uint32 voting_period = 9;// this option is for staggered and cycle both will represent how many days the voting period is (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
 }
 message CoinDenomination{
     string denomination_name = 5;

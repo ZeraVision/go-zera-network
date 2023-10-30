@@ -188,24 +188,27 @@ message CoinTXN{
 }
 message MintTXN{
     BaseTXN base = 1;
-    string contract_id = 39;
-    string amount = 40;
-    bytes recipient_address = 41;
+    string contract_id = 2;
+    string amount = 3;
+    bytes recipient_address = 4;
 }
 message NFTTXN{
     BaseTXN base = 1;
     string contract_id = 2;
     string item_id = 3;
     bytes recipient_address = 4; 
+    optional string contract_fee_amount = 5;
+    optional string contract_fee_id = 6;
 }
 message ItemizedMintTXN{
     BaseTXN base = 1;
-    string contract_id = 43;
-    string item_id = 44;
-    bytes recipient_address = 45; 
-    optional string voting_weight = 46;
-    repeated KeyValuePair parameters = 47; 
-    optional uint64 expiry = 48; 
+    string contract_id = 2;
+    string item_id = 3;
+    bytes recipient_address = 4; 
+    optional string voting_weight = 5;
+    repeated KeyValuePair parameters = 6; 
+    optional uint64 expiry = 7; 
+    optional string contract_fee_amount = 8;
 }
 message ContractUpdateTXN{
     BaseTXN base = 1;

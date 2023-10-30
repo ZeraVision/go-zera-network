@@ -208,7 +208,7 @@ message ItemizedMintTXN{
     optional string voting_weight = 5;
     repeated KeyValuePair parameters = 6; 
     optional uint64 expiry = 7; 
-    optional string contract_fee_amount = 8;
+    optional ContractFees contract_fees = 8;
 }
 message ContractUpdateTXN{
     BaseTXN base = 1;

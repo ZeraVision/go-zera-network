@@ -107,6 +107,7 @@ message Governance{
     bool allow_multi = 7;             // allow multiple choice proposals
     optional STAGED_VOTING staged_voting = 8; // To set up the stages of a cycle if the governance type is staged (has to be present if type is stage) | (cannot be present if not staged) 
     optional uint32 voting_period = 9;// this option is for staggered and cycle both will represent how many days the voting period is (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
+    repeated string allowed_proposal_instrument = 10;
 }
 message CoinDenomination{
     string denomination_name = 5;
@@ -116,13 +117,19 @@ message SoulBound{
     repeated bytes revoke_keys = 7;
 }
 message ContractFees{
-    string fee = 8;
-    optional bytes fee_address = 9;
-    string burn = 10;
-    string validator = 11;
-    repeated string allowed_fee_instrument = 12;
-    CONTRACT_FEE_TYPE contract_fee_type = 13;
-    repeated string allowed_proposal_instrument = 14;
+    string fee = 1;
+    optional bytes fee_address = 2;
+    string burn = 3;
+    string validator = 4;
+    repeated string allowed_fee_instrument = 5;
+    CONTRACT_FEE_TYPE contract_fee_type = 6;
+}
+message ItemContractFees{
+    string fee = 1;
+    optional bytes fee_address = 2;
+    string burn = 3;
+    string validator = 4;
+    repeated string allowed_fee_instrument = 5;
 }
 message RestrictedKey{
     bytes public_key = 1;
@@ -188,9 +195,9 @@ message CoinTXN{
 }
 message MintTXN{
     BaseTXN base = 1;
-    string contract_id = 2;
-    string amount = 3;
-    bytes recipient_address = 4;
+    string contract_id = 39;
+    string amount = 40;
+    bytes recipient_address = 41;
 }
 message NFTTXN{
     BaseTXN base = 1;

@@ -246,6 +246,7 @@ message InstrumentContract{
     repeated ExpenseRatio expense_ratio = 14;
     CONTRACT_TYPE type = 15;
     bool update_contract_fees = 16;
+    bool update_expense_ratio = 17;
 }
 message GovernanceVote{
     BaseTXN base = 1;

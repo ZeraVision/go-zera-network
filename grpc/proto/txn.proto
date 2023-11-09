@@ -43,6 +43,8 @@ enum TXN_STATUS{
     INVALID_NFT = 14;
     NFT_OWNERSHIP = 15;
     VALIDATOR_ADDRESS = 16;
+    CONTRACT_HAS_NO_GOVERNANCE = 17;
+    INVALID_BASE_FEE_ID = 18;
 }
 
 //ENUMS
@@ -104,14 +106,15 @@ message Governance{
     repeated string allowed_proposal_instrument = 9;
     PROPOSAL_PERIOD proposal_period = 10; // Is the total_period in months or days? months will start then cycle on the 1st of a month, days will start it on any day.
     repeated uint32 stage_length = 11;    // this determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
+    optional uint32 start_date = 12;      // this determines what day of the month a cycle starts 1-28 (only used)
+    optional uint32 start_time = 13;      // this determines what hour of the day a cycle starts 0-23
+    repeated uint32 stage_lengths = 14;   // the length of each stage in a staged type governance
 }
 message CoinDenomination{
     string denomination_name = 5;
     string amount = 6;
 }
-message SoulBound{
-    repeated bytes revoke_keys = 7;
-}
+
 message ContractFees{
     string fee = 1;
     optional bytes fee_address = 2;
@@ -212,6 +215,7 @@ message ItemizedMintTXN{
     repeated KeyValuePair parameters = 6; 
     optional uint64 expiry = 7; 
     optional ItemContractFees contract_fees = 8;
+    optional uint64 start = 9;
 }
 message ContractUpdateTXN{
     BaseTXN base = 1;
@@ -220,10 +224,9 @@ message ContractUpdateTXN{
     optional string name = 4;
     optional Governance governance = 5;
     repeated RestrictedKey restricted_keys = 6;
-    optional SoulBound soul_bound = 7;
-    optional ContractFees contract_fees = 8;
-    repeated KeyValuePair custom_parameters = 9; 
-    repeated ExpenseRatio expense_ratio = 10;
+    optional ContractFees contract_fees = 7;
+    repeated KeyValuePair custom_parameters = 8; 
+    repeated ExpenseRatio expense_ratio = 9;
 }
 message InstrumentContract{
     BaseTXN base = 1; 
@@ -232,23 +235,23 @@ message InstrumentContract{
     string name = 4;
     optional Governance governance = 5;
     repeated RestrictedKey restricted_keys = 6;
-    optional SoulBound soul_bound = 7;
-    optional string max_supply = 8;
-    optional ContractFees contract_fees = 9;
-    repeated PreMintWallet premint_wallets = 10;
-    optional CoinDenomination coin_denomination = 11;
-    repeated KeyValuePair custom_parameters = 12; 
-    string contract_id = 13; 
-    repeated ExpenseRatio expense_ratio = 14;
-    CONTRACT_TYPE type = 15;
-    bool update_contract_fees = 16;
-    bool update_expense_ratio = 17;
+    optional string max_supply = 7;
+    optional ContractFees contract_fees = 8;
+    repeated PreMintWallet premint_wallets = 9;
+    optional CoinDenomination coin_denomination = 10;
+    repeated KeyValuePair custom_parameters = 11; 
+    string contract_id = 12; 
+    repeated ExpenseRatio expense_ratio = 13;
+    CONTRACT_TYPE type = 14;
+    bool update_contract_fees = 15;
+    bool update_expense_ratio = 16;
 }
 message GovernanceVote{
     BaseTXN base = 1;
     string contract_id = 2;
-    optional bool support = 3;
-
+    string proposal_id = 3;
+    bool support = 4;
+    optional uint32 support_option = 5;
 }
 message GovernanceProposal{
     BaseTXN base = 1;

@@ -215,7 +215,7 @@ message ItemizedMintTXN{
     repeated KeyValuePair parameters = 6; 
     optional uint64 expiry = 7; 
     optional ItemContractFees contract_fees = 8;
-    optional uint64 start = 9;
+    optional uint64 valid_from = 9;
 }
 message ContractUpdateTXN{
     BaseTXN base = 1;

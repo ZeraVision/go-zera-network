@@ -86,10 +86,6 @@ message NFT{
     optional zera_txn.ItemContractFees contract_fees = 5;
 }
 
-message ProposalDetails{
-    bytes proposal_ids = 1;
-    uint32 stage = 2;
-}
 message ProcessLedger{
     repeated bytes cycle_contract_ids = 1;
     repeated bytes proposal_ids = 2;
@@ -101,14 +97,20 @@ message ProposalLedger{
     repeated bytes proposal_ids = 1;
     repeated bytes pending_proposal_ids = 2;
 }
-
+message Vote{
+    string contract_id = 1;
+    string amount = 2;
+}
 message Proposal{
     string contract_id = 1;
-    zera_txn.GOVERNANCE_TYPE governance_type = 2;
-    string yes_votes = 4;
-    string no_votes = 5;
-    repeated string option_votes = 6;
-    uint32 stage = 7;
+    optional Vote yes = 4;
+    optional Vote no = 5;
+    map<int32, Vote> options = 6;
+    uint32 options_size = 7;
+    uint32 stage = 8;
+    string fee = 9;
+    string fee_id = 10;
+    bytes wallet = 11;
 }
 message ProposalResult{
     zera_txn.BaseTXN base = 1;
@@ -135,10 +137,10 @@ message ProposalWalletSend{
     repeated string amounts = 5;
 }
 
-message ProposalVotes{
-    string contract_id = 1;
-    uint32 stage = 2;
-    string yes = 3;
-    string no = 4;
-    repeated string options = 5;
-}
+// message ProposalVotes{
+//     string contract_id = 1;
+//     uint32 stage = 2;
+//     string yes = 3;
+//     string no = 4;
+//     repeated string options = 5;
+// }

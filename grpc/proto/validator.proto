@@ -98,7 +98,8 @@ message ProcessLedger{
 //used to process cycle/staged governance
 // Key = contract_id
 message ProposalLedger{
-    repeated ProposalDetails proposals = 1;
+    repeated bytes proposal_ids = 1;
+    repeated bytes pending_proposal_ids = 2;
 }
 
 message Proposal{

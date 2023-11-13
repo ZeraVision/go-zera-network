@@ -108,7 +108,6 @@ message Governance{
     repeated uint32 stage_length = 11;    // this determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
     optional uint32 start_date = 12;      // this determines what day of the month a cycle starts 1-28 (only used)
     optional uint32 start_time = 13;      // this determines what hour of the day a cycle starts 0-23
-    repeated uint32 stage_lengths = 14;   // the length of each stage in a staged type governance
 }
 message CoinDenomination{
     string denomination_name = 5;
@@ -297,6 +296,16 @@ message SmartContractParameter{
     VARIABLE_TYPE type = 76;
     optional string value = 77;
 }
+message ProposalResult{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    bytes proposal_id = 3;
+    optional string yes_votes = 4;
+    optional string no_votes = 5;
+    repeated string option_votes = 6;
+    bool passed = 7;
+    bool final_stage = 8;
+}
 message TXNS{
     repeated CoinTXN coin_txns = 1;
     repeated MintTXN mint_txns = 2;
@@ -315,7 +324,9 @@ message TXNS{
     repeated ContractUpdateTXN contract_update_txns = 15;
     repeated ValidatorRegistration validator_registration_txns = 16;
     repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
+    repeated ProposalResult proposal_result_txns = 18;
 }
+
 message Token{
     string contract_id = 1;
     string amount = 2;

@@ -185,6 +185,7 @@ message AuthorizedCurrencyEquiv{
 message CurrencyEquiv{
     string contract_id = 1;
     string rate = 2;
+    bool authorized = 3;
 }
 
 //MAIN TXN MESSAGES
@@ -366,4 +367,5 @@ message TXNWrapper{
         ValidatorHeartbeat validator_heartbeat_txn = 15;
     }
 }
+
 

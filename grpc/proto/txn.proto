@@ -180,7 +180,7 @@ message SelfCurrencyEquiv{
 }
 message AuthorizedCurrencyEquiv{
     BaseTXN base = 1;
-    repeated KeyValuePair cur_equiv = 2;
+    repeated CurrencyEquiv cur_equiv = 2;
 }
 message CurrencyEquiv{
     string contract_id = 1;

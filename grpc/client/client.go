@@ -97,3 +97,65 @@ func SendMintTXN(mintTXN *zera_pb.MintTXN, destAddr string) (*emptypb.Empty, err
 
 	return response, nil
 }
+
+func SendAuthorizedCurrencyEquiv(authCur *zera_pb.AuthorizedCurrencyEquiv, destAddr string) (*emptypb.Empty, error) {
+	// Create a gRPC connection to the server
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Failed to connect to the server: %v", err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	// Create a new instance of ValidatorNetworkClient
+	client := NewNetworkClient(conn)
+
+	response, err := client.client.AuthCurrencyEquiv(context.Background(), authCur)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+func SendCurrencyEquiv(curEquiv *zera_pb.SelfCurrencyEquiv, destAddr string) (*emptypb.Empty, error) {
+	// Create a gRPC connection to the server
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Failed to connect to the server: %v", err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	// Create a new instance of ValidatorNetworkClient
+	client := NewNetworkClient(conn)
+
+	response, err := client.client.CurrencyEquiv(context.Background(), curEquiv)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func SendExpenseRatio(expenseRatio *zera_pb.ExpenseRatioTXN, destAddr string) (*emptypb.Empty, error) {
+	// Create a gRPC connection to the server
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Failed to connect to the server: %v", err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	// Create a new instance of ValidatorNetworkClient
+	client := NewNetworkClient(conn)
+
+	response, err := client.client.ExpenseRatio(context.Background(), expenseRatio)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}

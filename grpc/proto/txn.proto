@@ -173,19 +173,20 @@ message BaseTXN{
     repeated bytes multi_signature = 26;
     optional string memo = 27;
 }
+
 message SelfCurrencyEquiv{
     BaseTXN base = 1;
-    string contract_id = 2;
-    string cur_equiv = 3;
-}
-message CurrencyEquiv{
-    string contract_id = 1;
-    string value = 2;
+    repeated CurrencyEquiv cur_equiv = 2;
 }
 message AuthorizedCurrencyEquiv{
     BaseTXN base = 1;
     repeated KeyValuePair cur_equiv = 2;
 }
+message CurrencyEquiv{
+    string contract_id = 1;
+    string rate = 2;
+}
+
 //MAIN TXN MESSAGES
 message CoinTXN{
     BaseTXN base = 34;
@@ -365,3 +366,4 @@ message TXNWrapper{
         ValidatorHeartbeat validator_heartbeat_txn = 15;
     }
 }
+

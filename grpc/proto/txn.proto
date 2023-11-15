@@ -186,8 +186,8 @@ message CurrencyEquiv{
     string contract_id = 1;
     string rate = 2;
     bool authorized = 3;
+    optional uint64 max_stake = 4;
 }
-
 //MAIN TXN MESSAGES
 message CoinTXN{
     BaseTXN base = 34;

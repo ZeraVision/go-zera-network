@@ -185,9 +185,10 @@ message AuthorizedCurrencyEquiv{
 message CurrencyEquiv{
     string contract_id = 1;
     string rate = 2;
-    bool authorized = 3;
+    optional bool authorized = 3;
     optional uint64 max_stake = 4;
 }
+
 //MAIN TXN MESSAGES
 message CoinTXN{
     BaseTXN base = 34;
@@ -367,5 +368,4 @@ message TXNWrapper{
         ValidatorHeartbeat validator_heartbeat_txn = 15;
     }
 }
-
 

@@ -45,6 +45,7 @@ enum TXN_STATUS{
     VALIDATOR_ADDRESS = 16;
     CONTRACT_HAS_NO_GOVERNANCE = 17;
     INVALID_BASE_FEE_ID = 18;
+    EXPENSE_RATIO_DUPLICATE = 19;
 }
 
 //ENUMS
@@ -87,8 +88,9 @@ enum CONTRACT_TYPE{
 }
 //trade in for maps
 message ExpenseRatio{
-    string date = 1;
-    uint32 percent = 2;
+    uint32 day = 1;
+    uint32 month = 2;
+    uint32 percent = 3;
 }
 message KeyValuePair{
     string key = 1;
@@ -188,7 +190,10 @@ message CurrencyEquiv{
     optional bool authorized = 3;
     optional uint64 max_stake = 4;
 }
-
+message ExpenseRatioResult{
+    string contract_id = 1;
+    repeated KeyValuePair wallets = 2;
+}
 //MAIN TXN MESSAGES
 message CoinTXN{
     BaseTXN base = 34;
@@ -328,6 +333,7 @@ message TXNS{
     repeated ValidatorRegistration validator_registration_txns = 16;
     repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
     repeated ProposalResult proposal_result_txns = 18;
+    repeated ExpenseRatioResult expense_ratio_result_txns = 19;
 }
 
 message Token{

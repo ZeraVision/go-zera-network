@@ -110,7 +110,6 @@ message Proposal{
     string fee_id = 9;
     bytes wallet = 10;
 }
-
 message ProposalWalletRecieve{
     zera_txn.BaseTXN base = 1;
     bytes wallet_adr = 2;
@@ -124,6 +123,14 @@ message ProposalWalletSend{
     string contract_id = 3;
     repeated bytes recipient_wallet = 4;
     repeated string amounts = 5;
+}
+message CurrencyRate{
+    bool qualified = 1;
+    string rate = 2;
+}
+message ExpenseTracker{
+    int32 day = 1;
+    int32 month = 2;
 }
 
 // message ProposalVotes{

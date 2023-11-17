@@ -192,8 +192,14 @@ message CurrencyEquiv{
 }
 message ExpenseRatioResult{
     string contract_id = 1;
-    repeated KeyValuePair wallets = 2;
+    repeated Wallets wallets = 2;
 }
+
+message Wallets{
+    bytes address = 1;
+    string amount = 2;
+}
+
 //MAIN TXN MESSAGES
 message CoinTXN{
     BaseTXN base = 34;

@@ -193,6 +193,8 @@ message CurrencyEquiv{
 message ExpenseRatioResult{
     string contract_id = 1;
     repeated Wallets wallets = 2;
+    bytes hash = 3;
+    bytes recipient_address = 4;
 }
 
 message Wallets{

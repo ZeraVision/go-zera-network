@@ -124,6 +124,7 @@ message FoundationTXN{
     BaseTXN base = 1;
     repeated string restricted_symbols = 2;
     repeated ByteMultiplier byte_multiplier = 3;
+    optional string fee_ISO4217 = 4;
 }
 message Governance{
     GOVERNANCE_TYPE type = 1;         //read GOVERNANCE_TYPE above

@@ -39,6 +39,7 @@ const (
 	ValidatorService_ValidatorNFT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorNFT"
 	ValidatorService_ValidatorContractUpdate_FullMethodName       = "/zera_validator.ValidatorService/ValidatorContractUpdate"
 	ValidatorService_ValidatorHeartbeat_FullMethodName            = "/zera_validator.ValidatorService/ValidatorHeartbeat"
+	ValidatorService_ValidatorFoundation_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFoundation"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -64,6 +65,7 @@ type ValidatorServiceClient interface {
 	ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -293,6 +295,15 @@ func (c *validatorServiceClient) ValidatorHeartbeat(ctx context.Context, in *Val
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorFoundation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -316,6 +327,7 @@ type ValidatorServiceServer interface {
 	ValidatorNFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
 	ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error)
+	ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -379,6 +391,9 @@ func (UnimplementedValidatorServiceServer) ValidatorContractUpdate(context.Conte
 }
 func (UnimplementedValidatorServiceServer) ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorHeartbeat not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFoundation not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -746,6 +761,24 @@ func _ValidatorService_ValidatorHeartbeat_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorFoundation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FoundationTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorFoundation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorFoundation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorFoundation(ctx, req.(*FoundationTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -820,6 +853,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorHeartbeat",
 			Handler:    _ValidatorService_ValidatorHeartbeat_Handler,
+		},
+		{
+			MethodName: "ValidatorFoundation",
+			Handler:    _ValidatorService_ValidatorFoundation_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -22,7 +22,8 @@ service TXNService{
     rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
     rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty);
     rpc NFT(NFTTXN) returns (google.protobuf.Empty);
-    rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty);
+    rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
+    rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -47,7 +48,26 @@ enum TXN_STATUS{
     INVALID_BASE_FEE_ID = 18;
     EXPENSE_RATIO_DUPLICATE = 19;
 }
-
+enum TRANSACTION_TYPE
+{
+    COIN_TYPE = 0;
+    FOUNDATION_TYPE = 2;
+    MINT_TYPE = 1;
+    ITEM_MINT_TYPE = 3;
+    CONTRACT_TXN_TYPE = 4;
+    VOTE_TYPE = 5;
+    PROPOSAL_TYPE = 6;
+    SMART_CONTRACT_TYPE = 7;
+    SMART_CONTRACT_EXECUTE_TYPE = 8;
+    SELF_CURRENCY_EQUIV_TYPE = 9;
+    AUTHORIZED_CURRENCY_EQUIV_TYPE = 10;
+    EXPENSE_RATIO_TYPE = 11;
+    NFT_TYPE = 12;
+    UPDATE_CONTRACT_TYPE = 13;
+    VALIDATOR_REGISTRATION_TYPE = 14;
+    VALIDATOR_HEARTBEAT_TYPE = 15;
+    PROPOSAL_RESULT_TYPE = 16;
+}
 //ENUMS
 enum LANGUAGE{
     CPLUSPLUS = 0;
@@ -96,6 +116,15 @@ message KeyValuePair{
     string key = 1;
     string value = 2;
 }
+message ByteMultiplier{
+    TRANSACTION_TYPE txn_type = 1;
+    string multiplier = 2;
+}
+message FoundationTXN{
+    BaseTXN base = 1;
+    repeated string restricted_symbols = 2;
+    repeated ByteMultiplier byte_multiplier = 3;
+}
 message Governance{
     GOVERNANCE_TYPE type = 1;         //read GOVERNANCE_TYPE above
     uint32 regular_quorum = 2;        // % of yes votes to pass at the end of cycle (still needs to pass threshhold)
@@ -115,7 +144,6 @@ message CoinDenomination{
     string denomination_name = 5;
     string amount = 6;
 }
-
 message ContractFees{
     string fee = 1;
     optional bytes fee_address = 2;
@@ -342,6 +370,7 @@ message TXNS{
     repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
     repeated ProposalResult proposal_result_txns = 18;
     repeated ExpenseRatioResult expense_ratio_result_txns = 19;
+    repeated FoundationTXN foundation_txns = 20;
 }
 
 message Token{
@@ -380,6 +409,7 @@ message TXNWrapper{
         ContractUpdateTXN contract_update_txn = 13;
         ValidatorRegistration validator_registration_txn = 14;
         ValidatorHeartbeat validator_heartbeat_txn = 15;
+        FoundationTXN foundation_txn = 20;
     }
 }
 

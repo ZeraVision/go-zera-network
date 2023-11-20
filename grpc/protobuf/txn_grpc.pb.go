@@ -33,6 +33,7 @@ const (
 	TXNService_ExpenseRatio_FullMethodName         = "/zera_txn.TXNService/ExpenseRatio"
 	TXNService_NFT_FullMethodName                  = "/zera_txn.TXNService/NFT"
 	TXNService_ContractUpdate_FullMethodName       = "/zera_txn.TXNService/ContractUpdate"
+	TXNService_Foundation_FullMethodName           = "/zera_txn.TXNService/Foundation"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -52,6 +53,7 @@ type TXNServiceClient interface {
 	ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type tXNServiceClient struct {
@@ -179,6 +181,15 @@ func (c *tXNServiceClient) ContractUpdate(ctx context.Context, in *ContractUpdat
 	return out, nil
 }
 
+func (c *tXNServiceClient) Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_Foundation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXNServiceServer is the server API for TXNService service.
 // All implementations must embed UnimplementedTXNServiceServer
 // for forward compatibility
@@ -196,6 +207,7 @@ type TXNServiceServer interface {
 	ExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
 	NFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
 	ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
+	Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
 
@@ -241,6 +253,9 @@ func (UnimplementedTXNServiceServer) NFT(context.Context, *NFTTXN) (*emptypb.Emp
 }
 func (UnimplementedTXNServiceServer) ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ContractUpdate not implemented")
+}
+func (UnimplementedTXNServiceServer) Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Foundation not implemented")
 }
 func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
 
@@ -489,6 +504,24 @@ func _TXNService_ContractUpdate_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXNService_Foundation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FoundationTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).Foundation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_Foundation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).Foundation(ctx, req.(*FoundationTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -547,6 +580,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ContractUpdate",
 			Handler:    _TXNService_ContractUpdate_Handler,
+		},
+		{
+			MethodName: "Foundation",
+			Handler:    _TXNService_Foundation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

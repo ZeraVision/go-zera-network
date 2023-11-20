@@ -291,8 +291,8 @@ message SmartContractExecuteTXN{
 message Validator{
     bytes public_key = 1;
     string host = 2;
-    bytes client_port = 3; 
-    bytes validator_port = 4; 
+    uint32 client_port = 3; 
+    uint32 validator_port = 4; 
     uint64 benchmark = 5;
     google.protobuf.Timestamp timestamp = 6;
     bool lite = 7;

@@ -310,7 +310,7 @@ message GovernanceVote{
     BaseTXN base = 1;
     string contract_id = 2;
     string proposal_id = 3;
-    bool support = 4;
+    optional bool support = 4;
     optional uint32 support_option = 5;
 }
 message GovernanceProposal{

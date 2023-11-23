@@ -47,6 +47,7 @@ enum TXN_STATUS{
     CONTRACT_HAS_NO_GOVERNANCE = 17;
     INVALID_BASE_FEE_ID = 18;
     EXPENSE_RATIO_DUPLICATE = 19;
+    RESTRICTED_SYMBOL = 20;
 }
 enum TRANSACTION_TYPE
 {
@@ -106,6 +107,20 @@ enum CONTRACT_TYPE{
     NFT = 1;
     SBT = 2;
 }
+message DelegatedVotingTXN{
+    BaseTXN base = 1;
+    repeated DelegateVote delegate_votes = 2;
+    repeated DelegateFees delegate_fees = 3;
+}
+message DelegateVote{
+    bytes address = 1;
+    repeated string contract_ids = 2;
+    bool add_remove_delegate = 3;
+}
+message DelegateFees{
+    string contract_id = 1;
+    string auth_amount = 2;
+}
 //trade in for maps
 message ExpenseRatio{
     uint32 day = 1;
@@ -146,7 +161,7 @@ message CoinDenomination{
     string amount = 6;
 }
 message ContractFees{
-    string fee = 1;
+    string fee = 1;         //percent = 
     optional bytes fee_address = 2;
     string burn = 3;
     string validator = 4;
@@ -154,7 +169,7 @@ message ContractFees{
     CONTRACT_FEE_TYPE contract_fee_type = 6;
 }
 message ItemContractFees{
-    string fee = 1;
+    string fee = 1;          //$1.00 = 1000000000000000000 (quintillion)
     optional bytes fee_address = 2;
     string burn = 3;
     string validator = 4;
@@ -258,7 +273,7 @@ message ItemizedMintTXN{
     optional string voting_weight = 5;
     repeated KeyValuePair parameters = 6; 
     optional uint64 expiry = 7; 
-    optional ItemContractFees contract_fees = 8;
+    optional ItemContractFees contract_fees = 8; //contract fees for specific item
     optional uint64 valid_from = 9;
 }
 message ContractUpdateTXN{

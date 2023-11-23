@@ -24,6 +24,7 @@ service TXNService{
     rpc NFT(NFTTXN) returns (google.protobuf.Empty);
     rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
     rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
+    rpc DelegatedVoting(DelegatedVotingTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -144,14 +145,14 @@ message FoundationTXN{
 message Governance{
     GOVERNANCE_TYPE type = 1;         //read GOVERNANCE_TYPE above
     uint32 regular_quorum = 2;        // % of yes votes to pass at the end of cycle (still needs to pass threshhold)
-    uint32 fast_quorum = 3;           // % of yes votes to instantly pass (% is based off max supply)
+    optional uint32 fast_quorum = 3;           // % of yes votes to instantly pass (% is based off max supply)
     repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
     uint32 threshold = 5;             // threshold of participation of holders needed to be accepted
-    bool chicken_dinner = 6;          // winner not over threshold
+    optional bool chicken_dinner = 6;          // winner not over threshold
     bool allow_multi = 7;             // allow multiple choice proposals
     optional uint32 voting_period = 8;// this option is for staggered and cycle both will represent how many days the voting period is (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
     repeated string allowed_proposal_instrument = 9;
-    PROPOSAL_PERIOD proposal_period = 10; // Is the total_period in months or days? months will start then cycle on the 1st of a month, days will start it on any day.
+    optional PROPOSAL_PERIOD proposal_period = 10; // Is the total_period in months or days? months will start then cycle on the 1st of a month, days will start it on any day.
     repeated uint32 stage_length = 11;    // this determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
     optional uint32 start_date = 12;      // this determines what day of the month a cycle starts 1-28 (only used)
     optional uint32 start_time = 13;      // this determines what hour of the day a cycle starts 0-23

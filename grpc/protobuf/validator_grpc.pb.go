@@ -69,7 +69,7 @@ type ValidatorServiceClient interface {
 	ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	IndexerVoting(ctx context.Context, in *IndexerVotingReqest, opts ...grpc.CallOption) (*IndexerVotes, error)
+	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
 }
 
 type validatorServiceClient struct {
@@ -317,8 +317,8 @@ func (c *validatorServiceClient) ValidatorDelegatedVoting(ctx context.Context, i
 	return out, nil
 }
 
-func (c *validatorServiceClient) IndexerVoting(ctx context.Context, in *IndexerVotingReqest, opts ...grpc.CallOption) (*IndexerVotes, error) {
-	out := new(IndexerVotes)
+func (c *validatorServiceClient) IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error) {
+	out := new(IndexerVotingResponse)
 	err := c.cc.Invoke(ctx, ValidatorService_IndexerVoting_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -351,7 +351,7 @@ type ValidatorServiceServer interface {
 	ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error)
 	ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
 	ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
-	IndexerVoting(context.Context, *IndexerVotingReqest) (*IndexerVotes, error)
+	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -422,7 +422,7 @@ func (UnimplementedValidatorServiceServer) ValidatorFoundation(context.Context, 
 func (UnimplementedValidatorServiceServer) ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorDelegatedVoting not implemented")
 }
-func (UnimplementedValidatorServiceServer) IndexerVoting(context.Context, *IndexerVotingReqest) (*IndexerVotes, error) {
+func (UnimplementedValidatorServiceServer) IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IndexerVoting not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
@@ -828,7 +828,7 @@ func _ValidatorService_ValidatorDelegatedVoting_Handler(srv interface{}, ctx con
 }
 
 func _ValidatorService_IndexerVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IndexerVotingReqest)
+	in := new(IndexerVotingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -840,7 +840,7 @@ func _ValidatorService_IndexerVoting_Handler(srv interface{}, ctx context.Contex
 		FullMethod: ValidatorService_IndexerVoting_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).IndexerVoting(ctx, req.(*IndexerVotingReqest))
+		return srv.(ValidatorServiceServer).IndexerVoting(ctx, req.(*IndexerVotingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

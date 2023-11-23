@@ -31,6 +31,8 @@ service ValidatorService{
     rpc ValidatorContractUpdate(zera_txn.ContractUpdateTXN) returns (google.protobuf.Empty);
     rpc ValidatorHeartbeat(zera_txn.ValidatorHeartbeat) returns (google.protobuf.Empty);
     rpc ValidatorFoundation(zera_txn.FoundationTXN) returns (google.protobuf.Empty);
+    rpc ValidatorDelegatedVoting(zera_txn.DelegatedVotingTXN) returns (google.protobuf.Empty);
+    rpc IndexerVoting(IndexerVotingReqest) returns (IndexerVotes);
 }
 
 message DataChunk{
@@ -146,10 +148,23 @@ message RestrictedSymbols{
     repeated string symbols = 1;
 }
 
-// message ProposalVotes{
-//     string contract_id = 1;
-//     uint32 stage = 2;
-//     string yes = 3;
-//     string no = 4;
-//     repeated string options = 5;
-// }
+message IndexerVotingReqest{
+    string proposal_id = 1;
+}
+
+
+//THIS IS NOT A PART OF ACTUAL VALIDATOR
+message IndexerOption{
+    repeated IndexerVote votes = 1;
+    uint32 index = 2;
+}
+message IndexerVote{
+    string contract_id = 1;
+    string amount = 2;
+}
+message IndexerVotes{
+    repeated IndexerVote yes = 1;    //all votes for yes of each currency
+    repeated IndexerVote no = 2;     //all votes for no of each currency
+    repeated IndexerOption options = 3;  //all votes for each option of each currency
+    uint32 stage = 4;
+}

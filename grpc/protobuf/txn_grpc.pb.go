@@ -34,6 +34,7 @@ const (
 	TXNService_NFT_FullMethodName                  = "/zera_txn.TXNService/NFT"
 	TXNService_ContractUpdate_FullMethodName       = "/zera_txn.TXNService/ContractUpdate"
 	TXNService_Foundation_FullMethodName           = "/zera_txn.TXNService/Foundation"
+	TXNService_DelegatedVoting_FullMethodName      = "/zera_txn.TXNService/DelegatedVoting"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -54,6 +55,7 @@ type TXNServiceClient interface {
 	NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type tXNServiceClient struct {
@@ -190,6 +192,15 @@ func (c *tXNServiceClient) Foundation(ctx context.Context, in *FoundationTXN, op
 	return out, nil
 }
 
+func (c *tXNServiceClient) DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_DelegatedVoting_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXNServiceServer is the server API for TXNService service.
 // All implementations must embed UnimplementedTXNServiceServer
 // for forward compatibility
@@ -208,6 +219,7 @@ type TXNServiceServer interface {
 	NFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
 	ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
+	DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
 
@@ -256,6 +268,9 @@ func (UnimplementedTXNServiceServer) ContractUpdate(context.Context, *ContractUp
 }
 func (UnimplementedTXNServiceServer) Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Foundation not implemented")
+}
+func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelegatedVoting not implemented")
 }
 func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
 
@@ -522,6 +537,24 @@ func _TXNService_Foundation_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXNService_DelegatedVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DelegatedVotingTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).DelegatedVoting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_DelegatedVoting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).DelegatedVoting(ctx, req.(*DelegatedVotingTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -584,6 +617,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Foundation",
 			Handler:    _TXNService_Foundation_Handler,
+		},
+		{
+			MethodName: "DelegatedVoting",
+			Handler:    _TXNService_DelegatedVoting_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

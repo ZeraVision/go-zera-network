@@ -69,6 +69,7 @@ enum TRANSACTION_TYPE
     VALIDATOR_REGISTRATION_TYPE = 14;
     VALIDATOR_HEARTBEAT_TYPE = 15;
     PROPOSAL_RESULT_TYPE = 16;
+    DELEGATED_VOTING_TYPE = 17;
 }
 //ENUMS
 enum LANGUAGE{
@@ -143,34 +144,33 @@ message FoundationTXN{
     optional string fee_ISO4217 = 4;
 }
 message Governance{
-    GOVERNANCE_TYPE type = 1;         //read GOVERNANCE_TYPE above
-    uint32 regular_quorum = 2;        // % of yes votes to pass at the end of cycle (still needs to pass threshhold)
-    optional uint32 fast_quorum = 3;           // % of yes votes to instantly pass (% is based off max supply)
+    GOVERNANCE_TYPE type = 1;              //read GOVERNANCE_TYPE above
+    uint32 regular_quorum = 2;             // percent of yes votes to pass at the end of cycle (still needs to pass threshhold)
+    optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply)
     repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
-    uint32 threshold = 5;             // threshold of participation of holders needed to be accepted
-    optional bool chicken_dinner = 6;          // winner not over threshold
-    bool allow_multi = 7;             // allow multiple choice proposals
-    optional uint32 voting_period = 8;// this option is for staggered and cycle both will represent how many days the voting period is (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
+    uint32 threshold = 5;                  // threshold of participation of holders needed to be accepted
+    optional bool chicken_dinner = 6;      //Option winner does not need to pass regular quorum.
+    bool allow_multi = 7;                  //Allow multiple choice proposals.
+    optional uint32 voting_period = 8;     //How many days in the voting period (Months | Days). (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
     repeated string allowed_proposal_instrument = 9;
-    optional PROPOSAL_PERIOD proposal_period = 10; // Is the total_period in months or days? months will start then cycle on the 1st of a month, days will start it on any day.
-    repeated uint32 stage_length = 11;    // this determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
-    optional uint32 start_date = 12;      // this determines what day of the month a cycle starts 1-28 (only used)
-    optional uint32 start_time = 13;      // this determines what hour of the day a cycle starts 0-23
+    optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends
+    repeated uint32 stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
+    google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
 }
 message CoinDenomination{
     string denomination_name = 5;
     string amount = 6;
 }
 message ContractFees{
-    string fee = 1;         //percent = 
-    optional bytes fee_address = 2;
-    string burn = 3;
-    string validator = 4;
-    repeated string allowed_fee_instrument = 5;
-    CONTRACT_FEE_TYPE contract_fee_type = 6;
+    string fee = 1;                 //100% && $1.00 = 1000000000000000000 (quintillion)
+    optional bytes fee_address = 2; //address of contract holder (or the wallet they want fees to go to)
+    string burn = 3;                //percent = 100% = 1000000000000000000 (quintillion)
+    string validator = 4;           //percent = 100% = 1000000000000000000 (quintillion)
+    repeated string allowed_fee_instrument = 5; //contract_ids that can be used to pay fees
+    CONTRACT_FEE_TYPE contract_fee_type = 6;    //read CONTRACT_FEE_TYPE above
 }
 message ItemContractFees{
-    string fee = 1;          //$1.00 = 1000000000000000000 (quintillion)
+    string fee = 1;                  //$1.00 = 1000000000000000000 (quintillion)
     optional bytes fee_address = 2;
     string burn = 3;
     string validator = 4;
@@ -320,7 +320,8 @@ message GovernanceProposal{
     string synopsis = 4;
     string body = 5;
     repeated string options = 6;
-    optional uint64 adaptive_time = 7;
+    optional google.protobuf.Timestamp start_timestamp = 7;
+    optional google.protobuf.Timestamp end_timestamp = 8;
 }
 message SmartContractTXN{
     BaseTXN base = 1;
@@ -388,6 +389,7 @@ message TXNS{
     repeated ProposalResult proposal_result_txns = 18;
     repeated ExpenseRatioResult expense_ratio_result_txns = 19;
     repeated FoundationTXN foundation_txns = 20;
+    repeated DelegatedVotingTXN delegated_voting_txns = 21;
 }
 
 message Token{
@@ -427,6 +429,7 @@ message TXNWrapper{
         ValidatorRegistration validator_registration_txn = 14;
         ValidatorHeartbeat validator_heartbeat_txn = 15;
         FoundationTXN foundation_txn = 20;
+        DelegatedVotingTXN delegated_voting_txn = 21;
     }
 }
 

@@ -152,7 +152,6 @@ message IndexerVotingRequest{
     string proposal_id = 1;
 }
 
-
 //THIS IS NOT A PART OF ACTUAL VALIDATOR
 message IndexerOption{
     repeated IndexerVote votes = 1;

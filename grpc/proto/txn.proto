@@ -372,6 +372,7 @@ message ProposalResult{
     repeated string option_votes = 6;
     bool passed = 7;
     bool final_stage = 8;
+    uint32 stage = 9;
 }
 message TXNS{
     repeated CoinTXN coin_txns = 1;

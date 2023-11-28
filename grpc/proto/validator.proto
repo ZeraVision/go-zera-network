@@ -121,6 +121,8 @@ message Proposal{
     string fee_id = 9;
     bytes wallet = 10;
     repeated Voter voters = 11; //wallets and amounts of each currency wallet has
+    optional google.protobuf.Timestamp start_date = 12;
+    optional google.protobuf.Timestamp end_date = 13;
 }
 message ProposalWalletRecieve{
     zera_txn.BaseTXN base = 1;
@@ -166,4 +168,16 @@ message IndexerVotingResponse{
     repeated IndexerVote no = 2;     //all votes for no of each currency
     repeated IndexerOption options = 3;  //all votes for each option of each currency
     uint32 stage = 4;
+}
+message DelegationFees{
+    map<string, string> authorized_fees =3;
+}
+message DelegatedVote{
+    map<string, DelegationFees> delegations = 1;
+}
+message Delegator{
+    repeated bytes public_key = 1;
+}
+message DelegatedRecipient{
+    map<string, Delegator> delegations = 1;
 }

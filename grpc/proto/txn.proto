@@ -49,6 +49,8 @@ enum TXN_STATUS{
     INVALID_BASE_FEE_ID = 18;
     EXPENSE_RATIO_DUPLICATE = 19;
     RESTRICTED_SYMBOL = 20;
+    INVALID_PROPOSAL_ID = 21;
+    PROPOSAL_NOT_IN_VOTING_PERIOD = 22;
 }
 enum TRANSACTION_TYPE
 {
@@ -109,6 +111,10 @@ enum CONTRACT_TYPE{
     NFT = 1;
     SBT = 2;
 }
+message AddRemoveDelegate{
+    bool add_remove = 1;
+    string contract_id = 2;
+}
 message DelegatedVotingTXN{
     BaseTXN base = 1;
     repeated DelegateVote delegate_votes = 2;
@@ -116,8 +122,7 @@ message DelegatedVotingTXN{
 }
 message DelegateVote{
     bytes address = 1;
-    repeated string contract_ids = 2;
-    bool add_remove_delegate = 3;
+    repeated AddRemoveDelegate add_remove_contracts = 2;
 }
 message DelegateFees{
     string contract_id = 1;

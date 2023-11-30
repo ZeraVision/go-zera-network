@@ -25,6 +25,7 @@ service TXNService{
     rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
     rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
     rpc DelegatedVoting(DelegatedVotingTXN) returns (google.protobuf.Empty);
+    rpc Quah(QuashTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -251,7 +252,10 @@ message Wallets{
     bytes address = 1;
     string amount = 2;
 }
-
+message QuashTXN{
+    BaseTXN base = 1;
+    bytes txn_hash = 2;
+}
 //MAIN TXN MESSAGES
 message CoinTXN{
     BaseTXN base = 34;
@@ -363,16 +367,23 @@ message SmartContractParameter{
     VARIABLE_TYPE type = 76;
     optional string value = 77;
 }
+message Votes{
+    string contract_id = 1;
+    string votes = 2;
+}
 message ProposalResult{
     BaseTXN base = 1;
     string contract_id = 2;
     bytes proposal_id = 3;
-    optional string yes_votes = 4;
-    optional string no_votes = 5;
-    repeated string option_votes = 6;
-    bool passed = 7;
-    bool final_stage = 8;
-    uint32 stage = 9;
+    optional string yes_cur_equiv = 4;
+    optional string no_cur_equiv = 5;
+    repeated string option_cur_equiv = 6;
+    optional Votes yes_votes = 7;
+    optional Votes no_votes = 8;
+    repeated Votes option_votes = 9;
+    bool passed = 10;
+    bool final_stage = 11;
+    uint32 stage = 12;
 }
 message TXNS{
     repeated CoinTXN coin_txns = 1;

@@ -33,6 +33,7 @@ service ValidatorService{
     rpc ValidatorFoundation(zera_txn.FoundationTXN) returns (google.protobuf.Empty);
     rpc ValidatorDelegatedVoting(zera_txn.DelegatedVotingTXN) returns (google.protobuf.Empty);
     rpc IndexerVoting(IndexerVotingRequest) returns (IndexerVotingResponse);
+    rpc ValidatorQuash(zera_txn.QuashTXN) returns (google.protobuf.Empty);
 }
 
 message DataChunk{
@@ -104,9 +105,9 @@ message Vote{
     map<string, string> vote = 1;
 }
 message Voter{
-    bytes public_key = 1;
-    optional bool support = 2;
-    optional uint32 option = 3;
+    optional bool support = 1;
+    optional uint32 option = 2;
+    bool delegated = 3;
 }
 message VoteWallet{
     map<string, Voter> proposal_votes = 1;
@@ -120,7 +121,7 @@ message Proposal{
     string fee = 8;
     string fee_id = 9;
     bytes wallet = 10;
-    repeated Voter voters = 11; //wallets and amounts of each currency wallet has
+    map<string, Voter> voters = 11; //wallets and amounts of each currency wallet has
     optional google.protobuf.Timestamp start_date = 12;
     optional google.protobuf.Timestamp end_date = 13;
 }
@@ -172,12 +173,22 @@ message IndexerVotingResponse{
 message DelegationFees{
     map<string, string> authorized_fees =3;
 }
+message AuthorizedFee{
+    uint32 priority = 1;
+    string authorized_amount = 2;
+}
 message DelegatedVote{
-    map<string, DelegationFees> delegations = 1;
+    map<string, AuthorizedFee> authorized_fees = 3;
 }
 message Delegator{
     repeated bytes public_key = 1;
 }
-message DelegatedRecipient{
+message DelegatedRecipient{ 
     map<string, Delegator> delegations = 1;
+}
+message DelegateWallets{
+    repeated bytes wallets = 1;
+}
+message QuashLedger{
+    repeated string txn_ids = 1;
 }

@@ -42,6 +42,7 @@ const (
 	ValidatorService_ValidatorFoundation_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFoundation"
 	ValidatorService_ValidatorDelegatedVoting_FullMethodName      = "/zera_validator.ValidatorService/ValidatorDelegatedVoting"
 	ValidatorService_IndexerVoting_FullMethodName                 = "/zera_validator.ValidatorService/IndexerVoting"
+	ValidatorService_ValidatorQuash_FullMethodName                = "/zera_validator.ValidatorService/ValidatorQuash"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -70,6 +71,7 @@ type ValidatorServiceClient interface {
 	ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
+	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -326,6 +328,15 @@ func (c *validatorServiceClient) IndexerVoting(ctx context.Context, in *IndexerV
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorQuash_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -352,6 +363,7 @@ type ValidatorServiceServer interface {
 	ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
 	ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
 	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
+	ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -424,6 +436,9 @@ func (UnimplementedValidatorServiceServer) ValidatorDelegatedVoting(context.Cont
 }
 func (UnimplementedValidatorServiceServer) IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IndexerVoting not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorQuash not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -845,6 +860,24 @@ func _ValidatorService_IndexerVoting_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorQuash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuashTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorQuash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorQuash_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorQuash(ctx, req.(*QuashTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -931,6 +964,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IndexerVoting",
 			Handler:    _ValidatorService_IndexerVoting_Handler,
+		},
+		{
+			MethodName: "ValidatorQuash",
+			Handler:    _ValidatorService_ValidatorQuash_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

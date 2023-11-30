@@ -368,19 +368,17 @@ message SmartContractParameter{
     optional string value = 77;
 }
 message Votes{
-    string contract_id = 1;
-    string votes = 2;
+    repeated KeyValuePair votes = 1;
 }
 message ProposalResult{
-    BaseTXN base = 1;
-    string contract_id = 2;
-    bytes proposal_id = 3;
-    optional string yes_cur_equiv = 4;
-    optional string no_cur_equiv = 5;
-    repeated string option_cur_equiv = 6;
-    optional Votes yes_votes = 7;
-    optional Votes no_votes = 8;
-    repeated Votes option_votes = 9;
+    string contract_id = 2;     //contract_id of the proposal
+    bytes proposal_id = 3;      //proposal_id of the proposal
+    optional string support_cur_equiv = 4; //cur_equiv of all the support votes (multiple contract_ids)
+    optional string against_cur_equiv = 5; //cur_equiv of all the against votes (multiple contract_ids)
+    repeated string option_cur_equiv = 6;  //cur_equiv of all the option votes (multiple contract_ids)
+    optional Votes support_votes = 7;   //raw support votes of each contract_id
+    optional Votes against_votes = 8;   //raw against votes of each contract_id
+    repeated Votes option_votes = 9;    //raw option votes of each contract_id
     bool passed = 10;
     bool final_stage = 11;
     uint32 stage = 12;

@@ -368,7 +368,7 @@ message SmartContractParameter{
     optional string value = 77;
 }
 message Votes{
-    repeated KeyValuePair votes = 1;
+    repeated VotePair votes = 1;
 }
 message VotePair{
     string contract_id = 1;

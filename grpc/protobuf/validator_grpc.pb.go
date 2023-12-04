@@ -43,6 +43,7 @@ const (
 	ValidatorService_ValidatorDelegatedVoting_FullMethodName      = "/zera_validator.ValidatorService/ValidatorDelegatedVoting"
 	ValidatorService_IndexerVoting_FullMethodName                 = "/zera_validator.ValidatorService/IndexerVoting"
 	ValidatorService_ValidatorQuash_FullMethodName                = "/zera_validator.ValidatorService/ValidatorQuash"
+	ValidatorService_ValidatorFastQuorum_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFastQuorum"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -72,6 +73,7 @@ type ValidatorServiceClient interface {
 	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
 	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -337,6 +339,15 @@ func (c *validatorServiceClient) ValidatorQuash(ctx context.Context, in *QuashTX
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorFastQuorum_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -364,6 +375,7 @@ type ValidatorServiceServer interface {
 	ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
 	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
 	ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error)
+	ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -439,6 +451,9 @@ func (UnimplementedValidatorServiceServer) IndexerVoting(context.Context, *Index
 }
 func (UnimplementedValidatorServiceServer) ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorQuash not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFastQuorum not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -878,6 +893,24 @@ func _ValidatorService_ValidatorQuash_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorFastQuorum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FastQuorumTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorFastQuorum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorFastQuorum_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorFastQuorum(ctx, req.(*FastQuorumTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -968,6 +1001,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorQuash",
 			Handler:    _ValidatorService_ValidatorQuash_Handler,
+		},
+		{
+			MethodName: "ValidatorFastQuorum",
+			Handler:    _ValidatorService_ValidatorFastQuorum_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

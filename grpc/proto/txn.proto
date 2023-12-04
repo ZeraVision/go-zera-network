@@ -26,6 +26,7 @@ service TXNService{
     rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
     rpc DelegatedVoting(DelegatedVotingTXN) returns (google.protobuf.Empty);
     rpc Quah(QuashTXN) returns (google.protobuf.Empty);
+    rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -52,6 +53,7 @@ enum TXN_STATUS{
     RESTRICTED_SYMBOL = 20;
     INVALID_PROPOSAL_ID = 21;
     PROPOSAL_NOT_IN_VOTING_PERIOD = 22;
+    TIME_DELAY_INITIALIZED = 23;
 }
 enum TRANSACTION_TYPE
 {
@@ -148,6 +150,10 @@ message FoundationTXN{
     repeated string restricted_symbols = 2;
     repeated ByteMultiplier byte_multiplier = 3;
     optional string fee_ISO4217 = 4;
+}
+message FastQuorumTXN{
+    BaseTXN base = 1;
+    bytes proposal_id = 2;
 }
 message Governance{
     GOVERNANCE_TYPE type = 1;              //read GOVERNANCE_TYPE above

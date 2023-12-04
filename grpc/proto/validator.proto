@@ -34,6 +34,7 @@ service ValidatorService{
     rpc ValidatorDelegatedVoting(zera_txn.DelegatedVotingTXN) returns (google.protobuf.Empty);
     rpc IndexerVoting(IndexerVotingRequest) returns (IndexerVotingResponse);
     rpc ValidatorQuash(zera_txn.QuashTXN) returns (google.protobuf.Empty);
+    rpc ValidatorFastQuorum(zera_txn.FastQuorumTXN) returns (google.protobuf.Empty);
 }
 
 message DataChunk{

@@ -36,6 +36,7 @@ const (
 	TXNService_Foundation_FullMethodName           = "/zera_txn.TXNService/Foundation"
 	TXNService_DelegatedVoting_FullMethodName      = "/zera_txn.TXNService/DelegatedVoting"
 	TXNService_Quah_FullMethodName                 = "/zera_txn.TXNService/Quah"
+	TXNService_FastQuorum_FullMethodName           = "/zera_txn.TXNService/FastQuorum"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -58,6 +59,7 @@ type TXNServiceClient interface {
 	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Quah(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type tXNServiceClient struct {
@@ -212,6 +214,15 @@ func (c *tXNServiceClient) Quah(ctx context.Context, in *QuashTXN, opts ...grpc.
 	return out, nil
 }
 
+func (c *tXNServiceClient) FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_FastQuorum_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXNServiceServer is the server API for TXNService service.
 // All implementations must embed UnimplementedTXNServiceServer
 // for forward compatibility
@@ -232,6 +243,7 @@ type TXNServiceServer interface {
 	Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
 	DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
 	Quah(context.Context, *QuashTXN) (*emptypb.Empty, error)
+	FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
 
@@ -286,6 +298,9 @@ func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *Delegated
 }
 func (UnimplementedTXNServiceServer) Quah(context.Context, *QuashTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Quah not implemented")
+}
+func (UnimplementedTXNServiceServer) FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FastQuorum not implemented")
 }
 func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
 
@@ -588,6 +603,24 @@ func _TXNService_Quah_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXNService_FastQuorum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FastQuorumTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).FastQuorum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_FastQuorum_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).FastQuorum(ctx, req.(*FastQuorumTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -658,6 +691,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Quah",
 			Handler:    _TXNService_Quah_Handler,
+		},
+		{
+			MethodName: "FastQuorum",
+			Handler:    _TXNService_FastQuorum_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

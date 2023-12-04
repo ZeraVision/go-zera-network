@@ -166,8 +166,8 @@ message IndexerVote{
     string amount = 2;
 }
 message IndexerVotingResponse{
-    repeated IndexerVote yes = 1;    //all votes for yes of each currency
-    repeated IndexerVote no = 2;     //all votes for no of each currency
+    repeated IndexerVote support = 1;    //all votes for yes of each currency
+    repeated IndexerVote against = 2;     //all votes for no of each currency
     repeated IndexerOption options = 3;  //all votes for each option of each currency
     uint32 stage = 4;
 }

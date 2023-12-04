@@ -8,7 +8,6 @@ package zera_txn;
 option go_package = "./grpc/protobuf";
 
 option optimize_for = SPEED;
-
 service TXNService{
     rpc Coin(CoinTXN) returns (google.protobuf.Empty);
     rpc Mint(MintTXN) returns (google.protobuf.Empty);
@@ -25,7 +24,7 @@ service TXNService{
     rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
     rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
     rpc DelegatedVoting(DelegatedVotingTXN) returns (google.protobuf.Empty);
-    rpc Quah(QuashTXN) returns (google.protobuf.Empty);
+    rpc Quash(QuashTXN) returns (google.protobuf.Empty);
     rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
 }
 
@@ -54,6 +53,9 @@ enum TXN_STATUS{
     INVALID_PROPOSAL_ID = 21;
     PROPOSAL_NOT_IN_VOTING_PERIOD = 22;
     TIME_DELAY_INITIALIZED = 23;
+    INVALID_TXN_HASH = 24;
+    INVALID_TXN_TYPE = 25;
+    TIME_DELAY_EXPIRED = 26;
 }
 enum TRANSACTION_TYPE
 {
@@ -198,9 +200,10 @@ message RestrictedKey{
     bool mint = 7;
     bool vote = 8;
     bool propose = 9;
-    optional bool expense_ratio = 10;
-    optional bool cur_equiv = 11;
-    optional bool revoke = 12;
+    bool compliance = 10;
+    optional bool expense_ratio = 11;
+    optional bool cur_equiv = 12;
+    optional bool revoke = 13;
 }
 message ExpenseRatioTXN{
     BaseTXN base = 1;
@@ -260,7 +263,8 @@ message Wallets{
 }
 message QuashTXN{
     BaseTXN base = 1;
-    bytes txn_hash = 2;
+    string contract_id = 2;
+    bytes txn_hash = 3;
 }
 //MAIN TXN MESSAGES
 message CoinTXN{
@@ -415,6 +419,8 @@ message TXNS{
     repeated ExpenseRatioResult expense_ratio_result_txns = 19;
     repeated FoundationTXN foundation_txns = 20;
     repeated DelegatedVotingTXN delegated_voting_txns = 21;
+    repeated QuashTXN quash_txns = 22;
+    repeated FastQuorumTXN fast_quorum_txns = 23;
 }
 
 message Token{
@@ -455,6 +461,8 @@ message TXNWrapper{
         ValidatorHeartbeat validator_heartbeat_txn = 15;
         FoundationTXN foundation_txn = 20;
         DelegatedVotingTXN delegated_voting_txn = 21;
+        QuashTXN quash_txn = 22;
+        FastQuorumTXN fast_quorum_txn = 23;
     }
 }
 

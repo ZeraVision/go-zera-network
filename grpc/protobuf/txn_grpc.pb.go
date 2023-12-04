@@ -35,7 +35,7 @@ const (
 	TXNService_ContractUpdate_FullMethodName       = "/zera_txn.TXNService/ContractUpdate"
 	TXNService_Foundation_FullMethodName           = "/zera_txn.TXNService/Foundation"
 	TXNService_DelegatedVoting_FullMethodName      = "/zera_txn.TXNService/DelegatedVoting"
-	TXNService_Quah_FullMethodName                 = "/zera_txn.TXNService/Quah"
+	TXNService_Quash_FullMethodName                = "/zera_txn.TXNService/Quash"
 	TXNService_FastQuorum_FullMethodName           = "/zera_txn.TXNService/FastQuorum"
 )
 
@@ -58,7 +58,7 @@ type TXNServiceClient interface {
 	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Quah(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Quash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -205,9 +205,9 @@ func (c *tXNServiceClient) DelegatedVoting(ctx context.Context, in *DelegatedVot
 	return out, nil
 }
 
-func (c *tXNServiceClient) Quah(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *tXNServiceClient) Quash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Quah_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, TXNService_Quash_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -242,7 +242,7 @@ type TXNServiceServer interface {
 	ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
 	DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
-	Quah(context.Context, *QuashTXN) (*emptypb.Empty, error)
+	Quash(context.Context, *QuashTXN) (*emptypb.Empty, error)
 	FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
@@ -296,8 +296,8 @@ func (UnimplementedTXNServiceServer) Foundation(context.Context, *FoundationTXN)
 func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelegatedVoting not implemented")
 }
-func (UnimplementedTXNServiceServer) Quah(context.Context, *QuashTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Quah not implemented")
+func (UnimplementedTXNServiceServer) Quash(context.Context, *QuashTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Quash not implemented")
 }
 func (UnimplementedTXNServiceServer) FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FastQuorum not implemented")
@@ -585,20 +585,20 @@ func _TXNService_DelegatedVoting_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_Quah_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TXNService_Quash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QuashTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Quah(ctx, in)
+		return srv.(TXNServiceServer).Quash(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Quah_FullMethodName,
+		FullMethod: TXNService_Quash_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Quah(ctx, req.(*QuashTXN))
+		return srv.(TXNServiceServer).Quash(ctx, req.(*QuashTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -689,8 +689,8 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TXNService_DelegatedVoting_Handler,
 		},
 		{
-			MethodName: "Quah",
-			Handler:    _TXNService_Quah_Handler,
+			MethodName: "Quash",
+			Handler:    _TXNService_Quash_Handler,
 		},
 		{
 			MethodName: "FastQuorum",

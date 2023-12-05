@@ -461,6 +461,7 @@ message TXNS{
     repeated FastQuorumTXN fast_quorum_txns = 23;
     repeated QuashResult quash_results = 24;
     repeated RevokeTXN revoke_txns = 25;
+    repeated ComplianceTXN compliance_txns = 26;
 }
 
 message Token{
@@ -504,6 +505,7 @@ message TXNWrapper{
         QuashTXN quash_txn = 22;
         FastQuorumTXN fast_quorum_txn = 23;
         RevokeTXN revoke_txn = 24;
+        ComplianceTXN compliance_txn = 25;
     }
 }
 

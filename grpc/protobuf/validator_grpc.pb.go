@@ -45,6 +45,7 @@ const (
 	ValidatorService_ValidatorQuash_FullMethodName                = "/zera_validator.ValidatorService/ValidatorQuash"
 	ValidatorService_ValidatorFastQuorum_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFastQuorum"
 	ValidatorService_ValidatorRevoke_FullMethodName               = "/zera_validator.ValidatorService/ValidatorRevoke"
+	ValidatorService_ValidatorCompliance_FullMethodName           = "/zera_validator.ValidatorService/ValidatorCompliance"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -76,6 +77,7 @@ type ValidatorServiceClient interface {
 	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -359,6 +361,15 @@ func (c *validatorServiceClient) ValidatorRevoke(ctx context.Context, in *Revoke
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorCompliance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -388,6 +399,7 @@ type ValidatorServiceServer interface {
 	ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error)
 	ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
+	ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -469,6 +481,9 @@ func (UnimplementedValidatorServiceServer) ValidatorFastQuorum(context.Context, 
 }
 func (UnimplementedValidatorServiceServer) ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorRevoke not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCompliance not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -944,6 +959,24 @@ func _ValidatorService_ValidatorRevoke_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorCompliance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComplianceTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorCompliance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorCompliance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorCompliance(ctx, req.(*ComplianceTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1042,6 +1075,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorRevoke",
 			Handler:    _ValidatorService_ValidatorRevoke_Handler,
+		},
+		{
+			MethodName: "ValidatorCompliance",
+			Handler:    _ValidatorService_ValidatorCompliance_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

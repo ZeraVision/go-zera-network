@@ -27,6 +27,7 @@ service TXNService{
     rpc Quash(QuashTXN) returns (google.protobuf.Empty);
     rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
     rpc Revoke(RevokeTXN) returns (google.protobuf.Empty);
+    rpc Compliance(ComplianceTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -59,6 +60,7 @@ enum TXN_STATUS{
     TIME_DELAY_EXPIRED = 26;
     DUPLICATE_AUTH_KEY = 27;
     KEY_WEIGHT_TOO_LOW = 28;
+    INVALID_ITEM = 29;
 }
 enum TRANSACTION_TYPE
 {
@@ -80,6 +82,9 @@ enum TRANSACTION_TYPE
     VALIDATOR_HEARTBEAT_TYPE = 15;
     PROPOSAL_RESULT_TYPE = 16;
     DELEGATED_VOTING_TYPE = 17;
+    REVOKE_TYPE = 18;
+    QUASH_TYPE = 19;
+    FAST_QUORUM_TYPE = 20;
 }
 //ENUMS
 enum LANGUAGE{
@@ -136,6 +141,13 @@ message DelegateFees{
     string contract_id = 1;
     string auth_amount = 2;
 }
+message Compliance{
+    string contract_ids = 1;
+    uint32 compliance_levels = 2;
+}
+message TokenCompliance{
+    repeated Compliance compliance = 1;
+}
 //trade in for maps
 message ExpenseRatio{
     uint32 day = 1;
@@ -160,7 +172,7 @@ message RevokeTXN{
     BaseTXN base = 1;
     string contract_id = 2;
     bytes recipient_address = 3;
-    string sbt_id = 4;
+    string item_id = 4;
 }
 message FastQuorumTXN{
     BaseTXN base = 1;
@@ -266,7 +278,13 @@ message ExpenseRatioResult{
     bytes hash = 3;
     bytes recipient_address = 4;
 }
-
+message ComplianceTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    bytes recipient_address = 3;
+    uint32 compliance_level = 4;
+    bool assign_revoke = 5;
+}
 message Wallets{
     bytes address = 1;
     string amount = 2;
@@ -339,6 +357,9 @@ message InstrumentContract{
     bool update_contract_fees = 15;
     bool update_expense_ratio = 16;
     optional uint32 quash_threshold = 17;    //total number of quash txns to quash a time delay txn
+    repeated TokenCompliance token_compliance = 18;
+    bool kyc_status = 19;
+    bool immutable_kyc_status = 20;
 }
 message GovernanceVote{
     BaseTXN base = 1;
@@ -485,4 +506,6 @@ message TXNWrapper{
         RevokeTXN revoke_txn = 24;
     }
 }
+
+
 

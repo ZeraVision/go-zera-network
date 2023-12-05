@@ -36,6 +36,7 @@ service ValidatorService{
     rpc ValidatorQuash(zera_txn.QuashTXN) returns (google.protobuf.Empty);
     rpc ValidatorFastQuorum(zera_txn.FastQuorumTXN) returns (google.protobuf.Empty);
     rpc ValidatorRevoke(zera_txn.RevokeTXN) returns (google.protobuf.Empty);
+    rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
 }
 
 message DataChunk{

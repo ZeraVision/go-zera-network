@@ -58,6 +58,7 @@ enum TXN_STATUS{
     INVALID_TXN_TYPE = 25;
     TIME_DELAY_EXPIRED = 26;
     DUPLICATE_AUTH_KEY = 27;
+    KEY_WEIGHT_TOO_LOW = 28;
 }
 enum TRANSACTION_TYPE
 {
@@ -212,6 +213,7 @@ message RestrictedKey{
     optional bool expense_ratio = 11;
     optional bool cur_equiv = 12;
     optional bool revoke = 13;
+    uint32 key_weight = 14;
 }
 message ExpenseRatioTXN{
     BaseTXN base = 1;

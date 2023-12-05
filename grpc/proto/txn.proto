@@ -437,6 +437,7 @@ message TXNS{
     repeated QuashTXN quash_txns = 22;
     repeated FastQuorumTXN fast_quorum_txns = 23;
     repeated QuashResult quash_results = 24;
+    repeated RevokeSBT revoke_sbts = 25;
 }
 
 message Token{
@@ -479,6 +480,7 @@ message TXNWrapper{
         DelegatedVotingTXN delegated_voting_txn = 21;
         QuashTXN quash_txn = 22;
         FastQuorumTXN fast_quorum_txn = 23;
+        RevokeSBT revoke_sbt = 24;
     }
 }
 

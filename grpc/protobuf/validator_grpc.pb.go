@@ -20,720 +20,1041 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TXNService_Coin_FullMethodName                 = "/zera_validator.TXNService/Coin"
-	TXNService_Mint_FullMethodName                 = "/zera_validator.TXNService/Mint"
-	TXNService_ItemMint_FullMethodName             = "/zera_validator.TXNService/ItemMint"
-	TXNService_Contract_FullMethodName             = "/zera_validator.TXNService/Contract"
-	TXNService_GovernProposal_FullMethodName       = "/zera_validator.TXNService/GovernProposal"
-	TXNService_GovernVote_FullMethodName           = "/zera_validator.TXNService/GovernVote"
-	TXNService_SmartContract_FullMethodName        = "/zera_validator.TXNService/SmartContract"
-	TXNService_SmartContractExecute_FullMethodName = "/zera_validator.TXNService/SmartContractExecute"
-	TXNService_CurrencyEquiv_FullMethodName        = "/zera_validator.TXNService/CurrencyEquiv"
-	TXNService_AuthCurrencyEquiv_FullMethodName    = "/zera_validator.TXNService/AuthCurrencyEquiv"
-	TXNService_ExpenseRatio_FullMethodName         = "/zera_validator.TXNService/ExpenseRatio"
-	TXNService_NFT_FullMethodName                  = "/zera_validator.TXNService/NFT"
-	TXNService_ContractUpdate_FullMethodName       = "/zera_validator.TXNService/ContractUpdate"
-	TXNService_Foundation_FullMethodName           = "/zera_validator.TXNService/Foundation"
-	TXNService_DelegatedVoting_FullMethodName      = "/zera_validator.TXNService/DelegatedVoting"
-	TXNService_Quash_FullMethodName                = "/zera_validator.TXNService/Quash"
-	TXNService_FastQuorum_FullMethodName           = "/zera_validator.TXNService/FastQuorum"
-	TXNService_Revoke_FullMethodName               = "/zera_validator.TXNService/Revoke"
+	ValidatorService_StreamBroadcast_FullMethodName               = "/zera_validator.ValidatorService/StreamBroadcast"
+	ValidatorService_Broadcast_FullMethodName                     = "/zera_validator.ValidatorService/Broadcast"
+	ValidatorService_SyncBlockchain_FullMethodName                = "/zera_validator.ValidatorService/SyncBlockchain"
+	ValidatorService_ValidatorRegistration_FullMethodName         = "/zera_validator.ValidatorService/ValidatorRegistration"
+	ValidatorService_SyncValidatorList_FullMethodName             = "/zera_validator.ValidatorService/SyncValidatorList"
+	ValidatorService_ValidatorCoin_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorCoin"
+	ValidatorService_ValidatorMint_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorMint"
+	ValidatorService_ValidatorItemMint_FullMethodName             = "/zera_validator.ValidatorService/ValidatorItemMint"
+	ValidatorService_ValidatorContract_FullMethodName             = "/zera_validator.ValidatorService/ValidatorContract"
+	ValidatorService_ValidatorGovernProposal_FullMethodName       = "/zera_validator.ValidatorService/ValidatorGovernProposal"
+	ValidatorService_ValidatorGovernVote_FullMethodName           = "/zera_validator.ValidatorService/ValidatorGovernVote"
+	ValidatorService_ValidatorSmartContract_FullMethodName        = "/zera_validator.ValidatorService/ValidatorSmartContract"
+	ValidatorService_ValidatorSmartContractExecute_FullMethodName = "/zera_validator.ValidatorService/ValidatorSmartContractExecute"
+	ValidatorService_ValidatorCurrencyEquiv_FullMethodName        = "/zera_validator.ValidatorService/ValidatorCurrencyEquiv"
+	ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName    = "/zera_validator.ValidatorService/ValidatorAuthCurrencyEquiv"
+	ValidatorService_ValidatorExpenseRatio_FullMethodName         = "/zera_validator.ValidatorService/ValidatorExpenseRatio"
+	ValidatorService_ValidatorNFT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorNFT"
+	ValidatorService_ValidatorContractUpdate_FullMethodName       = "/zera_validator.ValidatorService/ValidatorContractUpdate"
+	ValidatorService_ValidatorHeartbeat_FullMethodName            = "/zera_validator.ValidatorService/ValidatorHeartbeat"
+	ValidatorService_ValidatorFoundation_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFoundation"
+	ValidatorService_ValidatorDelegatedVoting_FullMethodName      = "/zera_validator.ValidatorService/ValidatorDelegatedVoting"
+	ValidatorService_IndexerVoting_FullMethodName                 = "/zera_validator.ValidatorService/IndexerVoting"
+	ValidatorService_ValidatorQuash_FullMethodName                = "/zera_validator.ValidatorService/ValidatorQuash"
+	ValidatorService_ValidatorFastQuorum_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFastQuorum"
+	ValidatorService_ValidatorRevoke_FullMethodName               = "/zera_validator.ValidatorService/ValidatorRevoke"
 )
 
-// TXNServiceClient is the client API for TXNService service.
+// ValidatorServiceClient is the client API for ValidatorService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TXNServiceClient interface {
-	Coin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Mint(ctx context.Context, in *MintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ItemMint(ctx context.Context, in *ItemizedMintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Contract(ctx context.Context, in *InstrumentContract, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GovernProposal(ctx context.Context, in *GovernanceProposal, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GovernVote(ctx context.Context, in *GovernanceVote, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	SmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	SmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	AuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Quash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Revoke(ctx context.Context, in *RevokeSBT, opts ...grpc.CallOption) (*emptypb.Empty, error)
+type ValidatorServiceClient interface {
+	StreamBroadcast(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBroadcastClient, error)
+	Broadcast(ctx context.Context, in *Block, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SyncBlockchain(ctx context.Context, in *BlockSync, opts ...grpc.CallOption) (ValidatorService_SyncBlockchainClient, error)
+	ValidatorRegistration(ctx context.Context, in *ValidatorRegistration, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SyncValidatorList(ctx context.Context, in *ValidatorSyncRequest, opts ...grpc.CallOption) (*ValidatorSync, error)
+	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorMint(ctx context.Context, in *MintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorItemMint(ctx context.Context, in *ItemizedMintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorContract(ctx context.Context, in *InstrumentContract, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorGovernProposal(ctx context.Context, in *GovernanceProposal, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorGovernVote(ctx context.Context, in *GovernanceVote, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorSmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorSmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorCurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorAuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
+	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorRevoke(ctx context.Context, in *RevokeSBT, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type tXNServiceClient struct {
+type validatorServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewTXNServiceClient(cc grpc.ClientConnInterface) TXNServiceClient {
-	return &tXNServiceClient{cc}
+func NewValidatorServiceClient(cc grpc.ClientConnInterface) ValidatorServiceClient {
+	return &validatorServiceClient{cc}
 }
 
-func (c *tXNServiceClient) Coin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) StreamBroadcast(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBroadcastClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[0], ValidatorService_StreamBroadcast_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceStreamBroadcastClient{stream}
+	return x, nil
+}
+
+type ValidatorService_StreamBroadcastClient interface {
+	Send(*DataChunk) error
+	CloseAndRecv() (*emptypb.Empty, error)
+	grpc.ClientStream
+}
+
+type validatorServiceStreamBroadcastClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceStreamBroadcastClient) Send(m *DataChunk) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamBroadcastClient) CloseAndRecv() (*emptypb.Empty, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(emptypb.Empty)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *validatorServiceClient) Broadcast(ctx context.Context, in *Block, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Coin_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_Broadcast_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) Mint(ctx context.Context, in *MintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) SyncBlockchain(ctx context.Context, in *BlockSync, opts ...grpc.CallOption) (ValidatorService_SyncBlockchainClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[1], ValidatorService_SyncBlockchain_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceSyncBlockchainClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ValidatorService_SyncBlockchainClient interface {
+	Recv() (*DataChunk, error)
+	grpc.ClientStream
+}
+
+type validatorServiceSyncBlockchainClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceSyncBlockchainClient) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *validatorServiceClient) ValidatorRegistration(ctx context.Context, in *ValidatorRegistration, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Mint_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorRegistration_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) ItemMint(ctx context.Context, in *ItemizedMintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_ItemMint_FullMethodName, in, out, opts...)
+func (c *validatorServiceClient) SyncValidatorList(ctx context.Context, in *ValidatorSyncRequest, opts ...grpc.CallOption) (*ValidatorSync, error) {
+	out := new(ValidatorSync)
+	err := c.cc.Invoke(ctx, ValidatorService_SyncValidatorList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) Contract(ctx context.Context, in *InstrumentContract, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Contract_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorCoin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) GovernProposal(ctx context.Context, in *GovernanceProposal, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorMint(ctx context.Context, in *MintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_GovernProposal_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorMint_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) GovernVote(ctx context.Context, in *GovernanceVote, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorItemMint(ctx context.Context, in *ItemizedMintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_GovernVote_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorItemMint_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) SmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorContract(ctx context.Context, in *InstrumentContract, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_SmartContract_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorContract_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) SmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorGovernProposal(ctx context.Context, in *GovernanceProposal, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_SmartContractExecute_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorGovernProposal_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) CurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorGovernVote(ctx context.Context, in *GovernanceVote, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_CurrencyEquiv_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorGovernVote_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) AuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorSmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_AuthCurrencyEquiv_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorSmartContract_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorSmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_ExpenseRatio_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorSmartContractExecute_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorCurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_NFT_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorCurrencyEquiv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorAuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_ContractUpdate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Foundation_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorExpenseRatio_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_DelegatedVoting_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorNFT_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) Quash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Quash_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorContractUpdate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_FastQuorum_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorHeartbeat_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tXNServiceClient) Revoke(ctx context.Context, in *RevokeSBT, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Revoke_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorFoundation_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// TXNServiceServer is the server API for TXNService service.
-// All implementations must embed UnimplementedTXNServiceServer
+func (c *validatorServiceClient) ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorDelegatedVoting_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error) {
+	out := new(IndexerVotingResponse)
+	err := c.cc.Invoke(ctx, ValidatorService_IndexerVoting_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorQuash_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorFastQuorum_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) ValidatorRevoke(ctx context.Context, in *RevokeSBT, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorRevoke_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ValidatorServiceServer is the server API for ValidatorService service.
+// All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
-type TXNServiceServer interface {
-	Coin(context.Context, *CoinTXN) (*emptypb.Empty, error)
-	Mint(context.Context, *MintTXN) (*emptypb.Empty, error)
-	ItemMint(context.Context, *ItemizedMintTXN) (*emptypb.Empty, error)
-	Contract(context.Context, *InstrumentContract) (*emptypb.Empty, error)
-	GovernProposal(context.Context, *GovernanceProposal) (*emptypb.Empty, error)
-	GovernVote(context.Context, *GovernanceVote) (*emptypb.Empty, error)
-	SmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error)
-	SmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error)
-	CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error)
-	AuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
-	ExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
-	NFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
-	ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
-	Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
-	DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
-	Quash(context.Context, *QuashTXN) (*emptypb.Empty, error)
-	FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
-	Revoke(context.Context, *RevokeSBT) (*emptypb.Empty, error)
-	mustEmbedUnimplementedTXNServiceServer()
+type ValidatorServiceServer interface {
+	StreamBroadcast(ValidatorService_StreamBroadcastServer) error
+	Broadcast(context.Context, *Block) (*emptypb.Empty, error)
+	SyncBlockchain(*BlockSync, ValidatorService_SyncBlockchainServer) error
+	ValidatorRegistration(context.Context, *ValidatorRegistration) (*emptypb.Empty, error)
+	SyncValidatorList(context.Context, *ValidatorSyncRequest) (*ValidatorSync, error)
+	ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error)
+	ValidatorMint(context.Context, *MintTXN) (*emptypb.Empty, error)
+	ValidatorItemMint(context.Context, *ItemizedMintTXN) (*emptypb.Empty, error)
+	ValidatorContract(context.Context, *InstrumentContract) (*emptypb.Empty, error)
+	ValidatorGovernProposal(context.Context, *GovernanceProposal) (*emptypb.Empty, error)
+	ValidatorGovernVote(context.Context, *GovernanceVote) (*emptypb.Empty, error)
+	ValidatorSmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error)
+	ValidatorSmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error)
+	ValidatorCurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error)
+	ValidatorAuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
+	ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
+	ValidatorNFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
+	ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
+	ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error)
+	ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
+	ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
+	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
+	ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error)
+	ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
+	ValidatorRevoke(context.Context, *RevokeSBT) (*emptypb.Empty, error)
+	mustEmbedUnimplementedValidatorServiceServer()
 }
 
-// UnimplementedTXNServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedTXNServiceServer struct {
+// UnimplementedValidatorServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedValidatorServiceServer struct {
 }
 
-func (UnimplementedTXNServiceServer) Coin(context.Context, *CoinTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Coin not implemented")
+func (UnimplementedValidatorServiceServer) StreamBroadcast(ValidatorService_StreamBroadcastServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamBroadcast not implemented")
 }
-func (UnimplementedTXNServiceServer) Mint(context.Context, *MintTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Mint not implemented")
+func (UnimplementedValidatorServiceServer) Broadcast(context.Context, *Block) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Broadcast not implemented")
 }
-func (UnimplementedTXNServiceServer) ItemMint(context.Context, *ItemizedMintTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ItemMint not implemented")
+func (UnimplementedValidatorServiceServer) SyncBlockchain(*BlockSync, ValidatorService_SyncBlockchainServer) error {
+	return status.Errorf(codes.Unimplemented, "method SyncBlockchain not implemented")
 }
-func (UnimplementedTXNServiceServer) Contract(context.Context, *InstrumentContract) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Contract not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorRegistration(context.Context, *ValidatorRegistration) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorRegistration not implemented")
 }
-func (UnimplementedTXNServiceServer) GovernProposal(context.Context, *GovernanceProposal) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GovernProposal not implemented")
+func (UnimplementedValidatorServiceServer) SyncValidatorList(context.Context, *ValidatorSyncRequest) (*ValidatorSync, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncValidatorList not implemented")
 }
-func (UnimplementedTXNServiceServer) GovernVote(context.Context, *GovernanceVote) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GovernVote not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCoin not implemented")
 }
-func (UnimplementedTXNServiceServer) SmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SmartContract not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorMint(context.Context, *MintTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorMint not implemented")
 }
-func (UnimplementedTXNServiceServer) SmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SmartContractExecute not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorItemMint(context.Context, *ItemizedMintTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorItemMint not implemented")
 }
-func (UnimplementedTXNServiceServer) CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CurrencyEquiv not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorContract(context.Context, *InstrumentContract) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorContract not implemented")
 }
-func (UnimplementedTXNServiceServer) AuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthCurrencyEquiv not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorGovernProposal(context.Context, *GovernanceProposal) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorGovernProposal not implemented")
 }
-func (UnimplementedTXNServiceServer) ExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ExpenseRatio not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorGovernVote(context.Context, *GovernanceVote) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorGovernVote not implemented")
 }
-func (UnimplementedTXNServiceServer) NFT(context.Context, *NFTTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NFT not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorSmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSmartContract not implemented")
 }
-func (UnimplementedTXNServiceServer) ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ContractUpdate not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorSmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSmartContractExecute not implemented")
 }
-func (UnimplementedTXNServiceServer) Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Foundation not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorCurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCurrencyEquiv not implemented")
 }
-func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelegatedVoting not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorAuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorAuthCurrencyEquiv not implemented")
 }
-func (UnimplementedTXNServiceServer) Quash(context.Context, *QuashTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Quash not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorExpenseRatio not implemented")
 }
-func (UnimplementedTXNServiceServer) FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FastQuorum not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorNFT(context.Context, *NFTTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorNFT not implemented")
 }
-func (UnimplementedTXNServiceServer) Revoke(context.Context, *RevokeSBT) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Revoke not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorContractUpdate not implemented")
 }
-func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
+func (UnimplementedValidatorServiceServer) ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorHeartbeat not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFoundation not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorDelegatedVoting not implemented")
+}
+func (UnimplementedValidatorServiceServer) IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IndexerVoting not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorQuash not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFastQuorum not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorRevoke(context.Context, *RevokeSBT) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorRevoke not implemented")
+}
+func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
-// UnsafeTXNServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TXNServiceServer will
+// UnsafeValidatorServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ValidatorServiceServer will
 // result in compilation errors.
-type UnsafeTXNServiceServer interface {
-	mustEmbedUnimplementedTXNServiceServer()
+type UnsafeValidatorServiceServer interface {
+	mustEmbedUnimplementedValidatorServiceServer()
 }
 
-func RegisterTXNServiceServer(s grpc.ServiceRegistrar, srv TXNServiceServer) {
-	s.RegisterService(&TXNService_ServiceDesc, srv)
+func RegisterValidatorServiceServer(s grpc.ServiceRegistrar, srv ValidatorServiceServer) {
+	s.RegisterService(&ValidatorService_ServiceDesc, srv)
 }
 
-func _TXNService_Coin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_StreamBroadcast_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ValidatorServiceServer).StreamBroadcast(&validatorServiceStreamBroadcastServer{stream})
+}
+
+type ValidatorService_StreamBroadcastServer interface {
+	SendAndClose(*emptypb.Empty) error
+	Recv() (*DataChunk, error)
+	grpc.ServerStream
+}
+
+type validatorServiceStreamBroadcastServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceStreamBroadcastServer) SendAndClose(m *emptypb.Empty) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamBroadcastServer) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _ValidatorService_Broadcast_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Block)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).Broadcast(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_Broadcast_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).Broadcast(ctx, req.(*Block))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_SyncBlockchain_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(BlockSync)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ValidatorServiceServer).SyncBlockchain(m, &validatorServiceSyncBlockchainServer{stream})
+}
+
+type ValidatorService_SyncBlockchainServer interface {
+	Send(*DataChunk) error
+	grpc.ServerStream
+}
+
+type validatorServiceSyncBlockchainServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceSyncBlockchainServer) Send(m *DataChunk) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _ValidatorService_ValidatorRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidatorRegistration)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorRegistration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorRegistration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorRegistration(ctx, req.(*ValidatorRegistration))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_SyncValidatorList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidatorSyncRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).SyncValidatorList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_SyncValidatorList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).SyncValidatorList(ctx, req.(*ValidatorSyncRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_ValidatorCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CoinTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Coin(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorCoin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Coin_FullMethodName,
+		FullMethod: ValidatorService_ValidatorCoin_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Coin(ctx, req.(*CoinTXN))
+		return srv.(ValidatorServiceServer).ValidatorCoin(ctx, req.(*CoinTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_Mint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorMint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MintTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Mint(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorMint(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Mint_FullMethodName,
+		FullMethod: ValidatorService_ValidatorMint_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Mint(ctx, req.(*MintTXN))
+		return srv.(ValidatorServiceServer).ValidatorMint(ctx, req.(*MintTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_ItemMint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorItemMint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ItemizedMintTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).ItemMint(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorItemMint(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_ItemMint_FullMethodName,
+		FullMethod: ValidatorService_ValidatorItemMint_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).ItemMint(ctx, req.(*ItemizedMintTXN))
+		return srv.(ValidatorServiceServer).ValidatorItemMint(ctx, req.(*ItemizedMintTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_Contract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(InstrumentContract)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Contract(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorContract(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Contract_FullMethodName,
+		FullMethod: ValidatorService_ValidatorContract_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Contract(ctx, req.(*InstrumentContract))
+		return srv.(ValidatorServiceServer).ValidatorContract(ctx, req.(*InstrumentContract))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_GovernProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorGovernProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GovernanceProposal)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).GovernProposal(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorGovernProposal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_GovernProposal_FullMethodName,
+		FullMethod: ValidatorService_ValidatorGovernProposal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).GovernProposal(ctx, req.(*GovernanceProposal))
+		return srv.(ValidatorServiceServer).ValidatorGovernProposal(ctx, req.(*GovernanceProposal))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_GovernVote_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorGovernVote_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GovernanceVote)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).GovernVote(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorGovernVote(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_GovernVote_FullMethodName,
+		FullMethod: ValidatorService_ValidatorGovernVote_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).GovernVote(ctx, req.(*GovernanceVote))
+		return srv.(ValidatorServiceServer).ValidatorGovernVote(ctx, req.(*GovernanceVote))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_SmartContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorSmartContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SmartContractTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).SmartContract(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorSmartContract(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_SmartContract_FullMethodName,
+		FullMethod: ValidatorService_ValidatorSmartContract_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).SmartContract(ctx, req.(*SmartContractTXN))
+		return srv.(ValidatorServiceServer).ValidatorSmartContract(ctx, req.(*SmartContractTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_SmartContractExecute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorSmartContractExecute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SmartContractExecuteTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).SmartContractExecute(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorSmartContractExecute(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_SmartContractExecute_FullMethodName,
+		FullMethod: ValidatorService_ValidatorSmartContractExecute_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).SmartContractExecute(ctx, req.(*SmartContractExecuteTXN))
+		return srv.(ValidatorServiceServer).ValidatorSmartContractExecute(ctx, req.(*SmartContractExecuteTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_CurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorCurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SelfCurrencyEquiv)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).CurrencyEquiv(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorCurrencyEquiv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_CurrencyEquiv_FullMethodName,
+		FullMethod: ValidatorService_ValidatorCurrencyEquiv_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).CurrencyEquiv(ctx, req.(*SelfCurrencyEquiv))
+		return srv.(ValidatorServiceServer).ValidatorCurrencyEquiv(ctx, req.(*SelfCurrencyEquiv))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_AuthCurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorAuthCurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AuthorizedCurrencyEquiv)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).AuthCurrencyEquiv(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorAuthCurrencyEquiv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_AuthCurrencyEquiv_FullMethodName,
+		FullMethod: ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).AuthCurrencyEquiv(ctx, req.(*AuthorizedCurrencyEquiv))
+		return srv.(ValidatorServiceServer).ValidatorAuthCurrencyEquiv(ctx, req.(*AuthorizedCurrencyEquiv))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_ExpenseRatio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorExpenseRatio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ExpenseRatioTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).ExpenseRatio(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorExpenseRatio(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_ExpenseRatio_FullMethodName,
+		FullMethod: ValidatorService_ValidatorExpenseRatio_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).ExpenseRatio(ctx, req.(*ExpenseRatioTXN))
+		return srv.(ValidatorServiceServer).ValidatorExpenseRatio(ctx, req.(*ExpenseRatioTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_NFT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorNFT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(NFTTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).NFT(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorNFT(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_NFT_FullMethodName,
+		FullMethod: ValidatorService_ValidatorNFT_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).NFT(ctx, req.(*NFTTXN))
+		return srv.(ValidatorServiceServer).ValidatorNFT(ctx, req.(*NFTTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_ContractUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorContractUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ContractUpdateTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).ContractUpdate(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorContractUpdate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_ContractUpdate_FullMethodName,
+		FullMethod: ValidatorService_ValidatorContractUpdate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).ContractUpdate(ctx, req.(*ContractUpdateTXN))
+		return srv.(ValidatorServiceServer).ValidatorContractUpdate(ctx, req.(*ContractUpdateTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_Foundation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidatorHeartbeat)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorHeartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorHeartbeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorHeartbeat(ctx, req.(*ValidatorHeartbeat))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_ValidatorFoundation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FoundationTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Foundation(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorFoundation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Foundation_FullMethodName,
+		FullMethod: ValidatorService_ValidatorFoundation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Foundation(ctx, req.(*FoundationTXN))
+		return srv.(ValidatorServiceServer).ValidatorFoundation(ctx, req.(*FoundationTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_DelegatedVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorDelegatedVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DelegatedVotingTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).DelegatedVoting(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorDelegatedVoting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_DelegatedVoting_FullMethodName,
+		FullMethod: ValidatorService_ValidatorDelegatedVoting_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).DelegatedVoting(ctx, req.(*DelegatedVotingTXN))
+		return srv.(ValidatorServiceServer).ValidatorDelegatedVoting(ctx, req.(*DelegatedVotingTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_Quash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_IndexerVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IndexerVotingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).IndexerVoting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_IndexerVoting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).IndexerVoting(ctx, req.(*IndexerVotingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_ValidatorQuash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QuashTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Quash(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorQuash(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Quash_FullMethodName,
+		FullMethod: ValidatorService_ValidatorQuash_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Quash(ctx, req.(*QuashTXN))
+		return srv.(ValidatorServiceServer).ValidatorQuash(ctx, req.(*QuashTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_FastQuorum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorFastQuorum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FastQuorumTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).FastQuorum(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorFastQuorum(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_FastQuorum_FullMethodName,
+		FullMethod: ValidatorService_ValidatorFastQuorum_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).FastQuorum(ctx, req.(*FastQuorumTXN))
+		return srv.(ValidatorServiceServer).ValidatorFastQuorum(ctx, req.(*FastQuorumTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_Revoke_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ValidatorService_ValidatorRevoke_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RevokeSBT)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXNServiceServer).Revoke(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorRevoke(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TXNService_Revoke_FullMethodName,
+		FullMethod: ValidatorService_ValidatorRevoke_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Revoke(ctx, req.(*RevokeSBT))
+		return srv.(ValidatorServiceServer).ValidatorRevoke(ctx, req.(*RevokeSBT))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
+// ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var TXNService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "zera_validator.TXNService",
-	HandlerType: (*TXNServiceServer)(nil),
+var ValidatorService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "zera_validator.ValidatorService",
+	HandlerType: (*ValidatorServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Coin",
-			Handler:    _TXNService_Coin_Handler,
+			MethodName: "Broadcast",
+			Handler:    _ValidatorService_Broadcast_Handler,
 		},
 		{
-			MethodName: "Mint",
-			Handler:    _TXNService_Mint_Handler,
+			MethodName: "ValidatorRegistration",
+			Handler:    _ValidatorService_ValidatorRegistration_Handler,
 		},
 		{
-			MethodName: "ItemMint",
-			Handler:    _TXNService_ItemMint_Handler,
+			MethodName: "SyncValidatorList",
+			Handler:    _ValidatorService_SyncValidatorList_Handler,
 		},
 		{
-			MethodName: "Contract",
-			Handler:    _TXNService_Contract_Handler,
+			MethodName: "ValidatorCoin",
+			Handler:    _ValidatorService_ValidatorCoin_Handler,
 		},
 		{
-			MethodName: "GovernProposal",
-			Handler:    _TXNService_GovernProposal_Handler,
+			MethodName: "ValidatorMint",
+			Handler:    _ValidatorService_ValidatorMint_Handler,
 		},
 		{
-			MethodName: "GovernVote",
-			Handler:    _TXNService_GovernVote_Handler,
+			MethodName: "ValidatorItemMint",
+			Handler:    _ValidatorService_ValidatorItemMint_Handler,
 		},
 		{
-			MethodName: "SmartContract",
-			Handler:    _TXNService_SmartContract_Handler,
+			MethodName: "ValidatorContract",
+			Handler:    _ValidatorService_ValidatorContract_Handler,
 		},
 		{
-			MethodName: "SmartContractExecute",
-			Handler:    _TXNService_SmartContractExecute_Handler,
+			MethodName: "ValidatorGovernProposal",
+			Handler:    _ValidatorService_ValidatorGovernProposal_Handler,
 		},
 		{
-			MethodName: "CurrencyEquiv",
-			Handler:    _TXNService_CurrencyEquiv_Handler,
+			MethodName: "ValidatorGovernVote",
+			Handler:    _ValidatorService_ValidatorGovernVote_Handler,
 		},
 		{
-			MethodName: "AuthCurrencyEquiv",
-			Handler:    _TXNService_AuthCurrencyEquiv_Handler,
+			MethodName: "ValidatorSmartContract",
+			Handler:    _ValidatorService_ValidatorSmartContract_Handler,
 		},
 		{
-			MethodName: "ExpenseRatio",
-			Handler:    _TXNService_ExpenseRatio_Handler,
+			MethodName: "ValidatorSmartContractExecute",
+			Handler:    _ValidatorService_ValidatorSmartContractExecute_Handler,
 		},
 		{
-			MethodName: "NFT",
-			Handler:    _TXNService_NFT_Handler,
+			MethodName: "ValidatorCurrencyEquiv",
+			Handler:    _ValidatorService_ValidatorCurrencyEquiv_Handler,
 		},
 		{
-			MethodName: "ContractUpdate",
-			Handler:    _TXNService_ContractUpdate_Handler,
+			MethodName: "ValidatorAuthCurrencyEquiv",
+			Handler:    _ValidatorService_ValidatorAuthCurrencyEquiv_Handler,
 		},
 		{
-			MethodName: "Foundation",
-			Handler:    _TXNService_Foundation_Handler,
+			MethodName: "ValidatorExpenseRatio",
+			Handler:    _ValidatorService_ValidatorExpenseRatio_Handler,
 		},
 		{
-			MethodName: "DelegatedVoting",
-			Handler:    _TXNService_DelegatedVoting_Handler,
+			MethodName: "ValidatorNFT",
+			Handler:    _ValidatorService_ValidatorNFT_Handler,
 		},
 		{
-			MethodName: "Quash",
-			Handler:    _TXNService_Quash_Handler,
+			MethodName: "ValidatorContractUpdate",
+			Handler:    _ValidatorService_ValidatorContractUpdate_Handler,
 		},
 		{
-			MethodName: "FastQuorum",
-			Handler:    _TXNService_FastQuorum_Handler,
+			MethodName: "ValidatorHeartbeat",
+			Handler:    _ValidatorService_ValidatorHeartbeat_Handler,
 		},
 		{
-			MethodName: "Revoke",
-			Handler:    _TXNService_Revoke_Handler,
+			MethodName: "ValidatorFoundation",
+			Handler:    _ValidatorService_ValidatorFoundation_Handler,
+		},
+		{
+			MethodName: "ValidatorDelegatedVoting",
+			Handler:    _ValidatorService_ValidatorDelegatedVoting_Handler,
+		},
+		{
+			MethodName: "IndexerVoting",
+			Handler:    _ValidatorService_IndexerVoting_Handler,
+		},
+		{
+			MethodName: "ValidatorQuash",
+			Handler:    _ValidatorService_ValidatorQuash_Handler,
+		},
+		{
+			MethodName: "ValidatorFastQuorum",
+			Handler:    _ValidatorService_ValidatorFastQuorum_Handler,
+		},
+		{
+			MethodName: "ValidatorRevoke",
+			Handler:    _ValidatorService_ValidatorRevoke_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamBroadcast",
+			Handler:       _ValidatorService_StreamBroadcast_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "SyncBlockchain",
+			Handler:       _ValidatorService_SyncBlockchain_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "validator.proto",
 }

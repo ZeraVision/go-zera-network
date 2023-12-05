@@ -10,186 +10,477 @@ option go_package = "./grpc/protobuf";
 
 option optimize_for = SPEED;
 
-service ValidatorService{
-    rpc StreamBroadcast(stream DataChunk) returns (google.protobuf.Empty);
-    rpc Broadcast(Block) returns (google.protobuf.Empty);
-    rpc SyncBlockchain(BlockSync) returns (stream DataChunk);
-    rpc ValidatorRegistration(zera_txn.ValidatorRegistration) returns (google.protobuf.Empty);
-    rpc SyncValidatorList(ValidatorSyncRequest) returns (ValidatorSync);
-    rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
-    rpc ValidatorMint(zera_txn.MintTXN) returns (google.protobuf.Empty);
-    rpc ValidatorItemMint(zera_txn.ItemizedMintTXN) returns (google.protobuf.Empty);
-    rpc ValidatorContract(zera_txn.InstrumentContract) returns (google.protobuf.Empty); 
-    rpc ValidatorGovernProposal(zera_txn.GovernanceProposal) returns (google.protobuf.Empty);
-    rpc ValidatorGovernVote(zera_txn.GovernanceVote) returns (google.protobuf.Empty);
-    rpc ValidatorSmartContract(zera_txn.SmartContractTXN) returns (google.protobuf.Empty);
-    rpc ValidatorSmartContractExecute(zera_txn.SmartContractExecuteTXN) returns (google.protobuf.Empty);
-    rpc ValidatorCurrencyEquiv(zera_txn.SelfCurrencyEquiv) returns (google.protobuf.Empty);
-    rpc ValidatorAuthCurrencyEquiv(zera_txn.AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
-    rpc ValidatorExpenseRatio(zera_txn.ExpenseRatioTXN) returns (google.protobuf.Empty);
-    rpc ValidatorNFT(zera_txn.NFTTXN) returns (google.protobuf.Empty);
-    rpc ValidatorContractUpdate(zera_txn.ContractUpdateTXN) returns (google.protobuf.Empty);
-    rpc ValidatorHeartbeat(zera_txn.ValidatorHeartbeat) returns (google.protobuf.Empty);
-    rpc ValidatorFoundation(zera_txn.FoundationTXN) returns (google.protobuf.Empty);
-    rpc ValidatorDelegatedVoting(zera_txn.DelegatedVotingTXN) returns (google.protobuf.Empty);
-    rpc IndexerVoting(IndexerVotingRequest) returns (IndexerVotingResponse);
-    rpc ValidatorQuash(zera_txn.QuashTXN) returns (google.protobuf.Empty);
-    rpc ValidatorFastQuorum(zera_txn.FastQuorumTXN) returns (google.protobuf.Empty);
+service TXNService{
+    rpc Coin(CoinTXN) returns (google.protobuf.Empty);
+    rpc Mint(MintTXN) returns (google.protobuf.Empty);
+    rpc ItemMint(ItemizedMintTXN) returns (google.protobuf.Empty);
+    rpc Contract(InstrumentContract) returns (google.protobuf.Empty); 
+    rpc GovernProposal(GovernanceProposal) returns (google.protobuf.Empty);
+    rpc GovernVote(GovernanceVote) returns (google.protobuf.Empty);
+    rpc SmartContract(SmartContractTXN) returns (google.protobuf.Empty);
+    rpc SmartContractExecute(SmartContractExecuteTXN) returns (google.protobuf.Empty);
+    rpc CurrencyEquiv(SelfCurrencyEquiv) returns (google.protobuf.Empty);
+    rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
+    rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty);
+    rpc NFT(NFTTXN) returns (google.protobuf.Empty);
+    rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
+    rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
+    rpc DelegatedVoting(DelegatedVotingTXN) returns (google.protobuf.Empty);
+    rpc Quash(QuashTXN) returns (google.protobuf.Empty);
+    rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
+    rpc Revoke(RevokeSBT) returns (google.protobuf.Empty);
 }
 
-message DataChunk{
-    bytes chunk_data = 1;
-    int32 chunk_number = 2;
-    optional int32 total_chunks = 3;
+enum TXN_STATUS{
+    OK = 0;
+    INVALID_PARAMETERS = 1;
+    INSUFFICIENT_AMOUNT = 2;
+    INSUFFICIENT_CONTRACT_FEES = 3;
+    AUTHORIZED_INSUFFICIENT_FEES = 4;
+    AUTHORIZED_INSUFFICIENT_CONTRACT_FEES = 5;
+    INVALID_CONTRACT = 6;
+    INVALID_AUTH_KEY = 7;
+    INVALID_WALLET_ADDRESS = 8;
+    INVALID_MULTI_TRANSACTION = 9;
+    INVALID_CONTRACT_PARAMETERS = 10;
+    INVALID_CONTRACT_FEE_ID = 11;
+    INVALID_UINT256 = 12;
+    EXCEEDED_MAX_SUPPLY = 13;
+    INVALID_NFT = 14;
+    NFT_OWNERSHIP = 15;
+    VALIDATOR_ADDRESS = 16;
+    CONTRACT_HAS_NO_GOVERNANCE = 17;
+    INVALID_BASE_FEE_ID = 18;
+    EXPENSE_RATIO_DUPLICATE = 19;
+    RESTRICTED_SYMBOL = 20;
+    INVALID_PROPOSAL_ID = 21;
+    PROPOSAL_NOT_IN_VOTING_PERIOD = 22;
+    TIME_DELAY_INITIALIZED = 23;
+    INVALID_TXN_HASH = 24;
+    INVALID_TXN_TYPE = 25;
+    TIME_DELAY_EXPIRED = 26;
+    DUPLICATE_AUTH_KEY = 27;
 }
-message ValidatorSyncRequest {
-  bytes public_key = 1;
-  bytes signature = 2;
+enum TRANSACTION_TYPE
+{
+    COIN_TYPE = 0;
+    FOUNDATION_TYPE = 2;
+    MINT_TYPE = 1;
+    ITEM_MINT_TYPE = 3;
+    CONTRACT_TXN_TYPE = 4;
+    VOTE_TYPE = 5;
+    PROPOSAL_TYPE = 6;
+    SMART_CONTRACT_TYPE = 7;
+    SMART_CONTRACT_EXECUTE_TYPE = 8;
+    SELF_CURRENCY_EQUIV_TYPE = 9;
+    AUTHORIZED_CURRENCY_EQUIV_TYPE = 10;
+    EXPENSE_RATIO_TYPE = 11;
+    NFT_TYPE = 12;
+    UPDATE_CONTRACT_TYPE = 13;
+    VALIDATOR_REGISTRATION_TYPE = 14;
+    VALIDATOR_HEARTBEAT_TYPE = 15;
+    PROPOSAL_RESULT_TYPE = 16;
+    DELEGATED_VOTING_TYPE = 17;
 }
-message ValidatorSync{
-    repeated zera_txn.Validator validators = 1;
-    optional bytes signature = 2;
-    bytes public_key = 3;
+//ENUMS
+enum LANGUAGE{
+    CPLUSPLUS = 0;
+    RUST = 1;
+    PYTHON = 2;
+    JAVASCRIPT = 3;
 }
 
-message BlockSync{
-    bytes last_key = 1;
-    uint64 amount = 2;
-    optional bytes signature = 3;
-    bytes public_key = 4;
-}
-message BlockHeader{
-	optional uint64 version = 1;
-	optional bytes previous_block_hash = 2;
-    optional bytes hash = 3;
-	google.protobuf.Timestamp timestamp = 4;
-	uint64 nonce = 5;
-	uint64 block_height = 6;
-    bytes fee_address = 7;
-    optional bytes signature = 8;
-    bytes public_key = 9;
-    optional bytes merkle_root = 10;
-}
-message Block{
-	optional BlockHeader block_header = 1;
-	zera_txn.TXNS transactions = 2;
-	optional bytes signature = 4;
-    optional bytes public_key = 5;
-}
-message BlockBatch{
-    repeated Block blocks = 1;
-    bool last_block = 2;
-    optional bytes signature = 3;
-    bytes public_key = 4;
+enum PROPOSAL_PERIOD{
+    DAYS = 0;
+    MONTHS = 1;
 }
 
-message NFT{
-    bytes holder_address = 1;
+enum VARIABLE_TYPE{
+    INT = 0;
+    SHORT = 1;
+    LONG = 2;
+    LONG_LONG = 3;
+    BOOL = 4;
+    STRING = 5;
+}
+//SUB MESSAGES
+enum CONTRACT_FEE_TYPE{
+    FIXED = 0;
+    CUR_EQUIVALENT = 1;
+    PERCENTAGE= 2;
+}
+enum GOVERNANCE_TYPE{
+    STAGED = 0;    //Multiple stages of governance, must pass regular quorum to get to next stage. Up to 99 stages specified by contract creator (in days)
+    CYCLE = 1;     //1 specified voting stage based on days repeat this process once the cycle is complete (in days)
+    STAGGERED = 2; //Every proposal has the same voting period length and starts when proposal is made (in days)
+    ADAPTIVE = 3;  //Every proposal has its own specified voting period (in days)
+}
+enum CONTRACT_TYPE{
+    TOKEN = 0;
+    NFT = 1;
+    SBT = 2;
+}
+message AddRemoveDelegate{
+    bool add_remove = 1;
+    string contract_id = 2;
+}
+message DelegatedVotingTXN{
+    BaseTXN base = 1;
+    repeated DelegateVote delegate_votes = 2;
+    repeated DelegateFees delegate_fees = 3;
+}
+message DelegateVote{
+    bytes address = 1;
+    repeated AddRemoveDelegate add_remove_contracts = 2;
+}
+message DelegateFees{
+    string contract_id = 1;
+    string auth_amount = 2;
+}
+//trade in for maps
+message ExpenseRatio{
+    uint32 day = 1;
+    uint32 month = 2;
+    uint32 percent = 3;
+}
+message KeyValuePair{
+    string key = 1;
+    string value = 2;
+}
+message ByteMultiplier{
+    TRANSACTION_TYPE txn_type = 1;
+    string multiplier = 2;
+}
+message FoundationTXN{
+    BaseTXN base = 1;
+    repeated string restricted_symbols = 2;
+    repeated ByteMultiplier byte_multiplier = 3;
+    optional string fee_ISO4217 = 4;
+}
+message RevokeSBT{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    bytes recipient_address = 3;
+    string sbt_id = 4;
+}
+message FastQuorumTXN{
+    BaseTXN base = 1;
+    bytes proposal_id = 2;
+}
+message Governance{
+    GOVERNANCE_TYPE type = 1;              //read GOVERNANCE_TYPE above
+    uint32 regular_quorum = 2;             // percent of yes votes to pass at the end of cycle (still needs to pass threshhold)
+    optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply)
+    repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
+    uint32 threshold = 5;                  // threshold of participation of holders needed to be accepted
+    optional bool chicken_dinner = 6;      //Option winner does not need to pass regular quorum.
+    bool allow_multi = 7;                  //Allow multiple choice proposals.
+    optional uint32 voting_period = 8;     //How many days in the voting period (Months | Days). (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
+    repeated string allowed_proposal_instrument = 9;
+    optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends
+    repeated uint32 stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
+    google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
+}
+message CoinDenomination{
+    string denomination_name = 5;
+    string amount = 6;
+}
+message ContractFees{
+    string fee = 1;                 //100% && $1.00 = 1000000000000000000 (quintillion)
+    optional bytes fee_address = 2; //address of contract holder (or the wallet they want fees to go to)
+    string burn = 3;                //percent = 100% = 1000000000000000000 (quintillion)
+    string validator = 4;           //percent = 100% = 1000000000000000000 (quintillion)
+    repeated string allowed_fee_instrument = 5; //contract_ids that can be used to pay fees
+    CONTRACT_FEE_TYPE contract_fee_type = 6;    //read CONTRACT_FEE_TYPE above
+}
+message ItemContractFees{
+    string fee = 1;                  //$1.00 = 1000000000000000000 (quintillion)
+    optional bytes fee_address = 2;
+    string burn = 3;
+    string validator = 4;
+    repeated string allowed_fee_instrument = 5;
+}
+message RestrictedKey{
+    bytes public_key = 1;
+    int64 time_delay = 2;
+    bool global = 3;
+    bool update_contract = 4;
+    bool transfer = 5;
+    bool quash = 6;
+    bool mint = 7;
+    bool vote = 8;
+    bool propose = 9;
+    bool compliance = 10;
+    optional bool expense_ratio = 11;
+    optional bool cur_equiv = 12;
+    optional bool revoke = 13;
+}
+message ExpenseRatioTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    repeated bytes addresses = 3;
+}
+message PreMintWallet{
+    bytes address = 16;
+    string amount = 17;
+}
+message Transfer{
+    bytes recipient_address = 27;
+    string amount = 28;
+    string contract_id = 29;
+    optional string contract_fee_amount = 30;
+    optional string contract_fee_id = 31;
+    string base_fee_amount = 32;
+    string base_fee_id = 33;
+    optional string memo = 35;
+}
+message BaseTXN{
+    optional bytes public_key = 19;
+    google.protobuf.Timestamp timestamp = 20; 
+    string fee_amount = 21;
+    string fee_id = 22;
+    optional bytes signature = 23;
+    optional bytes hash = 24;
+    repeated bytes multi_public_key = 25;
+    repeated bytes multi_signature = 26;
+    optional string memo = 27;
+}
+
+message SelfCurrencyEquiv{
+    BaseTXN base = 1;
+    repeated CurrencyEquiv cur_equiv = 2;
+}
+message AuthorizedCurrencyEquiv{
+    BaseTXN base = 1;
+    repeated CurrencyEquiv cur_equiv = 2;
+}
+message CurrencyEquiv{
+    string contract_id = 1;
+    string rate = 2;
+    optional bool authorized = 3;
+    optional uint64 max_stake = 4;
+}
+message ExpenseRatioResult{
+    string contract_id = 1;
+    repeated Wallets wallets = 2;
+    bytes hash = 3;
+    bytes recipient_address = 4;
+}
+
+message Wallets{
+    bytes address = 1;
+    string amount = 2;
+}
+message QuashTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    bytes txn_hash = 3;
+}
+message QuashResult{
+    bytes txn_hash = 1;
+    repeated bytes quash_keys = 2;
+}
+//MAIN TXN MESSAGES
+message CoinTXN{
+    BaseTXN base = 34;
+    repeated Transfer transfers = 35;
+}
+message MintTXN{
+    BaseTXN base = 1;
+    string contract_id = 39;
+    string amount = 40;
+    bytes recipient_address = 41;
+}
+message NFTTXN{
+    BaseTXN base = 1;
     string contract_id = 2;
     string item_id = 3;
-    optional string voting_weight = 4;
-    optional zera_txn.ItemContractFees contract_fees = 5;
+    bytes recipient_address = 4; 
+    optional string contract_fee_amount = 5;
+    optional string contract_fee_id = 6;
 }
-
-message ProcessLedger{
-    repeated bytes cycle_contract_ids = 1;
-    repeated bytes proposal_ids = 2;
+message ItemizedMintTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string item_id = 3;
+    bytes recipient_address = 4; 
+    optional string voting_weight = 5;
+    repeated KeyValuePair parameters = 6; 
+    optional uint64 expiry = 7; 
+    optional ItemContractFees contract_fees = 8; //contract fees for specific item
+    optional uint64 valid_from = 9;
 }
-//message for a ledger to determine proposal_ids for contracts
-//used to process cycle/staged governance
-// Key = contract_id
-message ProposalLedger{
-    repeated bytes proposal_ids = 1;
-    repeated bytes pending_proposal_ids = 2;
+message ContractUpdateTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    uint64 contract_version = 3;
+    optional string name = 4;
+    optional Governance governance = 5;
+    repeated RestrictedKey restricted_keys = 6;
+    optional ContractFees contract_fees = 7;
+    repeated KeyValuePair custom_parameters = 8; 
+    repeated ExpenseRatio expense_ratio = 9;
 }
-message Vote{
-    map<string, string> vote = 1;
+message InstrumentContract{
+    BaseTXN base = 1; 
+    uint64 contract_version = 2;
+    string symbol = 3; 
+    string name = 4;
+    optional Governance governance = 5;
+    repeated RestrictedKey restricted_keys = 6;
+    optional string max_supply = 7;
+    optional ContractFees contract_fees = 8;
+    repeated PreMintWallet premint_wallets = 9;
+    optional CoinDenomination coin_denomination = 10;
+    repeated KeyValuePair custom_parameters = 11; 
+    string contract_id = 12; 
+    repeated ExpenseRatio expense_ratio = 13;
+    CONTRACT_TYPE type = 14;
+    bool update_contract_fees = 15;
+    bool update_expense_ratio = 16;
+    optional uint32 quash_threshold = 17;    //total number of quash txns to quash a time delay txn
 }
-message Voter{
-    optional bool support = 1;
-    optional uint32 option = 2;
-    bool delegated = 3;
+message GovernanceVote{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string proposal_id = 3;
+    optional bool support = 4;
+    optional uint32 support_option = 5;
 }
-message VoteWallet{
-    map<string, Voter> proposal_votes = 1;
+message GovernanceProposal{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string title = 3;
+    string synopsis = 4;
+    string body = 5;
+    repeated string options = 6;
+    optional google.protobuf.Timestamp start_timestamp = 7;
+    optional google.protobuf.Timestamp end_timestamp = 8;
 }
-message Proposal{
-    string contract_id = 1;
-    map<string, string> yes = 4;    //all votes for yes of each currency
-    map<string, string> no = 5;     //all votes for no of each currency
-    map<uint32, Vote> options = 6; //all votes for each option of each currency
-    uint32 stage = 7;
-    string fee = 8;
-    string fee_id = 9;
-    bytes wallet = 10;
-    map<string, Voter> voters = 11; //wallets and amounts of each currency wallet has
-    optional google.protobuf.Timestamp start_date = 12;
-    optional google.protobuf.Timestamp end_date = 13;
+message SmartContractTXN{
+    BaseTXN base = 1;
+    string raw_code = 2;
+    LANGUAGE language = 3;
+    repeated SmartContractParameter variable_type = 4;
 }
-message ProposalWalletRecieve{
-    zera_txn.BaseTXN base = 1;
-    bytes wallet_adr = 2;
-    string contract_id = 3;
-    string amount = 4;
+message SmartContractExecuteTXN{
+    BaseTXN base = 1;
+    bytes smart_contract_id = 2;
+    repeated SmartContractParameter parameters = 3;
 }
-
-message ProposalWalletSend{
-    zera_txn.BaseTXN base = 1;
-    bytes wallet_adr = 2;
-    string contract_id = 3;
-    repeated bytes recipient_wallet = 4;
-    repeated string amounts = 5;
+message Validator{
+    bytes public_key = 1;
+    string host = 2;
+    string client_port = 3; 
+    string validator_port = 4; 
+    uint64 benchmark = 5;
+    google.protobuf.Timestamp timestamp = 6;
+    bool lite = 7;
+    bool online = 8;
 }
-message CurrencyRate{
-    bool qualified = 1;
-    string rate = 2;
+message ValidatorRegistration{
+    BaseTXN base = 1;
+    Validator validator = 2;
+    bool register = 3;
 }
-message ExpenseTracker{
-    int32 day = 1;
-    int32 month = 2;
+message ValidatorHeartbeat{
+    BaseTXN base = 1;
+    bool online = 2;
 }
-message RestrictedSymbols{
-    repeated string symbols = 1;
+message SmartContractParameter{
+    uint32 index = 75;
+    VARIABLE_TYPE type = 76;
+    optional string value = 77;
 }
-
-message IndexerVotingRequest{
-    string proposal_id = 1;
+message Votes{
+    repeated VotePair votes = 1;
 }
-
-//THIS IS NOT A PART OF ACTUAL VALIDATOR
-message IndexerOption{
-    repeated IndexerVote votes = 1;
-    uint32 index = 2;
-}
-message IndexerVote{
+message VotePair{
     string contract_id = 1;
     string amount = 2;
 }
-message IndexerVotingResponse{
-    repeated IndexerVote support = 1;    //all votes for yes of each currency
-    repeated IndexerVote against = 2;     //all votes for no of each currency
-    repeated IndexerOption options = 3;  //all votes for each option of each currency
-    uint32 stage = 4;
+message ProposalResult{
+    BaseTXN base = 1;
+    string contract_id = 2;     //contract_id of the proposal
+    bytes proposal_id = 3;      //proposal_id of the proposal
+    optional string support_cur_equiv = 4; //cur_equiv of all the support votes (multiple contract_ids)
+    optional string against_cur_equiv = 5; //cur_equiv of all the against votes (multiple contract_ids)
+    repeated string option_cur_equiv = 6;  //cur_equiv of all the option votes (multiple contract_ids)
+    optional Votes support_votes = 7;   //raw support votes of each contract_id
+    optional Votes against_votes = 8;   //raw against votes of each contract_id
+    repeated Votes option_votes = 9;    //raw option votes of each contract_id
+    bool passed = 10;
+    bool final_stage = 11;
+    uint32 stage = 12;
+    string fee_address = 13;
 }
-message DelegationFees{
-    map<string, string> authorized_fees =3;
+message TXNS{
+    repeated CoinTXN coin_txns = 1;
+    repeated MintTXN mint_txns = 2;
+    repeated ItemizedMintTXN item_mint_txns = 3;
+    repeated InstrumentContract contract_txns = 4;
+    repeated GovernanceVote governance_votes = 5;
+    repeated GovernanceProposal governance_proposals = 6;
+    repeated SmartContractTXN smart_contracts = 7;
+    repeated SmartContractExecuteTXN smart_contract_executes = 8;
+    repeated SelfCurrencyEquiv self_cur_equivs = 9;
+    repeated AuthorizedCurrencyEquiv auth_cur_equivs = 10;
+    repeated ExpenseRatioTXN expense_ratios = 11;
+    repeated TXNStatusFees txn_fees_and_status = 12;
+    repeated TokenFees token_fees = 13;
+    repeated NFTTXN nft_txns = 14;
+    repeated ContractUpdateTXN contract_update_txns = 15;
+    repeated ValidatorRegistration validator_registration_txns = 16;
+    repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
+    repeated ProposalResult proposal_result_txns = 18;
+    repeated ExpenseRatioResult expense_ratio_result_txns = 19;
+    repeated FoundationTXN foundation_txns = 20;
+    repeated DelegatedVotingTXN delegated_voting_txns = 21;
+    repeated QuashTXN quash_txns = 22;
+    repeated FastQuorumTXN fast_quorum_txns = 23;
+    repeated QuashResult quash_results = 24;
 }
-message AuthorizedFee{
-    uint32 priority = 1;
-    string authorized_amount = 2;
+
+message Token{
+    string contract_id = 1;
+    string amount = 2;
 }
-message DelegatedVote{
-    map<string, AuthorizedFee> authorized_fees = 3;
+message TokenFees{
+    bytes address = 1;
+    repeated Token tokens = 2;
 }
-message Delegator{
-    repeated bytes public_key = 1;
+message TXNStatusFees{
+    bytes txn_hash = 1;
+    TXN_STATUS status = 2;
+    repeated string base_fees = 3;
+    repeated string base_contract_id = 4;
+    repeated string contract_fees = 5;
+    repeated string contract_contract_id = 6;
+    optional string approved_votes = 7;
+    optional string against_votes = 8;
 }
-message DelegatedRecipient{ 
-    map<string, Delegator> delegations = 1;
+
+message TXNWrapper{
+    oneof payload{
+        CoinTXN coin_txn = 1;
+        MintTXN mint_txn = 2;
+        ItemizedMintTXN item_mint_txn = 3;
+        InstrumentContract contract_txn = 4;
+        GovernanceVote governance_vote = 5;
+        GovernanceProposal governance_proposal = 6;
+        SmartContractTXN smart_contract = 7;
+        SmartContractExecuteTXN smart_contract_execute = 8;
+        SelfCurrencyEquiv self_cur_equivs = 9;
+        AuthorizedCurrencyEquiv auth_cur_equivs = 10;
+        ExpenseRatioTXN expense_ratios = 11;
+        NFTTXN nft_txn = 12;
+        ContractUpdateTXN contract_update_txn = 13;
+        ValidatorRegistration validator_registration_txn = 14;
+        ValidatorHeartbeat validator_heartbeat_txn = 15;
+        FoundationTXN foundation_txn = 20;
+        DelegatedVotingTXN delegated_voting_txn = 21;
+        QuashTXN quash_txn = 22;
+        FastQuorumTXN fast_quorum_txn = 23;
+    }
 }
-message DelegateWallets{
-    repeated bytes wallets = 1;
-}
-message QuashLedger{
-    repeated string txn_ids = 1;
-}
+

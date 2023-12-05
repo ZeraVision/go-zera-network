@@ -75,7 +75,7 @@ type ValidatorServiceClient interface {
 	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
 	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ValidatorRevoke(ctx context.Context, in *RevokeSBT, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -350,7 +350,7 @@ func (c *validatorServiceClient) ValidatorFastQuorum(ctx context.Context, in *Fa
 	return out, nil
 }
 
-func (c *validatorServiceClient) ValidatorRevoke(ctx context.Context, in *RevokeSBT, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorRevoke_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -387,7 +387,7 @@ type ValidatorServiceServer interface {
 	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
 	ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error)
 	ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
-	ValidatorRevoke(context.Context, *RevokeSBT) (*emptypb.Empty, error)
+	ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -467,7 +467,7 @@ func (UnimplementedValidatorServiceServer) ValidatorQuash(context.Context, *Quas
 func (UnimplementedValidatorServiceServer) ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFastQuorum not implemented")
 }
-func (UnimplementedValidatorServiceServer) ValidatorRevoke(context.Context, *RevokeSBT) (*emptypb.Empty, error) {
+func (UnimplementedValidatorServiceServer) ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorRevoke not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
@@ -927,7 +927,7 @@ func _ValidatorService_ValidatorFastQuorum_Handler(srv interface{}, ctx context.
 }
 
 func _ValidatorService_ValidatorRevoke_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RevokeSBT)
+	in := new(RevokeTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -939,7 +939,7 @@ func _ValidatorService_ValidatorRevoke_Handler(srv interface{}, ctx context.Cont
 		FullMethod: ValidatorService_ValidatorRevoke_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorRevoke(ctx, req.(*RevokeSBT))
+		return srv.(ValidatorServiceServer).ValidatorRevoke(ctx, req.(*RevokeTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -1024,7 +1024,7 @@ func (x *FoundationTXN) GetFee_ISO4217() string {
 	return ""
 }
 
-type RevokeSBT struct {
+type RevokeTXN struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1035,8 +1035,8 @@ type RevokeSBT struct {
 	SbtId            string   `protobuf:"bytes,4,opt,name=sbt_id,json=sbtId,proto3" json:"sbt_id,omitempty"`
 }
 
-func (x *RevokeSBT) Reset() {
-	*x = RevokeSBT{}
+func (x *RevokeTXN) Reset() {
+	*x = RevokeTXN{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_txn_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1044,13 +1044,13 @@ func (x *RevokeSBT) Reset() {
 	}
 }
 
-func (x *RevokeSBT) String() string {
+func (x *RevokeTXN) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RevokeSBT) ProtoMessage() {}
+func (*RevokeTXN) ProtoMessage() {}
 
-func (x *RevokeSBT) ProtoReflect() protoreflect.Message {
+func (x *RevokeTXN) ProtoReflect() protoreflect.Message {
 	mi := &file_txn_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1062,33 +1062,33 @@ func (x *RevokeSBT) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RevokeSBT.ProtoReflect.Descriptor instead.
-func (*RevokeSBT) Descriptor() ([]byte, []int) {
+// Deprecated: Use RevokeTXN.ProtoReflect.Descriptor instead.
+func (*RevokeTXN) Descriptor() ([]byte, []int) {
 	return file_txn_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *RevokeSBT) GetBase() *BaseTXN {
+func (x *RevokeTXN) GetBase() *BaseTXN {
 	if x != nil {
 		return x.Base
 	}
 	return nil
 }
 
-func (x *RevokeSBT) GetContractId() string {
+func (x *RevokeTXN) GetContractId() string {
 	if x != nil {
 		return x.ContractId
 	}
 	return ""
 }
 
-func (x *RevokeSBT) GetRecipientAddress() []byte {
+func (x *RevokeTXN) GetRecipientAddress() []byte {
 	if x != nil {
 		return x.RecipientAddress
 	}
 	return nil
 }
 
-func (x *RevokeSBT) GetSbtId() string {
+func (x *RevokeTXN) GetSbtId() string {
 	if x != nil {
 		return x.SbtId
 	}
@@ -3899,7 +3899,7 @@ type TXNS struct {
 	QuashTxns                 []*QuashTXN                `protobuf:"bytes,22,rep,name=quash_txns,json=quashTxns,proto3" json:"quash_txns,omitempty"`
 	FastQuorumTxns            []*FastQuorumTXN           `protobuf:"bytes,23,rep,name=fast_quorum_txns,json=fastQuorumTxns,proto3" json:"fast_quorum_txns,omitempty"`
 	QuashResults              []*QuashResult             `protobuf:"bytes,24,rep,name=quash_results,json=quashResults,proto3" json:"quash_results,omitempty"`
-	RevokeSbts                []*RevokeSBT               `protobuf:"bytes,25,rep,name=revoke_sbts,json=revokeSbts,proto3" json:"revoke_sbts,omitempty"`
+	RevokeSbts                []*RevokeTXN               `protobuf:"bytes,25,rep,name=revoke_sbts,json=revokeSbts,proto3" json:"revoke_sbts,omitempty"`
 }
 
 func (x *TXNS) Reset() {
@@ -4102,7 +4102,7 @@ func (x *TXNS) GetQuashResults() []*QuashResult {
 	return nil
 }
 
-func (x *TXNS) GetRevokeSbts() []*RevokeSBT {
+func (x *TXNS) GetRevokeSbts() []*RevokeTXN {
 	if x != nil {
 		return x.RevokeSbts
 	}
@@ -4524,7 +4524,7 @@ func (x *TXNWrapper) GetFastQuorumTxn() *FastQuorumTXN {
 	return nil
 }
 
-func (x *TXNWrapper) GetRevokeSbt() *RevokeSBT {
+func (x *TXNWrapper) GetRevokeSbt() *RevokeTXN {
 	if x, ok := x.GetPayload().(*TXNWrapper_RevokeSbt); ok {
 		return x.RevokeSbt
 	}
@@ -4612,7 +4612,7 @@ type TXNWrapper_FastQuorumTxn struct {
 }
 
 type TXNWrapper_RevokeSbt struct {
-	RevokeSbt *RevokeSBT `protobuf:"bytes,24,opt,name=revoke_sbt,json=revokeSbt,proto3,oneof"`
+	RevokeSbt *RevokeTXN `protobuf:"bytes,24,opt,name=revoke_sbt,json=revokeSbt,proto3,oneof"`
 }
 
 func (*TXNWrapper_CoinTxn) isTXNWrapper_Payload() {}
@@ -4722,7 +4722,7 @@ var file_txn_proto_rawDesc = []byte{
 	0x65, 0x65, 0x5f, 0x49, 0x53, 0x4f, 0x34, 0x32, 0x31, 0x37, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
 	0x48, 0x00, 0x52, 0x0a, 0x66, 0x65, 0x65, 0x49, 0x53, 0x4f, 0x34, 0x32, 0x31, 0x37, 0x88, 0x01,
 	0x01, 0x42, 0x0e, 0x0a, 0x0c, 0x5f, 0x66, 0x65, 0x65, 0x5f, 0x49, 0x53, 0x4f, 0x34, 0x32, 0x31,
-	0x37, 0x22, 0x97, 0x01, 0x0a, 0x09, 0x52, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x42, 0x54, 0x12,
+	0x37, 0x22, 0x97, 0x01, 0x0a, 0x09, 0x52, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x54, 0x58, 0x4e, 0x12,
 	0x25, 0x0a, 0x04, 0x62, 0x61, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e,
 	0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x54, 0x58, 0x4e,
 	0x52, 0x04, 0x62, 0x61, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61,
@@ -5361,7 +5361,7 @@ var file_txn_proto_rawDesc = []byte{
 	0x75, 0x6c, 0x74, 0x52, 0x0c, 0x71, 0x75, 0x61, 0x73, 0x68, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74,
 	0x73, 0x12, 0x34, 0x0a, 0x0b, 0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x5f, 0x73, 0x62, 0x74, 0x73,
 	0x18, 0x19, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78,
-	0x6e, 0x2e, 0x52, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x42, 0x54, 0x52, 0x0a, 0x72, 0x65, 0x76,
+	0x6e, 0x2e, 0x52, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x54, 0x58, 0x4e, 0x52, 0x0a, 0x72, 0x65, 0x76,
 	0x6f, 0x6b, 0x65, 0x53, 0x62, 0x74, 0x73, 0x22, 0x40, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
 	0x12, 0x1f, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x5f, 0x69, 0x64, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x49,
@@ -5481,7 +5481,7 @@ var file_txn_proto_rawDesc = []byte{
 	0x66, 0x61, 0x73, 0x74, 0x51, 0x75, 0x6f, 0x72, 0x75, 0x6d, 0x54, 0x78, 0x6e, 0x12, 0x34, 0x0a,
 	0x0a, 0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x5f, 0x73, 0x62, 0x74, 0x18, 0x18, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x13, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x52, 0x65, 0x76,
-	0x6f, 0x6b, 0x65, 0x53, 0x42, 0x54, 0x48, 0x00, 0x52, 0x09, 0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65,
+	0x6f, 0x6b, 0x65, 0x54, 0x58, 0x4e, 0x48, 0x00, 0x52, 0x09, 0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65,
 	0x53, 0x62, 0x74, 0x42, 0x09, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x2a, 0xf9,
 	0x05, 0x0a, 0x0a, 0x54, 0x58, 0x4e, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x12, 0x06, 0x0a,
 	0x02, 0x4f, 0x4b, 0x10, 0x00, 0x12, 0x16, 0x0a, 0x12, 0x49, 0x4e, 0x56, 0x41, 0x4c, 0x49, 0x44,
@@ -5654,7 +5654,7 @@ var file_txn_proto_rawDesc = []byte{
 	0x4e, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x35, 0x0a, 0x06, 0x52, 0x65, 0x76,
 	0x6f, 0x6b, 0x65, 0x12, 0x13, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x52,
-	0x65, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x42, 0x54, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
+	0x65, 0x76, 0x6f, 0x6b, 0x65, 0x54, 0x58, 0x4e, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
 	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
 	0x42, 0x13, 0x48, 0x01, 0x5a, 0x0f, 0x2e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x62, 0x75, 0x66, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
@@ -5691,7 +5691,7 @@ var file_txn_proto_goTypes = []interface{}{
 	(*KeyValuePair)(nil),            // 13: zera_txn.KeyValuePair
 	(*ByteMultiplier)(nil),          // 14: zera_txn.ByteMultiplier
 	(*FoundationTXN)(nil),           // 15: zera_txn.FoundationTXN
-	(*RevokeSBT)(nil),               // 16: zera_txn.RevokeSBT
+	(*RevokeTXN)(nil),               // 16: zera_txn.RevokeTXN
 	(*FastQuorumTXN)(nil),           // 17: zera_txn.FastQuorumTXN
 	(*Governance)(nil),              // 18: zera_txn.Governance
 	(*CoinDenomination)(nil),        // 19: zera_txn.CoinDenomination
@@ -5742,7 +5742,7 @@ var file_txn_proto_depIdxs = []int32{
 	1,   // 4: zera_txn.ByteMultiplier.txn_type:type_name -> zera_txn.TRANSACTION_TYPE
 	26,  // 5: zera_txn.FoundationTXN.base:type_name -> zera_txn.BaseTXN
 	14,  // 6: zera_txn.FoundationTXN.byte_multiplier:type_name -> zera_txn.ByteMultiplier
-	26,  // 7: zera_txn.RevokeSBT.base:type_name -> zera_txn.BaseTXN
+	26,  // 7: zera_txn.RevokeTXN.base:type_name -> zera_txn.BaseTXN
 	26,  // 8: zera_txn.FastQuorumTXN.base:type_name -> zera_txn.BaseTXN
 	6,   // 9: zera_txn.Governance.type:type_name -> zera_txn.GOVERNANCE_TYPE
 	3,   // 10: zera_txn.Governance.proposal_period:type_name -> zera_txn.PROPOSAL_PERIOD
@@ -5821,7 +5821,7 @@ var file_txn_proto_depIdxs = []int32{
 	32,  // 83: zera_txn.TXNS.quash_txns:type_name -> zera_txn.QuashTXN
 	17,  // 84: zera_txn.TXNS.fast_quorum_txns:type_name -> zera_txn.FastQuorumTXN
 	33,  // 85: zera_txn.TXNS.quash_results:type_name -> zera_txn.QuashResult
-	16,  // 86: zera_txn.TXNS.revoke_sbts:type_name -> zera_txn.RevokeSBT
+	16,  // 86: zera_txn.TXNS.revoke_sbts:type_name -> zera_txn.RevokeTXN
 	52,  // 87: zera_txn.TokenFees.tokens:type_name -> zera_txn.Token
 	0,   // 88: zera_txn.TXNStatusFees.status:type_name -> zera_txn.TXN_STATUS
 	34,  // 89: zera_txn.TXNWrapper.coin_txn:type_name -> zera_txn.CoinTXN
@@ -5843,7 +5843,7 @@ var file_txn_proto_depIdxs = []int32{
 	9,   // 105: zera_txn.TXNWrapper.delegated_voting_txn:type_name -> zera_txn.DelegatedVotingTXN
 	32,  // 106: zera_txn.TXNWrapper.quash_txn:type_name -> zera_txn.QuashTXN
 	17,  // 107: zera_txn.TXNWrapper.fast_quorum_txn:type_name -> zera_txn.FastQuorumTXN
-	16,  // 108: zera_txn.TXNWrapper.revoke_sbt:type_name -> zera_txn.RevokeSBT
+	16,  // 108: zera_txn.TXNWrapper.revoke_sbt:type_name -> zera_txn.RevokeTXN
 	34,  // 109: zera_txn.TXNService.Coin:input_type -> zera_txn.CoinTXN
 	35,  // 110: zera_txn.TXNService.Mint:input_type -> zera_txn.MintTXN
 	37,  // 111: zera_txn.TXNService.ItemMint:input_type -> zera_txn.ItemizedMintTXN
@@ -5861,7 +5861,7 @@ var file_txn_proto_depIdxs = []int32{
 	9,   // 123: zera_txn.TXNService.DelegatedVoting:input_type -> zera_txn.DelegatedVotingTXN
 	32,  // 124: zera_txn.TXNService.Quash:input_type -> zera_txn.QuashTXN
 	17,  // 125: zera_txn.TXNService.FastQuorum:input_type -> zera_txn.FastQuorumTXN
-	16,  // 126: zera_txn.TXNService.Revoke:input_type -> zera_txn.RevokeSBT
+	16,  // 126: zera_txn.TXNService.Revoke:input_type -> zera_txn.RevokeTXN
 	57,  // 127: zera_txn.TXNService.Coin:output_type -> google.protobuf.Empty
 	57,  // 128: zera_txn.TXNService.Mint:output_type -> google.protobuf.Empty
 	57,  // 129: zera_txn.TXNService.ItemMint:output_type -> google.protobuf.Empty
@@ -5990,7 +5990,7 @@ func file_txn_proto_init() {
 			}
 		}
 		file_txn_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RevokeSBT); i {
+			switch v := v.(*RevokeTXN); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -244,6 +244,27 @@ func SendCurrencyEquiv(curEquiv *zera_pb.SelfCurrencyEquiv, destAddr string) (*e
 	return response, nil
 }
 
+func SendKyc(compliance *zera_pb.ComplianceTXN, destAddr string) (*emptypb.Empty, error) {
+	// Create a gRPC connection to the server
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Failed to connect to the server: %v", err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	// Create a new instance of ValidatorNetworkClient
+	client := NewNetworkClient(conn)
+
+	response, err := client.client.Compliance(context.Background(), compliance)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 func SendExpenseRatio(expenseRatio *zera_pb.ExpenseRatioTXN, destAddr string) (*emptypb.Empty, error) {
 	// Create a gRPC connection to the server
 	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())

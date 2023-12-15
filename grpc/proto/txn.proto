@@ -273,10 +273,10 @@ message BaseTXN{
     optional bool safe_send = 30;
 }
 message MultiKey{
-    repeated bytes public_key = 1;
-    repeated bytes signature = 2;
+    repeated bytes public_keys = 1;
+    repeated bytes signatures = 2;
     repeated MultiPatterns multi_patterns = 3;
-    string hash_tokens = 4;
+    repeated string hash_tokens = 4;
 }
 message MultiPatterns{
     repeated int32 class = 1;
@@ -542,4 +542,5 @@ message TXNWrapper{
         ComplianceTXN compliance_txn = 25;
     }
 }
+
 

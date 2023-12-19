@@ -45,29 +45,20 @@ message DataChunk{
     optional int32 total_chunks = 3;
 }
 message ValidatorSyncRequest {
-    oneof payload{
-        bytes public_key = 1;
-        zera_txn.MultiKey multi_public_key = 2;
-    }
-  bytes signature = 3;
+    zera_txn.PublicKey public_key = 1; 
+    bytes signature = 2;
 }
 message ValidatorSync{
     repeated zera_txn.Validator validators = 1;
     optional bytes signature = 2;
-    oneof payload{
-        bytes public_key = 3;
-        zera_txn.MultiKey multi_public_key = 4;
-    }
+    zera_txn.PublicKey public_key = 3; 
 }
 
 message BlockSync{
     bytes last_key = 1;
     uint64 amount = 2;
     optional bytes signature = 3;
-    oneof payload{
-        bytes public_key = 4;
-        zera_txn.MultiKey multi_public_key = 5;
-    }
+    zera_txn.PublicKey public_key = 4; 
 }
 message BlockHeader{
 	optional uint64 version = 1;
@@ -79,28 +70,19 @@ message BlockHeader{
     bytes fee_address = 7;
     optional bytes signature = 8;
     optional bytes merkle_root = 9;
-    oneof payload{
-        bytes public_key = 10;
-        zera_txn.MultiKey multi_public_key = 11;
-    }
+    zera_txn.PublicKey public_key = 10; 
 }
 message Block{
 	optional BlockHeader block_header = 1;
 	zera_txn.TXNS transactions = 2;
 	optional bytes signature = 4;
-    oneof payload{
-        bytes public_key = 5;
-        zera_txn.MultiKey multi_public_key = 6;
-    }
+    zera_txn.PublicKey public_key = 5; 
 }
 message BlockBatch{
     repeated Block blocks = 1;
     bool last_block = 2;
     optional bytes signature = 3;
-    oneof payload{
-        bytes public_key = 4;
-        zera_txn.MultiKey multi_public_key = 5;
-    }
+    zera_txn.PublicKey public_key = 4; 
 }
 
 message NFT{
@@ -145,10 +127,7 @@ message Proposal{
     map<string, Voter> voters = 11; //wallets and amounts of each currency wallet has
     optional google.protobuf.Timestamp start_date = 12;
     optional google.protobuf.Timestamp end_date = 13;
-    oneof payload{
-        bytes public_key = 14;
-        zera_txn.MultiKey multi_public_key = 15;
-    }
+    zera_txn.PublicKey public_key = 4; 
 }
 message ProposalWalletRecieve{
     zera_txn.BaseTXN base = 1;
@@ -206,8 +185,7 @@ message DelegatedVote{
     map<string, AuthorizedFee> authorized_fees = 3;
 }
 message Delegator{
-    repeated bytes public_key = 1;
-    repeated zera_txn.MultiKey multi_public_key = 2;
+    repeated zera_txn.PublicKey public_keys = 1; 
 }
 message DelegatedRecipient{ 
     map<string, Delegator> delegations = 1;
@@ -220,7 +198,7 @@ message QuashLedger{
 }
 //key = proposal_id
 message QuashLookup{
-    repeated bytes quash_keys = 1;  //keys that have already sumbitted quash
+    repeated zera_txn.PublicKey quash_keys = 1; //keys that have already sumbitted quash 
     uint32 keys_required = 2;       //how many keys needed to fullfill quash
 }
 message ComplianceLevels{

@@ -220,23 +220,20 @@ message ItemContractFees{
     repeated string allowed_fee_instrument = 5;
 }
 message RestrictedKey{
-    oneof payload{
-        bytes public_key = 1;
-        MultiKey multi_public_key = 2;
-    }
-    int64 time_delay = 3;
-    bool global = 4;
-    bool update_contract = 5;
-    bool transfer = 6;
-    bool quash = 7;
-    bool mint = 8;
-    bool vote = 9;
-    bool propose = 10;
-    bool compliance = 11;
-    bool expense_ratio = 12;
-    bool cur_equiv = 13;
-    bool revoke = 14;
-    uint32 key_weight = 15;
+    PublicKey public_key = 1;
+    int64 time_delay = 2;
+    bool global = 3;
+    bool update_contract = 4;
+    bool transfer = 5;
+    bool quash = 6;
+    bool mint = 7;
+    bool vote = 8;
+    bool propose = 9;
+    bool compliance = 10;
+    bool expense_ratio = 11;
+    bool cur_equiv = 12;
+    bool revoke = 13;
+    uint32 key_weight = 14;
 }
 message ExpenseRatioTXN{
     BaseTXN base = 1;
@@ -258,17 +255,18 @@ message Transfer{
     optional string memo = 35;
 }
 message BaseTXN{
-    optional bytes public_key = 1;
-    optional MultiKey multi_public_key = 2;
-    //optional bytes public_key = 19;
+    PublicKey public_key = 1;
     google.protobuf.Timestamp timestamp = 3; 
     string fee_amount = 4;
     string fee_id = 5;
     optional bytes signature = 6;
     optional bytes hash = 7;
-    //optional MultiKey multi_public_key = 27;
     optional string memo = 8;
     optional bool safe_send = 9;
+}
+message PublicKey{
+    bytes single = 1;
+    MultiKey multi = 2;
 }
 message MultiKey{
     repeated bytes public_keys = 1;
@@ -322,8 +320,7 @@ message QuashTXN{
 }
 message QuashResult{
     bytes txn_hash = 1;
-    repeated bytes quash_keys = 2;
-    repeated MultiKey quash_multi_keys = 3;
+    repeated PublicKey public_keys = 2;
 }
 
 //MAIN TXN MESSAGES
@@ -418,10 +415,7 @@ message SmartContractExecuteTXN{
     repeated SmartContractParameter parameters = 3;
 }
 message Validator{
-    oneof payload{
-        bytes public_key = 1;
-        MultiKey multi_public_key = 2;
-    }
+    PublicKey public_key = 1;
     string host = 3;
     string client_port = 4; 
     string validator_port = 5; 
@@ -540,3 +534,4 @@ message TXNWrapper{
         ComplianceTXN compliance_txn = 25;
     }
 }
+

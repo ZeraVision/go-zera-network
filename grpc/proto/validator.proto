@@ -127,7 +127,7 @@ message Proposal{
     map<string, Voter> voters = 11; //wallets and amounts of each currency wallet has
     optional google.protobuf.Timestamp start_date = 12;
     optional google.protobuf.Timestamp end_date = 13;
-    zera_txn.PublicKey public_key = 4; 
+    zera_txn.PublicKey public_key = 14; 
 }
 message ProposalWalletRecieve{
     zera_txn.BaseTXN base = 1;

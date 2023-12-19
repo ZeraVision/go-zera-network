@@ -8,6 +8,7 @@ package zera_txn;
 option go_package = "./grpc/protobuf";
 
 option optimize_for = SPEED;
+
 service TXNService{
     rpc Coin(CoinTXN) returns (google.protobuf.Empty);
     rpc Mint(MintTXN) returns (google.protobuf.Empty);
@@ -257,20 +258,17 @@ message Transfer{
     optional string memo = 35;
 }
 message BaseTXN{
-    oneof payload{
-        bytes public_key = 19;
-        MultiKey multi_public_key = 27;
-    }
-
+    optional bytes public_key = 1;
+    optional MultiKey multi_public_key = 2;
     //optional bytes public_key = 19;
-    google.protobuf.Timestamp timestamp = 20; 
-    string fee_amount = 21;
-    string fee_id = 22;
-    optional bytes signature = 23;
-    optional bytes hash = 24;
+    google.protobuf.Timestamp timestamp = 3; 
+    string fee_amount = 4;
+    string fee_id = 5;
+    optional bytes signature = 6;
+    optional bytes hash = 7;
     //optional MultiKey multi_public_key = 27;
-    optional string memo = 29;
-    optional bool safe_send = 30;
+    optional string memo = 8;
+    optional bool safe_send = 9;
 }
 message MultiKey{
     repeated bytes public_keys = 1;
@@ -542,5 +540,3 @@ message TXNWrapper{
         ComplianceTXN compliance_txn = 25;
     }
 }
-
-

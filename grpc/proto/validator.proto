@@ -156,7 +156,7 @@ message RestrictedSymbols{
 }
 
 message IndexerVotingRequest{
-    string proposal_id = 1;
+    bytes proposal_id = 1;
 }
 
 //THIS IS NOT A PART OF ACTUAL VALIDATOR

@@ -188,14 +188,14 @@ message FastQuorumTXN{
 }
 message Governance{
     GOVERNANCE_TYPE type = 1;              //read GOVERNANCE_TYPE above
-    uint32 regular_quorum = 2;             // percent of yes votes to pass at the end of cycle (still needs to pass threshhold)
-    optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply)
+    uint32 regular_quorum = 2;             //percent of yes votes to pass at the end of cycle (still needs to pass threshhold) 100 = 100&
+    optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply) 100 = 100%
     repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
-    uint32 threshold = 5;                  // threshold of participation of holders needed to be accepted
+    uint32 threshold = 5;                  //threshold of participation of holders needed to be accepted 1000 = 1000%
     optional bool chicken_dinner = 6;      //Option winner does not need to pass regular quorum.
     bool allow_multi = 7;                  //Allow multiple choice proposals.
-    optional uint32 voting_period = 8;     //How many days in the voting period (Months | Days). (cannot be present with staged & adaptive) | (must be presnet with cycle & staggered)
-    repeated string allowed_proposal_instrument = 9;
+    optional uint32 voting_period = 8;     //How many days in the voting period (Months | Days). (cannot be present with adaptive) | (must be present with cycle & staggered & staged)
+    repeated string allowed_proposal_instrument = 9;    
     optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends
     repeated uint32 stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
     google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
@@ -333,7 +333,7 @@ message MintTXN{
     string contract_id = 39;
     string amount = 40;
     bytes recipient_address = 41;
-}
+} 
 message NFTTXN{
     BaseTXN base = 1;
     string contract_id = 2;
@@ -458,7 +458,7 @@ message ProposalResult{
     bool passed = 10;
     bool final_stage = 11;
     uint32 stage = 12;
-    string fee_address = 13;
+    bytes fee_address = 13;
     bool fast_quorum = 14;
 }
 message TXNS{
@@ -505,8 +505,8 @@ message TXNStatusFees{
     repeated string base_contract_id = 4;
     repeated string contract_fees = 5;
     repeated string contract_contract_id = 6;
-    optional string approved_votes = 7;
-    optional string against_votes = 8;
+    optional string approved_votes = 7; //TODO - REMOVE THIS?
+    optional string against_votes = 8;  //TODO - REMOVE THIS?
 }
 
 message TXNWrapper{
@@ -532,6 +532,9 @@ message TXNWrapper{
         FastQuorumTXN fast_quorum_txn = 23;
         RevokeTXN revoke_txn = 24;
         ComplianceTXN compliance_txn = 25;
+        bool proposal_result_txn = 26;
     }
 }
+
+
 

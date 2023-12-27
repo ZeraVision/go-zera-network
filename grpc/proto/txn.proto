@@ -458,8 +458,7 @@ message ProposalResult{
     bool passed = 10;
     bool final_stage = 11;
     uint32 stage = 12;
-    bytes fee_address = 13;
-    bool fast_quorum = 14;
+    bool fast_quorum = 13;
 }
 message TXNS{
     repeated CoinTXN coin_txns = 1;
@@ -535,6 +534,7 @@ message TXNWrapper{
         bool proposal_result_txn = 26;
     }
 }
+
 
 
 

@@ -29,6 +29,7 @@ service TXNService{
     rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
     rpc Revoke(RevokeTXN) returns (google.protobuf.Empty);
     rpc Compliance(ComplianceTXN) returns (google.protobuf.Empty);
+    rpc BurnSBT(BurnSBTTXN) returns (google.protobuf.Empty);
 }
 
 enum TXN_STATUS{
@@ -93,6 +94,7 @@ enum TRANSACTION_TYPE
     QUASH_TYPE = 19;
     FAST_QUORUM_TYPE = 20;
     COMPLIANCE_TYPE = 21;
+    SBT_BURN_TYPE = 22;
 }
 //ENUMS
 enum LANGUAGE{
@@ -152,6 +154,8 @@ message DelegateFees{
 message Compliance{
     string contract_id = 1;
     uint32 compliance_level = 2;
+    google.protobuf.Timestamp expiry = 3;
+
 }
 message TokenCompliance{
     repeated Compliance compliance = 1;
@@ -196,9 +200,14 @@ message Governance{
     bool allow_multi = 7;                  //Allow multiple choice proposals.
     optional uint32 voting_period = 8;     //How many days in the voting period (Months | Days). (cannot be present with adaptive) | (must be present with cycle & staggered & staged)
     repeated string allowed_proposal_instrument = 9;    
-    optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends
-    repeated uint32 stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
+    optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends (must be present with cycle & staggered & staged) | (cannot be present with adaptive) 
+    repeated Stage stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
     google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
+}
+message Stage{
+    uint32 length = 1;
+    PROPOSAL_PERIOD period = 2;
+    bool break = 3;
 }
 message CoinDenomination{
     string denomination_name = 5;
@@ -253,6 +262,11 @@ message Transfer{
     string base_fee_amount = 32;
     string base_fee_id = 33;
     optional string memo = 35;
+}
+message BurnSBTTXN{
+    BaseTXN base = 1;
+    string contract_id = 2;
+    string item_id = 3;
 }
 message BaseTXN{
     PublicKey public_key = 1;
@@ -381,10 +395,11 @@ message InstrumentContract{
     CONTRACT_TYPE type = 14;
     bool update_contract_fees = 15;
     bool update_expense_ratio = 16;
-    optional uint32 quash_threshold = 17;    //total number of quash txns to quash a time delay txn
-    repeated TokenCompliance token_compliance = 18;
+    optional uint32 quash_threshold = 17;           //total number of quash txns to quash a time delay txn
+    repeated TokenCompliance token_compliance = 18; //Compliance levels for each token that are manditory to transact with this contract
     bool kyc_status = 19;
     bool immutable_kyc_status = 20;
+    optional string cur_equiv_start = 21;
 }
 message GovernanceVote{
     BaseTXN base = 1;
@@ -478,7 +493,7 @@ message TXNS{
     repeated ContractUpdateTXN contract_update_txns = 15;
     repeated ValidatorRegistration validator_registration_txns = 16;
     repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
-    repeated ProposalResult proposal_result_txns = 18;
+    repeated ProposalResult proposal_result_txns = 18; //
     repeated ExpenseRatioResult expense_ratio_result_txns = 19;
     repeated FoundationTXN foundation_txns = 20;
     repeated DelegatedVotingTXN delegated_voting_txns = 21;
@@ -487,6 +502,7 @@ message TXNS{
     repeated QuashResult quash_results = 24;
     repeated RevokeTXN revoke_txns = 25;
     repeated ComplianceTXN compliance_txns = 26;
+    repeated BurnSBTTXN burn_sbt_txns = 27;
 }
 
 message Token{
@@ -532,9 +548,7 @@ message TXNWrapper{
         RevokeTXN revoke_txn = 24;
         ComplianceTXN compliance_txn = 25;
         bool proposal_result_txn = 26;
+        BurnSBTTXN burn_sbt_txn = 27;
     }
 }
-
-
-
 

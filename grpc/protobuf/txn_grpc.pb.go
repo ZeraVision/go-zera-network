@@ -39,6 +39,7 @@ const (
 	TXNService_FastQuorum_FullMethodName           = "/zera_txn.TXNService/FastQuorum"
 	TXNService_Revoke_FullMethodName               = "/zera_txn.TXNService/Revoke"
 	TXNService_Compliance_FullMethodName           = "/zera_txn.TXNService/Compliance"
+	TXNService_BurnSBT_FullMethodName              = "/zera_txn.TXNService/BurnSBT"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -64,6 +65,7 @@ type TXNServiceClient interface {
 	FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Revoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Compliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	BurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type tXNServiceClient struct {
@@ -245,6 +247,15 @@ func (c *tXNServiceClient) Compliance(ctx context.Context, in *ComplianceTXN, op
 	return out, nil
 }
 
+func (c *tXNServiceClient) BurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_BurnSBT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXNServiceServer is the server API for TXNService service.
 // All implementations must embed UnimplementedTXNServiceServer
 // for forward compatibility
@@ -268,6 +279,7 @@ type TXNServiceServer interface {
 	FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	Revoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
 	Compliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error)
+	BurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
 
@@ -331,6 +343,9 @@ func (UnimplementedTXNServiceServer) Revoke(context.Context, *RevokeTXN) (*empty
 }
 func (UnimplementedTXNServiceServer) Compliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Compliance not implemented")
+}
+func (UnimplementedTXNServiceServer) BurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BurnSBT not implemented")
 }
 func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
 
@@ -687,6 +702,24 @@ func _TXNService_Compliance_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXNService_BurnSBT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BurnSBTTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).BurnSBT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_BurnSBT_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).BurnSBT(ctx, req.(*BurnSBTTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -769,6 +802,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Compliance",
 			Handler:    _TXNService_Compliance_Handler,
+		},
+		{
+			MethodName: "BurnSBT",
+			Handler:    _TXNService_BurnSBT_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

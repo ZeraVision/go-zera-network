@@ -37,6 +37,7 @@ service ValidatorService{
     rpc ValidatorFastQuorum(zera_txn.FastQuorumTXN) returns (google.protobuf.Empty);
     rpc ValidatorRevoke(zera_txn.RevokeTXN) returns (google.protobuf.Empty);
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
+    rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
 }
 
 message DataChunk{
@@ -94,8 +95,8 @@ message NFT{
 }
 
 message ProcessLedger{
-    repeated bytes cycle_contract_ids = 1;
-    repeated bytes proposal_ids = 2;
+    repeated bytes cycle_contract_ids = 1; //all contracts that need proposals processed
+    repeated bytes proposal_ids = 2;       //all staggered proposals that need to be processed
 }
 //message for a ledger to determine proposal_ids for contracts
 //used to process cycle/staged governance
@@ -103,6 +104,12 @@ message ProcessLedger{
 message ProposalLedger{
     repeated bytes proposal_ids = 1;
     repeated bytes pending_proposal_ids = 2;
+    repeated bytes process_proposal_ids = 3;
+    uint32 stage = 4;
+    google.protobuf.Timestamp cycle_end_date = 5;
+    google.protobuf.Timestamp cycle_start_date = 6;
+    google.protobuf.Timestamp stage_end_date = 7;
+    google.protobuf.Timestamp stage_start_date = 8;
 }
 message Vote{
     map<string, string> vote = 1;
@@ -209,4 +216,16 @@ message ComplianceLevels{
 //Key = wallet_address
 message WalletLookup{
     map<string, ComplianceLevels> compliance = 1;    //compliance level of wallet of each contract
+}
+//the dates the next cycle will end at.
+message ProposalProcess{
+    zera_txn.GOVERNANCE_TYPE type = 1;
+    uint32 stage = 2;
+    uint32 total_stages = 3;
+    google.protobuf.Timestamp end_date = 4;
+    google.protobuf.Timestamp start_date = 5;
+
+}
+message TXNTracker{
+    repeated bytes txn_ids = 1;
 }

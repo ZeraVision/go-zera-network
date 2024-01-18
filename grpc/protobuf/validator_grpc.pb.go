@@ -46,6 +46,7 @@ const (
 	ValidatorService_ValidatorFastQuorum_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFastQuorum"
 	ValidatorService_ValidatorRevoke_FullMethodName               = "/zera_validator.ValidatorService/ValidatorRevoke"
 	ValidatorService_ValidatorCompliance_FullMethodName           = "/zera_validator.ValidatorService/ValidatorCompliance"
+	ValidatorService_ValidatorBurnSBT_FullMethodName              = "/zera_validator.ValidatorService/ValidatorBurnSBT"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -78,6 +79,7 @@ type ValidatorServiceClient interface {
 	ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -370,6 +372,15 @@ func (c *validatorServiceClient) ValidatorCompliance(ctx context.Context, in *Co
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorBurnSBT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -400,6 +411,7 @@ type ValidatorServiceServer interface {
 	ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
 	ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error)
+	ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -484,6 +496,9 @@ func (UnimplementedValidatorServiceServer) ValidatorRevoke(context.Context, *Rev
 }
 func (UnimplementedValidatorServiceServer) ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCompliance not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorBurnSBT not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -977,6 +992,24 @@ func _ValidatorService_ValidatorCompliance_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorBurnSBT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BurnSBTTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorBurnSBT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorBurnSBT_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorBurnSBT(ctx, req.(*BurnSBTTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1079,6 +1112,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorCompliance",
 			Handler:    _ValidatorService_ValidatorCompliance_Handler,
+		},
+		{
+			MethodName: "ValidatorBurnSBT",
+			Handler:    _ValidatorService_ValidatorBurnSBT_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

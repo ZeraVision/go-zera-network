@@ -134,8 +134,8 @@ enum CONTRACT_TYPE{
     NFT = 1;
     SBT = 2;
 }
-message AddRemoveDelegate{
-    bool add_remove = 1;
+message Delegate{
+    int32 priority= 1;
     string contract_id = 2;
 }
 message DelegatedVotingTXN{
@@ -145,7 +145,7 @@ message DelegatedVotingTXN{
 }
 message DelegateVote{
     bytes address = 1;
-    repeated AddRemoveDelegate add_remove_contracts = 2;
+    repeated Delegate add_remove_contracts = 2;
 }
 message DelegateFees{
     string contract_id = 1;
@@ -551,6 +551,8 @@ message TXNWrapper{
         BurnSBTTXN burn_sbt_txn = 27;
     }
 }
+
+
 
 
 

@@ -47,6 +47,9 @@ const (
 	ValidatorService_ValidatorRevoke_FullMethodName               = "/zera_validator.ValidatorService/ValidatorRevoke"
 	ValidatorService_ValidatorCompliance_FullMethodName           = "/zera_validator.ValidatorService/ValidatorCompliance"
 	ValidatorService_ValidatorBurnSBT_FullMethodName              = "/zera_validator.ValidatorService/ValidatorBurnSBT"
+	ValidatorService_Nonce_FullMethodName                         = "/zera_validator.ValidatorService/Nonce"
+	ValidatorService_BlockAttestation_FullMethodName              = "/zera_validator.ValidatorService/BlockAttestation"
+	ValidatorService_ValidatorNewCoin_FullMethodName              = "/zera_validator.ValidatorService/ValidatorNewCoin"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -80,6 +83,9 @@ type ValidatorServiceClient interface {
 	ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
+	BlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_BlockAttestationClient, error)
+	ValidatorNewCoin(ctx context.Context, in *NewCoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type validatorServiceClient struct {
@@ -381,6 +387,55 @@ func (c *validatorServiceClient) ValidatorBurnSBT(ctx context.Context, in *BurnS
 	return out, nil
 }
 
+func (c *validatorServiceClient) Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error) {
+	out := new(NonceResponse)
+	err := c.cc.Invoke(ctx, ValidatorService_Nonce_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) BlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_BlockAttestationClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[2], ValidatorService_BlockAttestation_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceBlockAttestationClient{stream}
+	return x, nil
+}
+
+type ValidatorService_BlockAttestationClient interface {
+	Send(*DataChunk) error
+	Recv() (*DataChunk, error)
+	grpc.ClientStream
+}
+
+type validatorServiceBlockAttestationClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceBlockAttestationClient) Send(m *DataChunk) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *validatorServiceBlockAttestationClient) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *validatorServiceClient) ValidatorNewCoin(ctx context.Context, in *NewCoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorNewCoin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -412,6 +467,9 @@ type ValidatorServiceServer interface {
 	ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
 	ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error)
 	ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error)
+	Nonce(context.Context, *NonceRequest) (*NonceResponse, error)
+	BlockAttestation(ValidatorService_BlockAttestationServer) error
+	ValidatorNewCoin(context.Context, *NewCoinTXN) (*emptypb.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -499,6 +557,15 @@ func (UnimplementedValidatorServiceServer) ValidatorCompliance(context.Context, 
 }
 func (UnimplementedValidatorServiceServer) ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorBurnSBT not implemented")
+}
+func (UnimplementedValidatorServiceServer) Nonce(context.Context, *NonceRequest) (*NonceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Nonce not implemented")
+}
+func (UnimplementedValidatorServiceServer) BlockAttestation(ValidatorService_BlockAttestationServer) error {
+	return status.Errorf(codes.Unimplemented, "method BlockAttestation not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorNewCoin(context.Context, *NewCoinTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorNewCoin not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -1010,6 +1077,68 @@ func _ValidatorService_ValidatorBurnSBT_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_Nonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NonceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).Nonce(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_Nonce_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).Nonce(ctx, req.(*NonceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_BlockAttestation_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ValidatorServiceServer).BlockAttestation(&validatorServiceBlockAttestationServer{stream})
+}
+
+type ValidatorService_BlockAttestationServer interface {
+	Send(*DataChunk) error
+	Recv() (*DataChunk, error)
+	grpc.ServerStream
+}
+
+type validatorServiceBlockAttestationServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceBlockAttestationServer) Send(m *DataChunk) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *validatorServiceBlockAttestationServer) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _ValidatorService_ValidatorNewCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewCoinTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorNewCoin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorNewCoin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorNewCoin(ctx, req.(*NewCoinTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1117,6 +1246,14 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ValidatorBurnSBT",
 			Handler:    _ValidatorService_ValidatorBurnSBT_Handler,
 		},
+		{
+			MethodName: "Nonce",
+			Handler:    _ValidatorService_Nonce_Handler,
+		},
+		{
+			MethodName: "ValidatorNewCoin",
+			Handler:    _ValidatorService_ValidatorNewCoin_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1128,6 +1265,12 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "SyncBlockchain",
 			Handler:       _ValidatorService_SyncBlockchain_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "BlockAttestation",
+			Handler:       _ValidatorService_BlockAttestation_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "validator.proto",

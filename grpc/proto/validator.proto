@@ -38,6 +38,39 @@ service ValidatorService{
     rpc ValidatorRevoke(zera_txn.RevokeTXN) returns (google.protobuf.Empty);
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
     rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
+    rpc Nonce(NonceRequest) returns (NonceResponse);
+    rpc BlockAttestation(stream DataChunk) returns (stream DataChunk);
+    rpc ValidatorNewCoin(zera_txn.NewCoinTXN) returns (google.protobuf.Empty);
+}
+
+message BlockAttestationResponse
+{
+    bool support = 1;
+    optional Block supported_block = 2;
+    repeated ValidatorSupport validator_support = 3;
+    zera_txn.PublicKey public_key = 4; 
+    bytes signature = 5;
+
+}
+message BlockAttestation{
+    bytes block_hash = 1;
+    uint32 block_height = 2;
+    repeated ValidatorSupport validator_support = 3;
+    zera_txn.PublicKey public_key = 4; 
+    bytes signature = 5;
+}
+
+message ValidatorSupport{
+    zera_txn.PublicKey public_key = 1; 
+    bytes signature = 2;
+    google.protobuf.Timestamp timestamp = 3;
+}
+message NonceRequest{
+    bytes wallet_address = 1;
+}
+
+message NonceResponse{
+    uint64 nonce = 1;
 }
 
 message DataChunk{
@@ -137,6 +170,7 @@ message Proposal{
     zera_txn.PublicKey public_key = 14; 
     bool options_set = 15;
     uint32 number_of_options = 16;
+    zera_txn.GovernanceTXN governance_txn = 17;
 }
 message ProposalWalletRecieve{
     zera_txn.BaseTXN base = 1;
@@ -190,14 +224,34 @@ message AuthorizedFee{
     uint32 priority = 1;
     string authorized_amount = 2;
 }
-message DelegatedVote{
-    map<string, AuthorizedFee> authorized_fees = 3;
-}
+
 message Delegator{
-    repeated zera_txn.PublicKey public_keys = 1; 
+    zera_txn.PublicKey public_key = 1; 
+    uint32 priority = 2;
 }
+message DelegatedFees{
+    repeated string contract_ids = 1;  
+}
+message Delegators{
+    repeated Delegator delegator = 1; 
+}
+
+
+//databaase db_delegate_recipient key = contract_id, value = DelegatedRecipient 
 message DelegatedRecipient{ 
-    map<string, Delegator> delegations = 1;
+    map<string, Delegators> delegations = 1; //key = contract_id, value = Delegator
+}
+
+//database db_voted_proposals key = public_key, value = VotedProposals
+message Delegated{
+    map<string, uint32> proposals = 1; //key = proposal_id encoded, value = priority
+}
+message DelegateeWallets{
+    repeated bytes wallet_adr = 1;
+}
+//database db_delegatees key = public_key, value = Delegatees
+message Delegatees{
+    map<string, DelegateeWallets> delegated_wallets = 1; //key = contract_id, value = DelegateeWallets
 }
 message DelegateWallets{
     repeated bytes wallets = 1;
@@ -228,4 +282,14 @@ message ProposalProcess{
 }
 message TXNTracker{
     repeated bytes txn_ids = 1;
+}
+//key = wallet_address + contract_id
+message PreProcessedWallets
+{
+    string amount = 1;
+    
+}
+message GovernanceAuth{
+    zera_txn.PublicKey public_key = 1;
+    zera_txn.TRANSACTION_TYPE type = 2;
 }

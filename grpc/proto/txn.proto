@@ -11,6 +11,7 @@ option optimize_for = SPEED;
 
 service TXNService{
     rpc Coin(CoinTXN) returns (google.protobuf.Empty);
+    rpc NewCoin(NewCoinTXN) returns (google.protobuf.Empty);
     rpc Mint(MintTXN) returns (google.protobuf.Empty);
     rpc ItemMint(ItemizedMintTXN) returns (google.protobuf.Empty);
     rpc Contract(InstrumentContract) returns (google.protobuf.Empty); 
@@ -69,6 +70,7 @@ enum TXN_STATUS{
     NO_CHANGE_TO_COMPLIANCE = 33;
     COMPLIANCE_CHECK_FAILED = 34;
     INVALID_SAFE_SEND = 35;
+    INVALID_TXN_DATA = 36;
 }
 enum TRANSACTION_TYPE
 {
@@ -95,6 +97,8 @@ enum TRANSACTION_TYPE
     FAST_QUORUM_TYPE = 20;
     COMPLIANCE_TYPE = 21;
     SBT_BURN_TYPE = 22;
+    NEW_COIN_TYPE = 23;
+    UKNOWN_TYPE = 24;
 }
 //ENUMS
 enum LANGUAGE{
@@ -277,10 +281,18 @@ message BaseTXN{
     optional bytes hash = 7;
     optional string memo = 8;
     optional bool safe_send = 9;
+    uint64 nonce = 10;
 }
 message PublicKey{
     bytes single = 1;
     MultiKey multi = 2;
+    optional bytes sc_wallet_adr = 3;
+    optional GovernanceAuth governance_auth = 4;
+}
+message GovernanceAuth
+{
+    bytes auth = 1;
+    bytes proposal_id = 2;
 }
 message MultiKey{
     repeated bytes public_keys = 1;
@@ -341,6 +353,34 @@ message QuashResult{
 message CoinTXN{
     BaseTXN base = 34;
     repeated Transfer transfers = 35;
+}
+message NewCoinTXN
+{
+    BaseTXN base = 1;
+    TransferAuthentication auth = 2;
+    repeated InputTransfers input_transfers = 3;
+    repeated OutPutTransfers transfers = 4;
+
+}
+message TransferAuthentication
+{
+    repeated PublicKey public_key = 1;
+    repeated bytes signature = 2;
+    repeated uint64 nonce = 3;
+}
+message InputTransfers
+{
+    uint64 index = 1;
+    string amount = 2;
+    string fee_amount = 3;
+    string fee_id = 4;
+    optional string contract_fee_amount = 5;
+    optional string contract_fee_id = 6;
+}
+message OutPutTransfers
+{
+    bytes wallet_address = 1;
+    string amount = 2;
 }
 message MintTXN{
     BaseTXN base = 1;
@@ -417,6 +457,12 @@ message GovernanceProposal{
     repeated string options = 6;
     optional google.protobuf.Timestamp start_timestamp = 7;
     optional google.protobuf.Timestamp end_timestamp = 8;
+    optional GovernanceTXN governance_txn = 9;
+}
+message GovernanceTXN{
+    TRANSACTION_TYPE txn_type = 1;
+    bytes serialized_txn = 2;
+    bytes txn_hash = 3;
 }
 message SmartContractTXN{
     BaseTXN base = 1;
@@ -429,8 +475,9 @@ message SmartContractExecuteTXN{
     bytes smart_contract_id = 2;
     repeated SmartContractParameter parameters = 3;
 }
+//key = generated public key
 message Validator{
-    PublicKey public_key = 1;
+    PublicKey public_key = 1;  //original public key
     string host = 3;
     string client_port = 4; 
     string validator_port = 5; 
@@ -503,6 +550,7 @@ message TXNS{
     repeated RevokeTXN revoke_txns = 25;
     repeated ComplianceTXN compliance_txns = 26;
     repeated BurnSBTTXN burn_sbt_txns = 27;
+    repeated NewCoinTXN new_coin_txns = 28;
 }
 
 message Token{
@@ -520,8 +568,10 @@ message TXNStatusFees{
     repeated string base_contract_id = 4;
     repeated string contract_fees = 5;
     repeated string contract_contract_id = 6;
+    repeated bytes smar_contract_result = 10;
     optional string approved_votes = 7; //TODO - REMOVE THIS?
     optional string against_votes = 8;  //TODO - REMOVE THIS?
+    bool smart_contract = 9;
 }
 
 message TXNWrapper{
@@ -541,19 +591,17 @@ message TXNWrapper{
         ContractUpdateTXN contract_update_txn = 13;
         ValidatorRegistration validator_registration_txn = 14;
         ValidatorHeartbeat validator_heartbeat_txn = 15;
-        FoundationTXN foundation_txn = 20;
-        DelegatedVotingTXN delegated_voting_txn = 21;
-        QuashTXN quash_txn = 22;
-        FastQuorumTXN fast_quorum_txn = 23;
-        RevokeTXN revoke_txn = 24;
-        ComplianceTXN compliance_txn = 25;
-        bool proposal_result_txn = 26;
-        BurnSBTTXN burn_sbt_txn = 27;
+        FoundationTXN foundation_txn = 16;
+        DelegatedVotingTXN delegated_voting_txn = 17;
+        QuashTXN quash_txn = 18;
+        FastQuorumTXN fast_quorum_txn = 19;
+        RevokeTXN revoke_txn = 20;
+        ComplianceTXN compliance_txn = 21;
+        bool proposal_result_txn = 22;
+        BurnSBTTXN burn_sbt_txn = 23;
+        NewCoinTXN new_coin_txn = 24;
     }
+    
+    TRANSACTION_TYPE txn_type = 25;
 }
-
-
-
-
-
 

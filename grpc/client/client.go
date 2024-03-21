@@ -285,3 +285,24 @@ func SendExpenseRatio(expenseRatio *zera_pb.ExpenseRatioTXN, destAddr string) (*
 
 	return response, nil
 }
+
+func SendNewCoinTXN(newCoin *zera_pb.NewCoinTXN, destAddr string) (*emptypb.Empty, error) {
+	// Create a gRPC connection to the server
+	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Failed to connect to the server: %v", err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	// Create a new instance of ValidatorNetworkClient
+	client := NewNetworkClient(conn)
+
+	response, err := client.client.NewCoin(context.Background(), newCoin)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}

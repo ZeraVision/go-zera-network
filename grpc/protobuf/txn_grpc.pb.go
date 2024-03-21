@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	TXNService_Coin_FullMethodName                 = "/zera_txn.TXNService/Coin"
+	TXNService_NewCoin_FullMethodName              = "/zera_txn.TXNService/NewCoin"
 	TXNService_Mint_FullMethodName                 = "/zera_txn.TXNService/Mint"
 	TXNService_ItemMint_FullMethodName             = "/zera_txn.TXNService/ItemMint"
 	TXNService_Contract_FullMethodName             = "/zera_txn.TXNService/Contract"
@@ -47,6 +48,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TXNServiceClient interface {
 	Coin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	NewCoin(ctx context.Context, in *NewCoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Mint(ctx context.Context, in *MintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ItemMint(ctx context.Context, in *ItemizedMintTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Contract(ctx context.Context, in *InstrumentContract, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -79,6 +81,15 @@ func NewTXNServiceClient(cc grpc.ClientConnInterface) TXNServiceClient {
 func (c *tXNServiceClient) Coin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, TXNService_Coin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tXNServiceClient) NewCoin(ctx context.Context, in *NewCoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_NewCoin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -261,6 +272,7 @@ func (c *tXNServiceClient) BurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...
 // for forward compatibility
 type TXNServiceServer interface {
 	Coin(context.Context, *CoinTXN) (*emptypb.Empty, error)
+	NewCoin(context.Context, *NewCoinTXN) (*emptypb.Empty, error)
 	Mint(context.Context, *MintTXN) (*emptypb.Empty, error)
 	ItemMint(context.Context, *ItemizedMintTXN) (*emptypb.Empty, error)
 	Contract(context.Context, *InstrumentContract) (*emptypb.Empty, error)
@@ -289,6 +301,9 @@ type UnimplementedTXNServiceServer struct {
 
 func (UnimplementedTXNServiceServer) Coin(context.Context, *CoinTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Coin not implemented")
+}
+func (UnimplementedTXNServiceServer) NewCoin(context.Context, *NewCoinTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NewCoin not implemented")
 }
 func (UnimplementedTXNServiceServer) Mint(context.Context, *MintTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Mint not implemented")
@@ -374,6 +389,24 @@ func _TXNService_Coin_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TXNServiceServer).Coin(ctx, req.(*CoinTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TXNService_NewCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewCoinTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).NewCoin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_NewCoin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).NewCoin(ctx, req.(*NewCoinTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -730,6 +763,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Coin",
 			Handler:    _TXNService_Coin_Handler,
+		},
+		{
+			MethodName: "NewCoin",
+			Handler:    _TXNService_NewCoin_Handler,
 		},
 		{
 			MethodName: "Mint",

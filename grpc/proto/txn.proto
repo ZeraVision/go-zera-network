@@ -357,9 +357,10 @@ message CoinTXN{
 message NewCoinTXN
 {
     BaseTXN base = 1;
-    TransferAuthentication auth = 2;
-    repeated InputTransfers input_transfers = 3;
-    repeated OutPutTransfers transfers = 4;
+    string contract_id = 2;
+    TransferAuthentication auth = 3;
+    repeated InputTransfers input_transfers = 4;
+    repeated OutputTransfers output_transfers = 5;
 
 }
 message TransferAuthentication
@@ -372,12 +373,12 @@ message InputTransfers
 {
     uint64 index = 1;
     string amount = 2;
-    string fee_amount = 3;
-    string fee_id = 4;
+    string base_fee_amount = 3;
+    string base_fee_id = 4;
     optional string contract_fee_amount = 5;
     optional string contract_fee_id = 6;
 }
-message OutPutTransfers
+message OutputTransfers
 {
     bytes wallet_address = 1;
     string amount = 2;

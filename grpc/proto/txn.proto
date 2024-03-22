@@ -375,13 +375,15 @@ message InputTransfers
     string amount = 2;
     string base_fee_amount = 3;
     string base_fee_id = 4;
-    optional string contract_fee_amount = 5;
-    optional string contract_fee_id = 6;
+    uint32 fee_percent = 5;                     // 100 000 000 = 100%
+    optional string contract_fee_amount = 6;
+    optional string contract_fee_id = 7;
 }
 message OutputTransfers
 {
     bytes wallet_address = 1;
     string amount = 2;
+    string memo = 3;
 }
 message MintTXN{
     BaseTXN base = 1;
@@ -605,4 +607,3 @@ message TXNWrapper{
     
     TRANSACTION_TYPE txn_type = 25;
 }
-

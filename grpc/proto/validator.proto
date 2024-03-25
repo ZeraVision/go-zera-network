@@ -287,9 +287,4 @@ message TXNTracker{
 message PreProcessedWallets
 {
     string amount = 1;
-    
-}
-message GovernanceAuth{
-    zera_txn.PublicKey public_key = 1;
-    zera_txn.TRANSACTION_TYPE type = 2;
 }

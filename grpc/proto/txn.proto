@@ -361,6 +361,7 @@ message NewCoinTXN
     TransferAuthentication auth = 3;
     repeated InputTransfers input_transfers = 4;
     repeated OutputTransfers output_transfers = 5;
+    string contract_fee_id = 6;
 
 }
 message TransferAuthentication
@@ -374,16 +375,14 @@ message InputTransfers
     uint64 index = 1;
     string amount = 2;
     string base_fee_amount = 3;
-    string base_fee_id = 4;
-    uint32 fee_percent = 5;                     // 100 000 000 = 100%
-    optional string contract_fee_amount = 6;
-    optional string contract_fee_id = 7;
+    uint32 fee_percent = 4;                     // 100 000 000 = 100%
+    optional string contract_fee_amount = 5;
 }
 message OutputTransfers
 {
     bytes wallet_address = 1;
     string amount = 2;
-    optional string memo = 3;
+    string memo = 3;
 }
 message MintTXN{
     BaseTXN base = 1;

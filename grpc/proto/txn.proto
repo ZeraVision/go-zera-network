@@ -382,7 +382,7 @@ message OutputTransfers
 {
     bytes wallet_address = 1;
     string amount = 2;
-    string memo = 3;
+    optional string memo = 3;
 }
 message MintTXN{
     BaseTXN base = 1;

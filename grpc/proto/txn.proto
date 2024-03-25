@@ -361,7 +361,7 @@ message NewCoinTXN
     TransferAuthentication auth = 3;
     repeated InputTransfers input_transfers = 4;
     repeated OutputTransfers output_transfers = 5;
-    string contract_fee_id = 6;
+    optional string contract_fee_id = 6;
 
 }
 message TransferAuthentication

@@ -188,7 +188,8 @@ message ProposalWalletSend{
 }
 message CurrencyRate{
     bool qualified = 1;
-    string rate = 2;
+    string rate = 2; //1000000000000000000 = $1.00
+    optional string max_stake = 3; //1000000000000000000 = $1.00
 }
 message ExpenseTracker{
     int32 day = 1;
@@ -257,7 +258,7 @@ message DelegateWallets{
     repeated bytes wallets = 1;
 }
 message QuashLedger{
-    repeated string txn_ids = 1;
+    repeated bytes txn_ids = 1;
 }
 //key = proposal_id
 message QuashLookup{
@@ -287,4 +288,9 @@ message TXNTracker{
 message PreProcessedWallets
 {
     string amount = 1;
+    
+}
+message GovernanceAuth{
+    zera_txn.PublicKey public_key = 1;
+    zera_txn.TRANSACTION_TYPE type = 2;
 }

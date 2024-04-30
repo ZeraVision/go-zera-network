@@ -21,7 +21,7 @@ service TXNService{
     rpc SmartContractExecute(SmartContractExecuteTXN) returns (google.protobuf.Empty);
     rpc CurrencyEquiv(SelfCurrencyEquiv) returns (google.protobuf.Empty);
     rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
-    rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty);
+    rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty); //TODO - change to stream
     rpc NFT(NFTTXN) returns (google.protobuf.Empty);
     rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
     rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
@@ -159,7 +159,6 @@ message Compliance{
     string contract_id = 1;
     uint32 compliance_level = 2;
     google.protobuf.Timestamp expiry = 3;
-
 }
 message TokenCompliance{
     repeated Compliance compliance = 1;
@@ -168,7 +167,7 @@ message TokenCompliance{
 message ExpenseRatio{
     uint32 day = 1;
     uint32 month = 2;
-    uint32 percent = 3;
+    uint32 percent = 3; //100 = 100%??
 }
 message KeyValuePair{
     string key = 1;
@@ -254,18 +253,18 @@ message ExpenseRatioTXN{
     repeated bytes addresses = 3;
 }
 message PreMintWallet{
-    bytes address = 16;
-    string amount = 17;
+    bytes address = 1;
+    string amount = 2;
 }
 message Transfer{
-    bytes recipient_address = 27;
-    string amount = 28;
-    string contract_id = 29;
-    optional string contract_fee_amount = 30;
-    optional string contract_fee_id = 31;
-    string base_fee_amount = 32;
-    string base_fee_id = 33;
-    optional string memo = 35;
+    bytes recipient_address = 1;
+    string amount = 2;
+    string contract_id = 3;
+    optional string contract_fee_amount = 4;
+    optional string contract_fee_id = 5;
+    string base_fee_amount = 6;
+    string base_fee_id = 7;
+    optional string memo = 8;
 }
 message BurnSBTTXN{
     BaseTXN base = 1;
@@ -314,9 +313,9 @@ message AuthorizedCurrencyEquiv{
 }
 message CurrencyEquiv{
     string contract_id = 1;
-    string rate = 2;
-    optional bool authorized = 3;
-    optional uint64 max_stake = 4;
+    string rate = 2; //1000000000000000000 = $1.00
+    optional bool authorized = 3; 
+    optional string max_stake = 4; //1000000000000000000 = $1.00
 }
 message ExpenseRatioResult{
     string contract_id = 1;
@@ -351,8 +350,8 @@ message QuashResult{
 
 //MAIN TXN MESSAGES
 message CoinTXN{
-    BaseTXN base = 34;
-    repeated Transfer transfers = 35;
+    BaseTXN base = 1;
+    repeated Transfer transfers = 2;
 }
 message NewCoinTXN
 {
@@ -361,8 +360,8 @@ message NewCoinTXN
     TransferAuthentication auth = 3;
     repeated InputTransfers input_transfers = 4;
     repeated OutputTransfers output_transfers = 5;
-    optional string contract_fee_id = 6;
-
+    string contract_fee_id = 6;
+    string contract_fee_amount = 7;
 }
 message TransferAuthentication
 {
@@ -374,9 +373,8 @@ message InputTransfers
 {
     uint64 index = 1;
     string amount = 2;
-    string base_fee_amount = 3;
-    uint32 fee_percent = 4;                     // 100 000 000 = 100%
-    optional string contract_fee_amount = 5;
+    uint32 fee_percent = 3;                     // 100 000 000 = 100%
+    optional uint32 contract_fee_percent = 4;   // 100 000 000 = 100%
 }
 message OutputTransfers
 {
@@ -386,9 +384,9 @@ message OutputTransfers
 }
 message MintTXN{
     BaseTXN base = 1;
-    string contract_id = 39;
-    string amount = 40;
-    bytes recipient_address = 41;
+    string contract_id = 2;
+    string amount = 3;
+    bytes recipient_address = 4;
 } 
 message NFTTXN{
     BaseTXN base = 1;
@@ -459,7 +457,7 @@ message GovernanceProposal{
     repeated string options = 6;
     optional google.protobuf.Timestamp start_timestamp = 7;
     optional google.protobuf.Timestamp end_timestamp = 8;
-    optional GovernanceTXN governance_txn = 9;
+    repeated GovernanceTXN governance_txn = 9;
 }
 message GovernanceTXN{
     TRANSACTION_TYPE txn_type = 1;

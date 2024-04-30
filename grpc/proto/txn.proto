@@ -286,7 +286,7 @@ message PublicKey{
     bytes single = 1;
     MultiKey multi = 2;
     optional bytes sc_wallet_adr = 3;
-    optional GovernanceAuth governance_auth = 4;
+    optional GovernanceAuth governance_auth = 4;  //
 }
 message GovernanceAuth
 {
@@ -360,8 +360,8 @@ message NewCoinTXN
     TransferAuthentication auth = 3;
     repeated InputTransfers input_transfers = 4;
     repeated OutputTransfers output_transfers = 5;
-    string contract_fee_id = 6;
-    string contract_fee_amount = 7;
+    optional string contract_fee_id = 6;
+    optional string contract_fee_amount = 7;
 }
 message TransferAuthentication
 {

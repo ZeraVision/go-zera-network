@@ -170,7 +170,7 @@ message Proposal{
     zera_txn.PublicKey public_key = 14; 
     bool options_set = 15;
     uint32 number_of_options = 16;
-    zera_txn.GovernanceTXN governance_txn = 17;
+    repeated zera_txn.GovernanceTXN governance_txn = 17;
 }
 message ProposalWalletRecieve{
     zera_txn.BaseTXN base = 1;
@@ -290,7 +290,7 @@ message PreProcessedWallets
     string amount = 1;
     
 }
-message GovernanceAuth{
+message ZeraGovernanceAuth{
     zera_txn.PublicKey public_key = 1;
     zera_txn.TRANSACTION_TYPE type = 2;
 }

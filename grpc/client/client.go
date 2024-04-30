@@ -306,3 +306,4 @@ func SendNewCoinTXN(newCoin *zera_pb.NewCoinTXN, destAddr string) (*emptypb.Empt
 
 	return response, nil
 }
+

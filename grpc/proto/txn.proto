@@ -294,10 +294,10 @@ message GovernanceAuth
     bytes proposal_id = 2;
 }
 message MultiKey{
-    repeated bytes public_keys = 1;
-    repeated bytes signatures = 2;
-    repeated MultiPatterns multi_patterns = 3;
-    repeated string hash_tokens = 4;
+    repeated bytes public_keys = 1;             //public keys with class prefix ex. c1_"public_key"
+    repeated bytes signatures = 2;              //signature of each public key included "empty space if not included"
+    repeated MultiPatterns multi_patterns = 3;  //all diiferent patterns of to verify the multi key
+    repeated string hash_tokens = 4;            //hash tokens to hash the multi key in wallet address
 }
 message MultiPatterns{
     repeated int32 class = 1;
@@ -478,9 +478,10 @@ message SmartContractExecuteTXN{
 //key = generated public key
 message Validator{
     PublicKey public_key = 1;  //original public key
-    string host = 3;
-    string client_port = 4; 
-    string validator_port = 5; 
+    string host = 2;
+    string client_port = 3; 
+    string validator_port = 4; 
+    repeated string staked_contract_ids = 5;
     uint64 benchmark = 6;
     google.protobuf.Timestamp timestamp = 7;
     bool lite = 8;

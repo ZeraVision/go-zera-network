@@ -567,8 +567,8 @@ message TXNStatusFees{
     TXN_STATUS status = 2;
     repeated string base_fees = 3;
     repeated string base_contract_id = 4;
-    repeated string contract_fees = 5;
-    repeated string contract_contract_id = 6;
+    string contract_fees = 5;
+    string contract_contract_id = 6;
     repeated bytes smar_contract_result = 10;
     optional string approved_votes = 7; //TODO - REMOVE THIS?
     optional string against_votes = 8;  //TODO - REMOVE THIS?

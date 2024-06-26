@@ -10,7 +10,6 @@ option go_package = "./grpc/protobuf";
 option optimize_for = SPEED;
 
 service TXNService{
-    rpc Coin(CoinTXN) returns (google.protobuf.Empty);
     rpc NewCoin(NewCoinTXN) returns (google.protobuf.Empty);
     rpc Mint(MintTXN) returns (google.protobuf.Empty);
     rpc ItemMint(ItemizedMintTXN) returns (google.protobuf.Empty);
@@ -347,12 +346,6 @@ message QuashResult{
     bytes txn_hash = 1;
     repeated PublicKey public_keys = 2;
 }
-
-//MAIN TXN MESSAGES
-message CoinTXN{
-    BaseTXN base = 1;
-    repeated Transfer transfers = 2;
-}
 message NewCoinTXN
 {
     BaseTXN base = 1;
@@ -497,9 +490,9 @@ message ValidatorHeartbeat{
     bool online = 2;
 }
 message SmartContractParameter{
-    uint32 index = 75;
-    VARIABLE_TYPE type = 76;
-    optional string value = 77;
+    uint32 index = 1;
+    VARIABLE_TYPE type = 2;
+    optional string value = 3;
 }
 message Votes{
     repeated VotePair votes = 1;
@@ -524,7 +517,7 @@ message ProposalResult{
     bool fast_quorum = 13;
 }
 message TXNS{
-    repeated CoinTXN coin_txns = 1;
+    repeated NewCoinTXN new_coin_txns = 1;
     repeated MintTXN mint_txns = 2;
     repeated ItemizedMintTXN item_mint_txns = 3;
     repeated InstrumentContract contract_txns = 4;
@@ -551,7 +544,6 @@ message TXNS{
     repeated RevokeTXN revoke_txns = 25;
     repeated ComplianceTXN compliance_txns = 26;
     repeated BurnSBTTXN burn_sbt_txns = 27;
-    repeated NewCoinTXN new_coin_txns = 28;
 }
 
 message Token{
@@ -562,22 +554,22 @@ message TokenFees{
     bytes address = 1;
     repeated Token tokens = 2;
 }
+
 message TXNStatusFees{
     bytes txn_hash = 1;
     TXN_STATUS status = 2;
-    repeated string base_fees = 3;
-    repeated string base_contract_id = 4;
-    string contract_fees = 5;
-    string contract_contract_id = 6;
-    repeated bytes smar_contract_result = 10;
-    optional string approved_votes = 7; //TODO - REMOVE THIS?
-    optional string against_votes = 8;  //TODO - REMOVE THIS?
+    string base_fees = 3;
+    string base_contract_id = 4;
+    optional string contract_fees = 5;
+    optional string contract_contract_id = 6;
     bool smart_contract = 9;
+    repeated bytes smart_contract_result = 10;
+    repeated string misc = 11;
 }
 
 message TXNWrapper{
     oneof payload{
-        CoinTXN coin_txn = 1;
+        NewCoinTXN new_coin_txn = 1;
         MintTXN mint_txn = 2;
         ItemizedMintTXN item_mint_txn = 3;
         InstrumentContract contract_txn = 4;
@@ -600,7 +592,6 @@ message TXNWrapper{
         ComplianceTXN compliance_txn = 21;
         bool proposal_result_txn = 22;
         BurnSBTTXN burn_sbt_txn = 23;
-        NewCoinTXN new_coin_txn = 24;
     }
     
     TRANSACTION_TYPE txn_type = 25;

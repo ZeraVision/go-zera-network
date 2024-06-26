@@ -11,12 +11,14 @@ option go_package = "./grpc/protobuf";
 option optimize_for = SPEED;
 
 service ValidatorService{
+    //streams
     rpc StreamBroadcast(stream DataChunk) returns (google.protobuf.Empty);
-    rpc Broadcast(Block) returns (google.protobuf.Empty);
+    rpc BlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc SyncBlockchain(BlockSync) returns (stream DataChunk);
+
+    rpc Broadcast(Block) returns (google.protobuf.Empty);
     rpc ValidatorRegistration(zera_txn.ValidatorRegistration) returns (google.protobuf.Empty);
     rpc SyncValidatorList(ValidatorSyncRequest) returns (ValidatorSync);
-    rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
     rpc ValidatorMint(zera_txn.MintTXN) returns (google.protobuf.Empty);
     rpc ValidatorItemMint(zera_txn.ItemizedMintTXN) returns (google.protobuf.Empty);
     rpc ValidatorContract(zera_txn.InstrumentContract) returns (google.protobuf.Empty); 
@@ -39,31 +41,53 @@ service ValidatorService{
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
     rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
     rpc Nonce(NonceRequest) returns (NonceResponse);
-    rpc BlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc ValidatorNewCoin(zera_txn.NewCoinTXN) returns (google.protobuf.Empty);
 }
 
+//Key = Block Height
+message ValidatorArchive
+{
+    map<string, ValidatorBalance> validators = 1; //Key = gen public key
+    string total_balance = 2;                     //Total Balance of all validators
+}
+message ValidatorBalance
+{
+    zera_txn.PublicKey public_key = 1;            //Original Public Key
+    string total_balance = 2;                     //Total Balance of all qualified coins
+}
 message BlockAttestationResponse
 {
-    bool support = 1;
-    optional Block supported_block = 2;
-    repeated ValidatorSupport validator_support = 3;
-    zera_txn.PublicKey public_key = 4; 
-    bytes signature = 5;
-
+    bool support = 1;                                //hash of block to support
+    bool no_preference = 2;                          //if validator has no preference
+    optional Block supported_block = 3;              //block that they support if they dont agree
+    repeated ValidatorSupport validator_support = 4; //all validators that support either new block or same block
+    zera_txn.PublicKey public_key = 5;               //public key of validator in favour
+    bytes signature = 6;                             //signature of this transaction
 }
 message BlockAttestation{
-    bytes block_hash = 1;
-    uint32 block_height = 2;
-    repeated ValidatorSupport validator_support = 3;
-    zera_txn.PublicKey public_key = 4; 
-    bytes signature = 5;
+    bytes block_hash = 1;                            //hash of block to support
+    uint32 block_height = 2;                         //height of block to support
+    repeated ValidatorSupport validator_support = 3; //all validators that support block
+    zera_txn.PublicKey public_key = 4;               //public key of validator in favour
+    bytes signature = 5;                             //signature of this transaction
 }
 
+//Key = Block Height
+message AttestationLedger{
+    map<string, AttestationSupport> block_attestation_responses = 1; //all of the attestation responses for a block recieved from other validators key = block hash
+    map<string, string> validator_support = 2;                       //shows how much support that block has key = block hash
+}
+
+message AttestationSupport
+{
+    repeated ValidatorSupport validator_support = 1; //all validators that support block
+    optional Block supported_block = 2;              //block that they support if they dont agree
+
+}
 message ValidatorSupport{
-    zera_txn.PublicKey public_key = 1; 
-    bytes signature = 2;
-    google.protobuf.Timestamp timestamp = 3;
+    zera_txn.PublicKey public_key = 1;       //public key of validator in favour
+    bytes signature = 2;                     //signature of block_hash
+    google.protobuf.Timestamp timestamp = 3; //timestamp of support
 }
 message NonceRequest{
     bytes wallet_address = 1;
@@ -152,6 +176,8 @@ message Voter{
     optional uint32 option = 2;
     bool delegated = 3;
 }
+
+//which proposals have been voted on with this wallet.
 message VoteWallet{
     map<string, Voter> proposal_votes = 1;
 }
@@ -293,4 +319,10 @@ message PreProcessedWallets
 message ZeraGovernanceAuth{
     zera_txn.PublicKey public_key = 1;
     zera_txn.TRANSACTION_TYPE type = 2;
+}
+
+message ContractPrice{
+    string symbol = 1;
+    uint32 number_of_symbols = 2;
+    string multiplier = 3;
 }

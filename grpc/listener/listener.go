@@ -20,7 +20,6 @@ type BroadcastHandler func(ctx context.Context, block *zera_pb.Block) (*emptypb.
 type SyncBlockchainHandler func(ctx context.Context, blockSync *zera_pb.BlockSync) (*zera_pb.BlockBatch, error)
 type ValidatorRegistrationHandler func(ctx context.Context, message *zera_pb.ValidatorRegistration) (*emptypb.Empty, error)
 type SyncValidatorListHandler func(ctx context.Context, request *zera_pb.ValidatorSyncRequest) (*zera_pb.ValidatorSync, error)
-type ValidatorCoinHandler func(ctx context.Context, txn *zera_pb.CoinTXN) (*emptypb.Empty, error)
 type ValidatorMintHandler func(ctx context.Context, txn *zera_pb.MintTXN) (*emptypb.Empty, error)
 type ValidatorItemMintHandler func(ctx context.Context, txn *zera_pb.ItemizedMintTXN) (*emptypb.Empty, error)
 type ValidatorContractHandler func(ctx context.Context, contract *zera_pb.InstrumentContract) (*emptypb.Empty, error)
@@ -39,7 +38,6 @@ type ValidatorService struct {
 	HandleSyncBlockchain             SyncBlockchainHandler
 	HandleValidatorRegistration      ValidatorRegistrationHandler
 	HandleSyncValidatorList          SyncValidatorListHandler
-	HandleValidatorCoin              ValidatorCoinHandler
 	HandleValidatorMint              ValidatorMintHandler
 	HandleValidatorItemMint          ValidatorItemMintHandler
 	HandleValidatorContract          ValidatorContractHandler
@@ -143,13 +141,6 @@ func (c *ValidatorService) SyncValidatorList(ctx context.Context, in *zera_pb.Va
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleSyncValidatorList(ctx, in)
-}
-
-func (c *ValidatorService) ValidatorCoin(ctx context.Context, in *zera_pb.CoinTXN) (*emptypb.Empty, error) {
-	if c.HandleValidatorCoin == nil {
-		return nil, errors.New("ValidatorService is not initialized")
-	}
-	return c.HandleValidatorCoin(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorMint(ctx context.Context, in *zera_pb.MintTXN) (*emptypb.Empty, error) {

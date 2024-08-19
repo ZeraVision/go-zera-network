@@ -10,7 +10,7 @@ option go_package = "./grpc/protobuf";
 option optimize_for = SPEED;
 
 service TXNService{
-    rpc NewCoin(NewCoinTXN) returns (google.protobuf.Empty);
+    rpc Coin(CoinTXN) returns (google.protobuf.Empty);
     rpc Mint(MintTXN) returns (google.protobuf.Empty);
     rpc ItemMint(ItemizedMintTXN) returns (google.protobuf.Empty);
     rpc Contract(InstrumentContract) returns (google.protobuf.Empty); 
@@ -30,6 +30,7 @@ service TXNService{
     rpc Revoke(RevokeTXN) returns (google.protobuf.Empty);
     rpc Compliance(ComplianceTXN) returns (google.protobuf.Empty);
     rpc BurnSBT(BurnSBTTXN) returns (google.protobuf.Empty);
+
 }
 
 enum TXN_STATUS{
@@ -96,15 +97,13 @@ enum TRANSACTION_TYPE
     FAST_QUORUM_TYPE = 20;
     COMPLIANCE_TYPE = 21;
     SBT_BURN_TYPE = 22;
-    NEW_COIN_TYPE = 23;
-    UKNOWN_TYPE = 24;
+    UKNOWN_TYPE = 23;
 }
 //ENUMS
 enum LANGUAGE{
-    CPLUSPLUS = 0;
-    RUST = 1;
-    PYTHON = 2;
-    JAVASCRIPT = 3;
+    COMPILED = 0;
+    PYTHON = 1;
+    JAVASCRIPT = 2;
 }
 
 enum PROPOSAL_PERIOD{
@@ -346,7 +345,7 @@ message QuashResult{
     bytes txn_hash = 1;
     repeated PublicKey public_keys = 2;
 }
-message NewCoinTXN
+message CoinTXN
 {
     BaseTXN base = 1;
     string contract_id = 2;
@@ -479,15 +478,18 @@ message Validator{
     google.protobuf.Timestamp timestamp = 7;
     bool lite = 8;
     bool online = 9;
+    uint32 version = 10;
 }
 message ValidatorRegistration{
     BaseTXN base = 1;
     Validator validator = 2;
     bool register = 3;
+    PublicKey generated_public_key = 4;
 }
 message ValidatorHeartbeat{
     BaseTXN base = 1;
     bool online = 2;
+    uint32 version = 3;
 }
 message SmartContractParameter{
     uint32 index = 1;
@@ -517,7 +519,7 @@ message ProposalResult{
     bool fast_quorum = 13;
 }
 message TXNS{
-    repeated NewCoinTXN new_coin_txns = 1;
+    repeated CoinTXN coin_txns = 1;
     repeated MintTXN mint_txns = 2;
     repeated ItemizedMintTXN item_mint_txns = 3;
     repeated InstrumentContract contract_txns = 4;
@@ -569,7 +571,7 @@ message TXNStatusFees{
 
 message TXNWrapper{
     oneof payload{
-        NewCoinTXN new_coin_txn = 1;
+        CoinTXN coin_txn = 1;
         MintTXN mint_txn = 2;
         ItemizedMintTXN item_mint_txn = 3;
         InstrumentContract contract_txn = 4;

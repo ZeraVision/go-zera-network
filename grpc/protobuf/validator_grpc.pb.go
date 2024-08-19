@@ -20,8 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	ValidatorService_StreamFailedBlock_FullMethodName             = "/zera_validator.ValidatorService/StreamFailedBlock"
 	ValidatorService_StreamBroadcast_FullMethodName               = "/zera_validator.ValidatorService/StreamBroadcast"
-	ValidatorService_BlockAttestation_FullMethodName              = "/zera_validator.ValidatorService/BlockAttestation"
 	ValidatorService_SyncBlockchain_FullMethodName                = "/zera_validator.ValidatorService/SyncBlockchain"
 	ValidatorService_Broadcast_FullMethodName                     = "/zera_validator.ValidatorService/Broadcast"
 	ValidatorService_ValidatorRegistration_FullMethodName         = "/zera_validator.ValidatorService/ValidatorRegistration"
@@ -48,7 +48,8 @@ const (
 	ValidatorService_ValidatorCompliance_FullMethodName           = "/zera_validator.ValidatorService/ValidatorCompliance"
 	ValidatorService_ValidatorBurnSBT_FullMethodName              = "/zera_validator.ValidatorService/ValidatorBurnSBT"
 	ValidatorService_Nonce_FullMethodName                         = "/zera_validator.ValidatorService/Nonce"
-	ValidatorService_ValidatorNewCoin_FullMethodName              = "/zera_validator.ValidatorService/ValidatorNewCoin"
+	ValidatorService_ValidatorCoin_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorCoin"
+	ValidatorService_StreamBlockAttestation_FullMethodName        = "/zera_validator.ValidatorService/StreamBlockAttestation"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -56,8 +57,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ValidatorServiceClient interface {
 	// streams
+	StreamFailedBlock(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamFailedBlockClient, error)
 	StreamBroadcast(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBroadcastClient, error)
-	BlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_BlockAttestationClient, error)
 	SyncBlockchain(ctx context.Context, in *BlockSync, opts ...grpc.CallOption) (ValidatorService_SyncBlockchainClient, error)
 	Broadcast(ctx context.Context, in *Block, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorRegistration(ctx context.Context, in *ValidatorRegistration, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -84,7 +85,8 @@ type ValidatorServiceClient interface {
 	ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
-	ValidatorNewCoin(ctx context.Context, in *NewCoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	StreamBlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBlockAttestationClient, error)
 }
 
 type validatorServiceClient struct {
@@ -95,8 +97,42 @@ func NewValidatorServiceClient(cc grpc.ClientConnInterface) ValidatorServiceClie
 	return &validatorServiceClient{cc}
 }
 
+func (c *validatorServiceClient) StreamFailedBlock(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamFailedBlockClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[0], ValidatorService_StreamFailedBlock_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceStreamFailedBlockClient{stream}
+	return x, nil
+}
+
+type ValidatorService_StreamFailedBlockClient interface {
+	Send(*DataChunk) error
+	CloseAndRecv() (*emptypb.Empty, error)
+	grpc.ClientStream
+}
+
+type validatorServiceStreamFailedBlockClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceStreamFailedBlockClient) Send(m *DataChunk) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamFailedBlockClient) CloseAndRecv() (*emptypb.Empty, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(emptypb.Empty)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *validatorServiceClient) StreamBroadcast(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBroadcastClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[0], ValidatorService_StreamBroadcast_FullMethodName, opts...)
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[1], ValidatorService_StreamBroadcast_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -123,37 +159,6 @@ func (x *validatorServiceStreamBroadcastClient) CloseAndRecv() (*emptypb.Empty, 
 		return nil, err
 	}
 	m := new(emptypb.Empty)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *validatorServiceClient) BlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_BlockAttestationClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[1], ValidatorService_BlockAttestation_FullMethodName, opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &validatorServiceBlockAttestationClient{stream}
-	return x, nil
-}
-
-type ValidatorService_BlockAttestationClient interface {
-	Send(*DataChunk) error
-	Recv() (*DataChunk, error)
-	grpc.ClientStream
-}
-
-type validatorServiceBlockAttestationClient struct {
-	grpc.ClientStream
-}
-
-func (x *validatorServiceBlockAttestationClient) Send(m *DataChunk) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *validatorServiceBlockAttestationClient) Recv() (*DataChunk, error) {
-	m := new(DataChunk)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -417,13 +422,44 @@ func (c *validatorServiceClient) Nonce(ctx context.Context, in *NonceRequest, op
 	return out, nil
 }
 
-func (c *validatorServiceClient) ValidatorNewCoin(ctx context.Context, in *NewCoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, ValidatorService_ValidatorNewCoin_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorCoin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *validatorServiceClient) StreamBlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBlockAttestationClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[3], ValidatorService_StreamBlockAttestation_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceStreamBlockAttestationClient{stream}
+	return x, nil
+}
+
+type ValidatorService_StreamBlockAttestationClient interface {
+	Send(*DataChunk) error
+	Recv() (*DataChunk, error)
+	grpc.ClientStream
+}
+
+type validatorServiceStreamBlockAttestationClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceStreamBlockAttestationClient) Send(m *DataChunk) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamBlockAttestationClient) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // ValidatorServiceServer is the server API for ValidatorService service.
@@ -431,8 +467,8 @@ func (c *validatorServiceClient) ValidatorNewCoin(ctx context.Context, in *NewCo
 // for forward compatibility
 type ValidatorServiceServer interface {
 	// streams
+	StreamFailedBlock(ValidatorService_StreamFailedBlockServer) error
 	StreamBroadcast(ValidatorService_StreamBroadcastServer) error
-	BlockAttestation(ValidatorService_BlockAttestationServer) error
 	SyncBlockchain(*BlockSync, ValidatorService_SyncBlockchainServer) error
 	Broadcast(context.Context, *Block) (*emptypb.Empty, error)
 	ValidatorRegistration(context.Context, *ValidatorRegistration) (*emptypb.Empty, error)
@@ -459,7 +495,8 @@ type ValidatorServiceServer interface {
 	ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error)
 	ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error)
 	Nonce(context.Context, *NonceRequest) (*NonceResponse, error)
-	ValidatorNewCoin(context.Context, *NewCoinTXN) (*emptypb.Empty, error)
+	ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error)
+	StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -467,11 +504,11 @@ type ValidatorServiceServer interface {
 type UnimplementedValidatorServiceServer struct {
 }
 
+func (UnimplementedValidatorServiceServer) StreamFailedBlock(ValidatorService_StreamFailedBlockServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamFailedBlock not implemented")
+}
 func (UnimplementedValidatorServiceServer) StreamBroadcast(ValidatorService_StreamBroadcastServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamBroadcast not implemented")
-}
-func (UnimplementedValidatorServiceServer) BlockAttestation(ValidatorService_BlockAttestationServer) error {
-	return status.Errorf(codes.Unimplemented, "method BlockAttestation not implemented")
 }
 func (UnimplementedValidatorServiceServer) SyncBlockchain(*BlockSync, ValidatorService_SyncBlockchainServer) error {
 	return status.Errorf(codes.Unimplemented, "method SyncBlockchain not implemented")
@@ -551,8 +588,11 @@ func (UnimplementedValidatorServiceServer) ValidatorBurnSBT(context.Context, *Bu
 func (UnimplementedValidatorServiceServer) Nonce(context.Context, *NonceRequest) (*NonceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Nonce not implemented")
 }
-func (UnimplementedValidatorServiceServer) ValidatorNewCoin(context.Context, *NewCoinTXN) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidatorNewCoin not implemented")
+func (UnimplementedValidatorServiceServer) ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCoin not implemented")
+}
+func (UnimplementedValidatorServiceServer) StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamBlockAttestation not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -565,6 +605,32 @@ type UnsafeValidatorServiceServer interface {
 
 func RegisterValidatorServiceServer(s grpc.ServiceRegistrar, srv ValidatorServiceServer) {
 	s.RegisterService(&ValidatorService_ServiceDesc, srv)
+}
+
+func _ValidatorService_StreamFailedBlock_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ValidatorServiceServer).StreamFailedBlock(&validatorServiceStreamFailedBlockServer{stream})
+}
+
+type ValidatorService_StreamFailedBlockServer interface {
+	SendAndClose(*emptypb.Empty) error
+	Recv() (*DataChunk, error)
+	grpc.ServerStream
+}
+
+type validatorServiceStreamFailedBlockServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceStreamFailedBlockServer) SendAndClose(m *emptypb.Empty) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamFailedBlockServer) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func _ValidatorService_StreamBroadcast_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -586,32 +652,6 @@ func (x *validatorServiceStreamBroadcastServer) SendAndClose(m *emptypb.Empty) e
 }
 
 func (x *validatorServiceStreamBroadcastServer) Recv() (*DataChunk, error) {
-	m := new(DataChunk)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func _ValidatorService_BlockAttestation_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ValidatorServiceServer).BlockAttestation(&validatorServiceBlockAttestationServer{stream})
-}
-
-type ValidatorService_BlockAttestationServer interface {
-	Send(*DataChunk) error
-	Recv() (*DataChunk, error)
-	grpc.ServerStream
-}
-
-type validatorServiceBlockAttestationServer struct {
-	grpc.ServerStream
-}
-
-func (x *validatorServiceBlockAttestationServer) Send(m *DataChunk) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *validatorServiceBlockAttestationServer) Recv() (*DataChunk, error) {
 	m := new(DataChunk)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -1090,22 +1130,48 @@ func _ValidatorService_Nonce_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ValidatorService_ValidatorNewCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NewCoinTXN)
+func _ValidatorService_ValidatorCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CoinTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ValidatorServiceServer).ValidatorNewCoin(ctx, in)
+		return srv.(ValidatorServiceServer).ValidatorCoin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ValidatorService_ValidatorNewCoin_FullMethodName,
+		FullMethod: ValidatorService_ValidatorCoin_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorNewCoin(ctx, req.(*NewCoinTXN))
+		return srv.(ValidatorServiceServer).ValidatorCoin(ctx, req.(*CoinTXN))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_StreamBlockAttestation_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ValidatorServiceServer).StreamBlockAttestation(&validatorServiceStreamBlockAttestationServer{stream})
+}
+
+type ValidatorService_StreamBlockAttestationServer interface {
+	Send(*DataChunk) error
+	Recv() (*DataChunk, error)
+	grpc.ServerStream
+}
+
+type validatorServiceStreamBlockAttestationServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceStreamBlockAttestationServer) Send(m *DataChunk) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamBlockAttestationServer) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
@@ -1216,26 +1282,31 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ValidatorService_Nonce_Handler,
 		},
 		{
-			MethodName: "ValidatorNewCoin",
-			Handler:    _ValidatorService_ValidatorNewCoin_Handler,
+			MethodName: "ValidatorCoin",
+			Handler:    _ValidatorService_ValidatorCoin_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamFailedBlock",
+			Handler:       _ValidatorService_StreamFailedBlock_Handler,
+			ClientStreams: true,
+		},
 		{
 			StreamName:    "StreamBroadcast",
 			Handler:       _ValidatorService_StreamBroadcast_Handler,
 			ClientStreams: true,
 		},
 		{
-			StreamName:    "BlockAttestation",
-			Handler:       _ValidatorService_BlockAttestation_Handler,
-			ServerStreams: true,
-			ClientStreams: true,
-		},
-		{
 			StreamName:    "SyncBlockchain",
 			Handler:       _ValidatorService_SyncBlockchain_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "StreamBlockAttestation",
+			Handler:       _ValidatorService_StreamBlockAttestation_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "validator.proto",

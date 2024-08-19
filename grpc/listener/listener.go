@@ -30,7 +30,7 @@ type ValidatorSmartContractExecuteHandler func(ctx context.Context, txn *zera_pb
 type ValidatorCurrencyEquivHandler func(ctx context.Context, equiv *zera_pb.SelfCurrencyEquiv) (*emptypb.Empty, error)
 type ValidatorAuthCurrencyEquivHandler func(ctx context.Context, equiv *zera_pb.AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
 type ValidatorExpenseRatioHandler func(ctx context.Context, ratio *zera_pb.ExpenseRatioTXN) (*emptypb.Empty, error)
-type ValidatorNewCoinHandler func(ctx context.Context, txn *zera_pb.NewCoinTXN) (*emptypb.Empty, error)
+type ValidatorCoinHandler func(ctx context.Context, txn *zera_pb.CoinTXN) (*emptypb.Empty, error)
 
 // ValidatorService is an implementation of the ValidatorServiceClient interface.
 type ValidatorService struct {
@@ -48,7 +48,7 @@ type ValidatorService struct {
 	HandleValidatorCurrencyEquiv     ValidatorCurrencyEquivHandler
 	HandleValidatorAuthCurrencyEquiv ValidatorAuthCurrencyEquivHandler
 	HandleValidatorExpenseRatio      ValidatorExpenseRatioHandler
-	HandleValidatorNewCoin		     ValidatorNewCoinHandler
+	HandleValidatorCoin		     	 ValidatorCoinHandler
 	zera_pb.UnimplementedValidatorServiceServer
 	Service *grpc.Server
 }
@@ -213,10 +213,10 @@ func (c *ValidatorService) ValidatorExpenseRatio(ctx context.Context, in *zera_p
 	return c.HandleValidatorExpenseRatio(ctx, in)
 }
 
-func(c *ValidatorService) ValidatorNewCoin(ctx context.Context, in *zera_pb.NewCoinTXN) (*emptypb.Empty, error){
-	if c.HandleValidatorNewCoin == nil {
+func(c *ValidatorService) ValidatorCoin(ctx context.Context, in *zera_pb.CoinTXN) (*emptypb.Empty, error){
+	if c.HandleValidatorCoin == nil {
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 
-	return c.HandleValidatorNewCoin(ctx, in)
+	return c.HandleValidatorCoin(ctx, in)
 }

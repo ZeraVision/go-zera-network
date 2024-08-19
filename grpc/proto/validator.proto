@@ -12,8 +12,8 @@ option optimize_for = SPEED;
 
 service ValidatorService{
     //streams
+    rpc StreamFailedBlock(stream DataChunk) returns (google.protobuf.Empty);
     rpc StreamBroadcast(stream DataChunk) returns (google.protobuf.Empty);
-    rpc BlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc SyncBlockchain(BlockSync) returns (stream DataChunk);
 
     rpc Broadcast(Block) returns (google.protobuf.Empty);
@@ -41,9 +41,15 @@ service ValidatorService{
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
     rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
     rpc Nonce(NonceRequest) returns (NonceResponse);
-    rpc ValidatorNewCoin(zera_txn.NewCoinTXN) returns (google.protobuf.Empty);
+    rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
+    rpc StreamBlockAttestation(stream DataChunk) returns (stream DataChunk);
 }
 
+message StakeMultipliers
+{
+    map<string, string> contract_multipliers = 1; //key = contract_id, value = multiplier (multiplier 100 000 = 100%)
+    string default_multiplier = 2;                //default multiplier for all contracts based off of % of zera staked
+}
 //Key = Block Height
 message ValidatorArchive
 {
@@ -63,13 +69,16 @@ message BlockAttestationResponse
     repeated ValidatorSupport validator_support = 4; //all validators that support either new block or same block
     zera_txn.PublicKey public_key = 5;               //public key of validator in favour
     bytes signature = 6;                             //signature of this transaction
+    bool confirmed = 7;                              //if the block has been confirmed
 }
 message BlockAttestation{
     bytes block_hash = 1;                            //hash of block to support
     uint32 block_height = 2;                         //height of block to support
-    repeated ValidatorSupport validator_support = 3; //all validators that support block
-    zera_txn.PublicKey public_key = 4;               //public key of validator in favour
-    bytes signature = 5;                             //signature of this transaction
+    bytes previous_block_hash = 3;                   //hash of previous block
+    repeated ValidatorSupport validator_support = 4; //all validators that support block
+    zera_txn.PublicKey public_key = 5;               //public key of validator in favour
+    bytes signature = 6;                             //signature of this transaction
+    bool confirmed = 7;                              //if the block has been confirmed
 }
 
 //Key = Block Height

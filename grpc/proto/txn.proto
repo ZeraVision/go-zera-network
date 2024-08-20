@@ -97,7 +97,8 @@ enum TRANSACTION_TYPE
     FAST_QUORUM_TYPE = 20;
     COMPLIANCE_TYPE = 21;
     SBT_BURN_TYPE = 22;
-    UKNOWN_TYPE = 23;
+    REQUIRED_VERSION = 23;
+    UKNOWN_TYPE = 24;
 }
 //ENUMS
 enum LANGUAGE{
@@ -284,7 +285,7 @@ message PublicKey{
     bytes single = 1;
     MultiKey multi = 2;
     optional bytes sc_wallet_adr = 3;
-    optional GovernanceAuth governance_auth = 4;  //
+    optional bytes governance_auth = 4;  //
 }
 message GovernanceAuth
 {
@@ -503,6 +504,11 @@ message VotePair{
     string contract_id = 1;
     string amount = 2;
 }
+message RequiredVersion{
+    BaseTXN base = 1;
+    repeated uint32 version = 2;
+
+}
 message ProposalResult{
     BaseTXN base = 1;
     string contract_id = 2;     //contract_id of the proposal
@@ -546,6 +552,7 @@ message TXNS{
     repeated RevokeTXN revoke_txns = 25;
     repeated ComplianceTXN compliance_txns = 26;
     repeated BurnSBTTXN burn_sbt_txns = 27;
+    RequiredVersion required_version_txn = 28;
 }
 
 message Token{
@@ -594,6 +601,7 @@ message TXNWrapper{
         ComplianceTXN compliance_txn = 21;
         bool proposal_result_txn = 22;
         BurnSBTTXN burn_sbt_txn = 23;
+        RequiredVersion required_version_txn = 24;
     }
     
     TRANSACTION_TYPE txn_type = 25;

@@ -20,26 +20,27 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TXNService_Coin_FullMethodName                 = "/zera_txn.TXNService/Coin"
-	TXNService_Mint_FullMethodName                 = "/zera_txn.TXNService/Mint"
-	TXNService_ItemMint_FullMethodName             = "/zera_txn.TXNService/ItemMint"
-	TXNService_Contract_FullMethodName             = "/zera_txn.TXNService/Contract"
-	TXNService_GovernProposal_FullMethodName       = "/zera_txn.TXNService/GovernProposal"
-	TXNService_GovernVote_FullMethodName           = "/zera_txn.TXNService/GovernVote"
-	TXNService_SmartContract_FullMethodName        = "/zera_txn.TXNService/SmartContract"
-	TXNService_SmartContractExecute_FullMethodName = "/zera_txn.TXNService/SmartContractExecute"
-	TXNService_CurrencyEquiv_FullMethodName        = "/zera_txn.TXNService/CurrencyEquiv"
-	TXNService_AuthCurrencyEquiv_FullMethodName    = "/zera_txn.TXNService/AuthCurrencyEquiv"
-	TXNService_ExpenseRatio_FullMethodName         = "/zera_txn.TXNService/ExpenseRatio"
-	TXNService_NFT_FullMethodName                  = "/zera_txn.TXNService/NFT"
-	TXNService_ContractUpdate_FullMethodName       = "/zera_txn.TXNService/ContractUpdate"
-	TXNService_Foundation_FullMethodName           = "/zera_txn.TXNService/Foundation"
-	TXNService_DelegatedVoting_FullMethodName      = "/zera_txn.TXNService/DelegatedVoting"
-	TXNService_Quash_FullMethodName                = "/zera_txn.TXNService/Quash"
-	TXNService_FastQuorum_FullMethodName           = "/zera_txn.TXNService/FastQuorum"
-	TXNService_Revoke_FullMethodName               = "/zera_txn.TXNService/Revoke"
-	TXNService_Compliance_FullMethodName           = "/zera_txn.TXNService/Compliance"
-	TXNService_BurnSBT_FullMethodName              = "/zera_txn.TXNService/BurnSBT"
+	TXNService_Coin_FullMethodName                     = "/zera_txn.TXNService/Coin"
+	TXNService_Mint_FullMethodName                     = "/zera_txn.TXNService/Mint"
+	TXNService_ItemMint_FullMethodName                 = "/zera_txn.TXNService/ItemMint"
+	TXNService_Contract_FullMethodName                 = "/zera_txn.TXNService/Contract"
+	TXNService_GovernProposal_FullMethodName           = "/zera_txn.TXNService/GovernProposal"
+	TXNService_GovernVote_FullMethodName               = "/zera_txn.TXNService/GovernVote"
+	TXNService_SmartContract_FullMethodName            = "/zera_txn.TXNService/SmartContract"
+	TXNService_SmartContractExecute_FullMethodName     = "/zera_txn.TXNService/SmartContractExecute"
+	TXNService_SmartContractInstantiate_FullMethodName = "/zera_txn.TXNService/SmartContractInstantiate"
+	TXNService_CurrencyEquiv_FullMethodName            = "/zera_txn.TXNService/CurrencyEquiv"
+	TXNService_AuthCurrencyEquiv_FullMethodName        = "/zera_txn.TXNService/AuthCurrencyEquiv"
+	TXNService_ExpenseRatio_FullMethodName             = "/zera_txn.TXNService/ExpenseRatio"
+	TXNService_NFT_FullMethodName                      = "/zera_txn.TXNService/NFT"
+	TXNService_ContractUpdate_FullMethodName           = "/zera_txn.TXNService/ContractUpdate"
+	TXNService_Foundation_FullMethodName               = "/zera_txn.TXNService/Foundation"
+	TXNService_DelegatedVoting_FullMethodName          = "/zera_txn.TXNService/DelegatedVoting"
+	TXNService_Quash_FullMethodName                    = "/zera_txn.TXNService/Quash"
+	TXNService_FastQuorum_FullMethodName               = "/zera_txn.TXNService/FastQuorum"
+	TXNService_Revoke_FullMethodName                   = "/zera_txn.TXNService/Revoke"
+	TXNService_Compliance_FullMethodName               = "/zera_txn.TXNService/Compliance"
+	TXNService_BurnSBT_FullMethodName                  = "/zera_txn.TXNService/BurnSBT"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -54,6 +55,7 @@ type TXNServiceClient interface {
 	GovernVote(ctx context.Context, in *GovernanceVote, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SmartContractInstantiate(ctx context.Context, in *SmartContractInstantiateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -142,6 +144,15 @@ func (c *tXNServiceClient) SmartContract(ctx context.Context, in *SmartContractT
 func (c *tXNServiceClient) SmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, TXNService_SmartContractExecute_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tXNServiceClient) SmartContractInstantiate(ctx context.Context, in *SmartContractInstantiateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TXNService_SmartContractInstantiate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -268,6 +279,7 @@ type TXNServiceServer interface {
 	GovernVote(context.Context, *GovernanceVote) (*emptypb.Empty, error)
 	SmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error)
 	SmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error)
+	SmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*emptypb.Empty, error)
 	CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error)
 	AuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
 	ExpenseRatio(context.Context, *ExpenseRatioTXN) (*emptypb.Empty, error)
@@ -310,6 +322,9 @@ func (UnimplementedTXNServiceServer) SmartContract(context.Context, *SmartContra
 }
 func (UnimplementedTXNServiceServer) SmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SmartContractExecute not implemented")
+}
+func (UnimplementedTXNServiceServer) SmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SmartContractInstantiate not implemented")
 }
 func (UnimplementedTXNServiceServer) CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrencyEquiv not implemented")
@@ -500,6 +515,24 @@ func _TXNService_SmartContractExecute_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TXNServiceServer).SmartContractExecute(ctx, req.(*SmartContractExecuteTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TXNService_SmartContractInstantiate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SmartContractInstantiateTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).SmartContractInstantiate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_SmartContractInstantiate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).SmartContractInstantiate(ctx, req.(*SmartContractInstantiateTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -758,6 +791,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SmartContractExecute",
 			Handler:    _TXNService_SmartContractExecute_Handler,
+		},
+		{
+			MethodName: "SmartContractInstantiate",
+			Handler:    _TXNService_SmartContractInstantiate_Handler,
 		},
 		{
 			MethodName: "CurrencyEquiv",

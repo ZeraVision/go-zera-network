@@ -25,6 +25,7 @@ service ValidatorService{
     rpc ValidatorGovernProposal(zera_txn.GovernanceProposal) returns (google.protobuf.Empty);
     rpc ValidatorGovernVote(zera_txn.GovernanceVote) returns (google.protobuf.Empty);
     rpc ValidatorSmartContract(zera_txn.SmartContractTXN) returns (google.protobuf.Empty);
+    rpc ValidatorSmartContractInstantiate(zera_txn.SmartContractInstantiateTXN) returns (google.protobuf.Empty);
     rpc ValidatorSmartContractExecute(zera_txn.SmartContractExecuteTXN) returns (google.protobuf.Empty);
     rpc ValidatorCurrencyEquiv(zera_txn.SelfCurrencyEquiv) returns (google.protobuf.Empty);
     rpc ValidatorAuthCurrencyEquiv(zera_txn.AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);

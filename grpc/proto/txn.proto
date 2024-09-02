@@ -18,6 +18,7 @@ service TXNService{
     rpc GovernVote(GovernanceVote) returns (google.protobuf.Empty);
     rpc SmartContract(SmartContractTXN) returns (google.protobuf.Empty);
     rpc SmartContractExecute(SmartContractExecuteTXN) returns (google.protobuf.Empty);
+    rpc SmartContractInstantiate(SmartContractInstantiateTXN) returns (google.protobuf.Empty);
     rpc CurrencyEquiv(SelfCurrencyEquiv) returns (google.protobuf.Empty);
     rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
     rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty); //TODO - change to stream
@@ -98,13 +99,15 @@ enum TRANSACTION_TYPE
     COMPLIANCE_TYPE = 21;
     SBT_BURN_TYPE = 22;
     REQUIRED_VERSION = 23;
-    UKNOWN_TYPE = 24;
+    SMART_CONTRACT_INSTANTIATE_TYPE = 24;
+    UKNOWN_TYPE = 25;
 }
 //ENUMS
 enum LANGUAGE{
-    COMPILED = 0;
-    PYTHON = 1;
-    JAVASCRIPT = 2;
+    CPLUSPLUS = 0;
+    RUST = 1;
+    PYTHON = 2;
+    JAVASCRIPT = 3;
 }
 
 enum PROPOSAL_PERIOD{
@@ -197,7 +200,7 @@ message Governance{
     uint32 regular_quorum = 2;             //percent of yes votes to pass at the end of cycle (still needs to pass threshhold) 100 = 100&
     optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply) 100 = 100%
     repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
-    uint32 threshold = 5;                  //threshold of participation of holders needed to be accepted 1000 = 1000%
+    uint32 threshold = 5;                  //threshold of participation of holders needed to be accepted 1000 = 100%
     optional bool chicken_dinner = 6;      //Option winner does not need to pass regular quorum.
     bool allow_multi = 7;                  //Allow multiple choice proposals.
     optional uint32 voting_period = 8;     //How many days in the voting period (Months | Days). (cannot be present with adaptive) | (must be present with cycle & staggered & staged)
@@ -299,7 +302,7 @@ message MultiKey{
     repeated string hash_tokens = 4;            //hash tokens to hash the multi key in wallet address
 }
 message MultiPatterns{
-    repeated int32 class = 1;
+    repeated int32 class = 1;                   //these are a parrellel array of classes and how many of these classes are required to create a valid multi key
     repeated int32 required = 2;
 }
 message SelfCurrencyEquiv{
@@ -456,17 +459,29 @@ message GovernanceTXN{
     TRANSACTION_TYPE txn_type = 1;
     bytes serialized_txn = 2;
     bytes txn_hash = 3;
+
 }
 message SmartContractTXN{
     BaseTXN base = 1;
-    string raw_code = 2;
+    string smart_contract_name = 4;
+    bytes binary_code = 2;
+    bytes source_code = 7;
     LANGUAGE language = 3;
-    repeated SmartContractParameter variable_type = 4;
+    repeated string functions = 5;
+    repeated string dependencies = 6;
 }
 message SmartContractExecuteTXN{
     BaseTXN base = 1;
-    bytes smart_contract_id = 2;
-    repeated SmartContractParameter parameters = 3;
+    string smart_contract_name = 2;
+    uint32 nonce = 3;
+    string function = 74;
+    repeated bytes parameters = 4; 
+    repeated string parameters_types = 5; 
+}
+message SmartContractInstantiateTXN{
+    BaseTXN base = 1;
+    string smart_contract_name = 2;
+    uint32 nonce = 3;
 }
 //key = generated public key
 message Validator{
@@ -480,6 +495,7 @@ message Validator{
     bool lite = 8;
     bool online = 9;
     uint32 version = 10;
+    uint64 last_heartbeat = 11;
 }
 message ValidatorRegistration{
     BaseTXN base = 1;
@@ -552,7 +568,8 @@ message TXNS{
     repeated RevokeTXN revoke_txns = 25;
     repeated ComplianceTXN compliance_txns = 26;
     repeated BurnSBTTXN burn_sbt_txns = 27;
-    RequiredVersion required_version_txn = 28;
+    repeated SmartContractInstantiateTXN smart_contract_instantiate_txns = 28;
+    optional RequiredVersion required_version_txn = 29;
 }
 
 message Token{
@@ -602,7 +619,8 @@ message TXNWrapper{
         bool proposal_result_txn = 22;
         BurnSBTTXN burn_sbt_txn = 23;
         RequiredVersion required_version_txn = 24;
+        SmartContractInstantiateTXN smart_contract_instantiate_txn = 25;
     }
     
-    TRANSACTION_TYPE txn_type = 25;
+    TRANSACTION_TYPE txn_type = 26;
 }

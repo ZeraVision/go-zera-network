@@ -20,36 +20,37 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ValidatorService_StreamFailedBlock_FullMethodName             = "/zera_validator.ValidatorService/StreamFailedBlock"
-	ValidatorService_StreamBroadcast_FullMethodName               = "/zera_validator.ValidatorService/StreamBroadcast"
-	ValidatorService_SyncBlockchain_FullMethodName                = "/zera_validator.ValidatorService/SyncBlockchain"
-	ValidatorService_Broadcast_FullMethodName                     = "/zera_validator.ValidatorService/Broadcast"
-	ValidatorService_ValidatorRegistration_FullMethodName         = "/zera_validator.ValidatorService/ValidatorRegistration"
-	ValidatorService_SyncValidatorList_FullMethodName             = "/zera_validator.ValidatorService/SyncValidatorList"
-	ValidatorService_ValidatorMint_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorMint"
-	ValidatorService_ValidatorItemMint_FullMethodName             = "/zera_validator.ValidatorService/ValidatorItemMint"
-	ValidatorService_ValidatorContract_FullMethodName             = "/zera_validator.ValidatorService/ValidatorContract"
-	ValidatorService_ValidatorGovernProposal_FullMethodName       = "/zera_validator.ValidatorService/ValidatorGovernProposal"
-	ValidatorService_ValidatorGovernVote_FullMethodName           = "/zera_validator.ValidatorService/ValidatorGovernVote"
-	ValidatorService_ValidatorSmartContract_FullMethodName        = "/zera_validator.ValidatorService/ValidatorSmartContract"
-	ValidatorService_ValidatorSmartContractExecute_FullMethodName = "/zera_validator.ValidatorService/ValidatorSmartContractExecute"
-	ValidatorService_ValidatorCurrencyEquiv_FullMethodName        = "/zera_validator.ValidatorService/ValidatorCurrencyEquiv"
-	ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName    = "/zera_validator.ValidatorService/ValidatorAuthCurrencyEquiv"
-	ValidatorService_ValidatorExpenseRatio_FullMethodName         = "/zera_validator.ValidatorService/ValidatorExpenseRatio"
-	ValidatorService_ValidatorNFT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorNFT"
-	ValidatorService_ValidatorContractUpdate_FullMethodName       = "/zera_validator.ValidatorService/ValidatorContractUpdate"
-	ValidatorService_ValidatorHeartbeat_FullMethodName            = "/zera_validator.ValidatorService/ValidatorHeartbeat"
-	ValidatorService_ValidatorFoundation_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFoundation"
-	ValidatorService_ValidatorDelegatedVoting_FullMethodName      = "/zera_validator.ValidatorService/ValidatorDelegatedVoting"
-	ValidatorService_IndexerVoting_FullMethodName                 = "/zera_validator.ValidatorService/IndexerVoting"
-	ValidatorService_ValidatorQuash_FullMethodName                = "/zera_validator.ValidatorService/ValidatorQuash"
-	ValidatorService_ValidatorFastQuorum_FullMethodName           = "/zera_validator.ValidatorService/ValidatorFastQuorum"
-	ValidatorService_ValidatorRevoke_FullMethodName               = "/zera_validator.ValidatorService/ValidatorRevoke"
-	ValidatorService_ValidatorCompliance_FullMethodName           = "/zera_validator.ValidatorService/ValidatorCompliance"
-	ValidatorService_ValidatorBurnSBT_FullMethodName              = "/zera_validator.ValidatorService/ValidatorBurnSBT"
-	ValidatorService_Nonce_FullMethodName                         = "/zera_validator.ValidatorService/Nonce"
-	ValidatorService_ValidatorCoin_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorCoin"
-	ValidatorService_StreamBlockAttestation_FullMethodName        = "/zera_validator.ValidatorService/StreamBlockAttestation"
+	ValidatorService_StreamFailedBlock_FullMethodName                 = "/zera_validator.ValidatorService/StreamFailedBlock"
+	ValidatorService_StreamBroadcast_FullMethodName                   = "/zera_validator.ValidatorService/StreamBroadcast"
+	ValidatorService_SyncBlockchain_FullMethodName                    = "/zera_validator.ValidatorService/SyncBlockchain"
+	ValidatorService_Broadcast_FullMethodName                         = "/zera_validator.ValidatorService/Broadcast"
+	ValidatorService_ValidatorRegistration_FullMethodName             = "/zera_validator.ValidatorService/ValidatorRegistration"
+	ValidatorService_SyncValidatorList_FullMethodName                 = "/zera_validator.ValidatorService/SyncValidatorList"
+	ValidatorService_ValidatorMint_FullMethodName                     = "/zera_validator.ValidatorService/ValidatorMint"
+	ValidatorService_ValidatorItemMint_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorItemMint"
+	ValidatorService_ValidatorContract_FullMethodName                 = "/zera_validator.ValidatorService/ValidatorContract"
+	ValidatorService_ValidatorGovernProposal_FullMethodName           = "/zera_validator.ValidatorService/ValidatorGovernProposal"
+	ValidatorService_ValidatorGovernVote_FullMethodName               = "/zera_validator.ValidatorService/ValidatorGovernVote"
+	ValidatorService_ValidatorSmartContract_FullMethodName            = "/zera_validator.ValidatorService/ValidatorSmartContract"
+	ValidatorService_ValidatorSmartContractInstantiate_FullMethodName = "/zera_validator.ValidatorService/ValidatorSmartContractInstantiate"
+	ValidatorService_ValidatorSmartContractExecute_FullMethodName     = "/zera_validator.ValidatorService/ValidatorSmartContractExecute"
+	ValidatorService_ValidatorCurrencyEquiv_FullMethodName            = "/zera_validator.ValidatorService/ValidatorCurrencyEquiv"
+	ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName        = "/zera_validator.ValidatorService/ValidatorAuthCurrencyEquiv"
+	ValidatorService_ValidatorExpenseRatio_FullMethodName             = "/zera_validator.ValidatorService/ValidatorExpenseRatio"
+	ValidatorService_ValidatorNFT_FullMethodName                      = "/zera_validator.ValidatorService/ValidatorNFT"
+	ValidatorService_ValidatorContractUpdate_FullMethodName           = "/zera_validator.ValidatorService/ValidatorContractUpdate"
+	ValidatorService_ValidatorHeartbeat_FullMethodName                = "/zera_validator.ValidatorService/ValidatorHeartbeat"
+	ValidatorService_ValidatorFoundation_FullMethodName               = "/zera_validator.ValidatorService/ValidatorFoundation"
+	ValidatorService_ValidatorDelegatedVoting_FullMethodName          = "/zera_validator.ValidatorService/ValidatorDelegatedVoting"
+	ValidatorService_IndexerVoting_FullMethodName                     = "/zera_validator.ValidatorService/IndexerVoting"
+	ValidatorService_ValidatorQuash_FullMethodName                    = "/zera_validator.ValidatorService/ValidatorQuash"
+	ValidatorService_ValidatorFastQuorum_FullMethodName               = "/zera_validator.ValidatorService/ValidatorFastQuorum"
+	ValidatorService_ValidatorRevoke_FullMethodName                   = "/zera_validator.ValidatorService/ValidatorRevoke"
+	ValidatorService_ValidatorCompliance_FullMethodName               = "/zera_validator.ValidatorService/ValidatorCompliance"
+	ValidatorService_ValidatorBurnSBT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorBurnSBT"
+	ValidatorService_Nonce_FullMethodName                             = "/zera_validator.ValidatorService/Nonce"
+	ValidatorService_ValidatorCoin_FullMethodName                     = "/zera_validator.ValidatorService/ValidatorCoin"
+	ValidatorService_StreamBlockAttestation_FullMethodName            = "/zera_validator.ValidatorService/StreamBlockAttestation"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -69,6 +70,7 @@ type ValidatorServiceClient interface {
 	ValidatorGovernProposal(ctx context.Context, in *GovernanceProposal, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorGovernVote(ctx context.Context, in *GovernanceVote, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorSmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorSmartContractInstantiate(ctx context.Context, in *SmartContractInstantiateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorSmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorCurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorAuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -278,6 +280,15 @@ func (c *validatorServiceClient) ValidatorSmartContract(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorSmartContractInstantiate(ctx context.Context, in *SmartContractInstantiateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorSmartContractInstantiate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *validatorServiceClient) ValidatorSmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorSmartContractExecute_FullMethodName, in, out, opts...)
@@ -479,6 +490,7 @@ type ValidatorServiceServer interface {
 	ValidatorGovernProposal(context.Context, *GovernanceProposal) (*emptypb.Empty, error)
 	ValidatorGovernVote(context.Context, *GovernanceVote) (*emptypb.Empty, error)
 	ValidatorSmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error)
+	ValidatorSmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*emptypb.Empty, error)
 	ValidatorSmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error)
 	ValidatorCurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*emptypb.Empty, error)
 	ValidatorAuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
@@ -539,6 +551,9 @@ func (UnimplementedValidatorServiceServer) ValidatorGovernVote(context.Context, 
 }
 func (UnimplementedValidatorServiceServer) ValidatorSmartContract(context.Context, *SmartContractTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSmartContract not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorSmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSmartContractInstantiate not implemented")
 }
 func (UnimplementedValidatorServiceServer) ValidatorSmartContractExecute(context.Context, *SmartContractExecuteTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSmartContractExecute not implemented")
@@ -838,6 +853,24 @@ func _ValidatorService_ValidatorSmartContract_Handler(srv interface{}, ctx conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ValidatorServiceServer).ValidatorSmartContract(ctx, req.(*SmartContractTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_ValidatorSmartContractInstantiate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SmartContractInstantiateTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorSmartContractInstantiate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorSmartContractInstantiate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorSmartContractInstantiate(ctx, req.(*SmartContractInstantiateTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1216,6 +1249,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorSmartContract",
 			Handler:    _ValidatorService_ValidatorSmartContract_Handler,
+		},
+		{
+			MethodName: "ValidatorSmartContractInstantiate",
+			Handler:    _ValidatorService_ValidatorSmartContractInstantiate_Handler,
 		},
 		{
 			MethodName: "ValidatorSmartContractExecute",

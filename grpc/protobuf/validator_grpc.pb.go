@@ -51,6 +51,7 @@ const (
 	ValidatorService_Nonce_FullMethodName                             = "/zera_validator.ValidatorService/Nonce"
 	ValidatorService_ValidatorCoin_FullMethodName                     = "/zera_validator.ValidatorService/ValidatorCoin"
 	ValidatorService_StreamBlockAttestation_FullMethodName            = "/zera_validator.ValidatorService/StreamBlockAttestation"
+	ValidatorService_StreamRequestSlashed_FullMethodName              = "/zera_validator.ValidatorService/StreamRequestSlashed"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -89,6 +90,7 @@ type ValidatorServiceClient interface {
 	Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	StreamBlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBlockAttestationClient, error)
+	StreamRequestSlashed(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamRequestSlashedClient, error)
 }
 
 type validatorServiceClient struct {
@@ -473,6 +475,37 @@ func (x *validatorServiceStreamBlockAttestationClient) Recv() (*DataChunk, error
 	return m, nil
 }
 
+func (c *validatorServiceClient) StreamRequestSlashed(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamRequestSlashedClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[4], ValidatorService_StreamRequestSlashed_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceStreamRequestSlashedClient{stream}
+	return x, nil
+}
+
+type ValidatorService_StreamRequestSlashedClient interface {
+	Send(*SlashedRequest) error
+	Recv() (*DataChunk, error)
+	grpc.ClientStream
+}
+
+type validatorServiceStreamRequestSlashedClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceStreamRequestSlashedClient) Send(m *SlashedRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamRequestSlashedClient) Recv() (*DataChunk, error) {
+	m := new(DataChunk)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -509,6 +542,7 @@ type ValidatorServiceServer interface {
 	Nonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error)
 	StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error
+	StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -608,6 +642,9 @@ func (UnimplementedValidatorServiceServer) ValidatorCoin(context.Context, *CoinT
 }
 func (UnimplementedValidatorServiceServer) StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamBlockAttestation not implemented")
+}
+func (UnimplementedValidatorServiceServer) StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamRequestSlashed not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -1207,6 +1244,32 @@ func (x *validatorServiceStreamBlockAttestationServer) Recv() (*DataChunk, error
 	return m, nil
 }
 
+func _ValidatorService_StreamRequestSlashed_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ValidatorServiceServer).StreamRequestSlashed(&validatorServiceStreamRequestSlashedServer{stream})
+}
+
+type ValidatorService_StreamRequestSlashedServer interface {
+	Send(*DataChunk) error
+	Recv() (*SlashedRequest, error)
+	grpc.ServerStream
+}
+
+type validatorServiceStreamRequestSlashedServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceStreamRequestSlashedServer) Send(m *DataChunk) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *validatorServiceStreamRequestSlashedServer) Recv() (*SlashedRequest, error) {
+	m := new(SlashedRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1342,6 +1405,12 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "StreamBlockAttestation",
 			Handler:       _ValidatorService_StreamBlockAttestation_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "StreamRequestSlashed",
+			Handler:       _ValidatorService_StreamRequestSlashed_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

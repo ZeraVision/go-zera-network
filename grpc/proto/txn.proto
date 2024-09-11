@@ -502,6 +502,7 @@ message ValidatorRegistration{
     Validator validator = 2;
     bool register = 3;
     PublicKey generated_public_key = 4;
+    bytes generated_signature = 5;      //signature of the generated public key (signing txn hash)
 }
 message ValidatorHeartbeat{
     BaseTXN base = 1;
@@ -523,7 +524,6 @@ message VotePair{
 message RequiredVersion{
     BaseTXN base = 1;
     repeated uint32 version = 2;
-
 }
 message ProposalResult{
     BaseTXN base = 1;
@@ -623,4 +623,6 @@ message TXNWrapper{
     }
     
     TRANSACTION_TYPE txn_type = 26;
+    repeated bytes proposal_ids = 27;
+    repeated bytes proposal_contracts = 28;
 }

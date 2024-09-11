@@ -44,6 +44,7 @@ service ValidatorService{
     rpc Nonce(NonceRequest) returns (NonceResponse);
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
     rpc StreamBlockAttestation(stream DataChunk) returns (stream DataChunk);
+    rpc StreamRequestSlashed(stream SlashedRequest) returns (stream DataChunk);
 }
 
 message StakeMultipliers
@@ -145,6 +146,22 @@ message Block{
 	zera_txn.TXNS transactions = 2;
 	optional bytes signature = 4;
     zera_txn.PublicKey public_key = 5; 
+    repeated SlashedValidator slashed_validators = 6;
+}
+message SlashedValidator
+{
+    zera_txn.PublicKey public_key = 1;
+    bytes slashed_block_hash = 2;
+    repeated SlashedToken slashed_tokens = 3;
+}
+message SlashedRequest
+{
+    bytes slashed_block_hash = 1;
+}
+message SlashedToken
+{
+    string contract_id = 1;
+    string amount = 2;
 }
 message BlockBatch{
     repeated Block blocks = 1;
@@ -169,14 +186,15 @@ message ProcessLedger{
 //used to process cycle/staged governance
 // Key = contract_id
 message ProposalLedger{
-    repeated bytes proposal_ids = 1;
-    repeated bytes pending_proposal_ids = 2;
-    repeated bytes process_proposal_ids = 3;
-    uint32 stage = 4;
-    google.protobuf.Timestamp cycle_end_date = 5;
-    google.protobuf.Timestamp cycle_start_date = 6;
-    google.protobuf.Timestamp stage_end_date = 7;
-    google.protobuf.Timestamp stage_start_date = 8;
+    repeated bytes proposal_ids = 1;                //proposals that need to be processed at the end of this cycle
+    repeated bytes pending_proposal_ids = 2;        //proposals that need to be put into the next cycle
+    repeated bytes process_proposal_ids = 3;        //not sure yet
+    uint32 stage = 4;                               //what stage we are currently on
+    google.protobuf.Timestamp cycle_end_date = 5;   //the date the cycle will end at
+    google.protobuf.Timestamp cycle_start_date = 6; //the date the cycle will start at
+    google.protobuf.Timestamp stage_end_date = 7;   //the date the stage will end at
+    google.protobuf.Timestamp stage_start_date = 8; //the date the stage will start at
+    bool break = 9;
 }
 message Vote{
     map<string, string> vote = 1;

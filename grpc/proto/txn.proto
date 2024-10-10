@@ -134,6 +134,7 @@ enum GOVERNANCE_TYPE{
     CYCLE = 1;     //1 specified voting stage based on days repeat this process once the cycle is complete (in days)
     STAGGERED = 2; //Every proposal has the same voting period length and starts when proposal is made (in days)
     ADAPTIVE = 3;  //Every proposal has its own specified voting period (in days)
+    REMOVE = 4;
 }
 enum CONTRACT_TYPE{
     TOKEN = 0;
@@ -160,7 +161,6 @@ message DelegateFees{
 message Compliance{
     string contract_id = 1;
     uint32 compliance_level = 2;
-    google.protobuf.Timestamp expiry = 3;
 }
 message TokenCompliance{
     repeated Compliance compliance = 1;
@@ -197,8 +197,8 @@ message FastQuorumTXN{
 }
 message Governance{
     GOVERNANCE_TYPE type = 1;              //read GOVERNANCE_TYPE above
-    uint32 regular_quorum = 2;             //percent of yes votes to pass at the end of cycle (still needs to pass threshhold) 100 = 100&
-    optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply) 100 = 100%
+    uint32 regular_quorum = 2;             //percent of yes votes to pass at the end of cycle (still needs to pass threshhold) 10000 = 100&
+    optional uint32 fast_quorum = 3;       //Percent of yes votes to instantly pass (% based off circulating supply) 10000 = 100%
     repeated string voting_instrument = 4; //which voting instruments are allowed to vote in this contract - this does effect fast_quorum and threshold
     uint32 threshold = 5;                  //threshold of participation of holders needed to be accepted 1000 = 100%
     optional bool chicken_dinner = 6;      //Option winner does not need to pass regular quorum.
@@ -207,7 +207,7 @@ message Governance{
     repeated string allowed_proposal_instrument = 9;    
     optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends (must be present with cycle & staggered & staged) | (cannot be present with adaptive) 
     repeated Stage stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
-    google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
+    optional google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
 }
 message Stage{
     uint32 length = 1;
@@ -327,13 +327,14 @@ message ExpenseRatioResult{
 }
 message ComplianceAssign
 {
-    bytes recipient_address = 1;
-    uint32 compliance_level = 2;
-    bool assign_revoke = 3;
+    bytes recipient_address = 1;    //address of the wallet to assign compliance
+    uint32 compliance_level = 2;    //compliance level to assign
+    bool assign_revoke = 3;         //true to assign compliance, false to revoke
+    google.protobuf.Timestamp expiry = 4;
 }
 message ComplianceTXN{
     BaseTXN base = 1;
-    string contract_id = 2;
+    string contract_id = 2;         //contract_id of the contract to assign compliance
     repeated ComplianceAssign compliance = 3;
 }
 message Wallets{
@@ -413,6 +414,10 @@ message ContractUpdateTXN{
     optional ContractFees contract_fees = 7;
     repeated KeyValuePair custom_parameters = 8; 
     repeated ExpenseRatio expense_ratio = 9;
+    repeated TokenCompliance token_compliance = 10;
+    optional bool kyc_status = 11;                               //does contract require kyc?
+    optional bool immutable_kyc_status = 12;
+    optional uint32 quash_threshold = 13; 
 }
 message InstrumentContract{
     BaseTXN base = 1; 

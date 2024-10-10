@@ -319,8 +319,13 @@ message QuashLookup{
     repeated zera_txn.PublicKey quash_keys = 1; //keys that have already sumbitted quash 
     uint32 keys_required = 2;       //how many keys needed to fullfill quash
 }
+message ComplianceData
+{
+    uint32 level = 1;
+    google.protobuf.Timestamp expiry = 2;
+}
 message ComplianceLevels{
-    repeated uint32 levels = 1;
+    repeated ComplianceData levels = 1;
 }
 //Key = wallet_address
 message WalletLookup{

@@ -134,7 +134,7 @@ enum GOVERNANCE_TYPE{
     CYCLE = 1;     //1 specified voting stage based on days repeat this process once the cycle is complete (in days)
     STAGGERED = 2; //Every proposal has the same voting period length and starts when proposal is made (in days)
     ADAPTIVE = 3;  //Every proposal has its own specified voting period (in days)
-    REMOVE = 4;
+    REMOVE = 4;    //CHANGE - Remove governance from contract
 }
 enum CONTRACT_TYPE{
     TOKEN = 0;
@@ -208,6 +208,7 @@ message Governance{
     optional PROPOSAL_PERIOD proposal_period = 10;  //Is the total_period in months or days? months will start the cycle on the start_date, days will start after period ends (must be present with cycle & staggered & staged) | (cannot be present with adaptive) 
     repeated Stage stage_length = 11;              //Determines how many stages in cycle, cannot be more than 28 per month and 99 in total. '0' input will represent remainder of month (can only be used as last entry)
     optional google.protobuf.Timestamp start_timestamp = 12; //Start date of the contract, year-month-day-hour parsed. Needs to be present for staged and cycle
+    repeated uint32 proposal_amount = 13; //amount of proposals that can make it to next stage (must be present with staged)
 }
 message Stage{
     uint32 length = 1;
@@ -414,10 +415,10 @@ message ContractUpdateTXN{
     optional ContractFees contract_fees = 7;
     repeated KeyValuePair custom_parameters = 8; 
     repeated ExpenseRatio expense_ratio = 9;
-    repeated TokenCompliance token_compliance = 10;
-    optional bool kyc_status = 11;                               //does contract require kyc?
-    optional bool immutable_kyc_status = 12;
-    optional uint32 quash_threshold = 13; 
+    repeated TokenCompliance token_compliance = 10; //CHANGE - Compliance levels for kyc compliance
+    optional bool kyc_status = 11;            //CHANGE - if true, this contract will require kyc to transact
+    optional bool immutable_kyc_status = 12;  //CHANGE - if kyc_status is true, this will make it immutable
+    optional uint32 quash_threshold = 13;     //CHANGE - total number of quash txns to quash a time delay txn
 }
 message InstrumentContract{
     BaseTXN base = 1; 
@@ -544,6 +545,7 @@ message ProposalResult{
     bool final_stage = 11;
     uint32 stage = 12;
     bool fast_quorum = 13;
+    optional bool proposal_cut = 14;      //CHANGE - if staged and proposal is accepted to next stage (top x yes votes / and passing)
 }
 message TXNS{
     repeated CoinTXN coin_txns = 1;

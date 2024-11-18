@@ -72,6 +72,8 @@ enum TXN_STATUS{
     COMPLIANCE_CHECK_FAILED = 34;
     INVALID_SAFE_SEND = 35;
     INVALID_TXN_DATA = 36;
+    DUPLICATE_SMART_CONTRACT_NONCE =37;
+    INVALID_SMART_CONTRACT = 38;
 }
 enum TRANSACTION_TYPE
 {
@@ -288,7 +290,7 @@ message BaseTXN{
 message PublicKey{
     bytes single = 1;
     MultiKey multi = 2;
-    optional bytes sc_wallet_adr = 3;
+    optional bytes smart_contract_auth = 3;
     optional bytes governance_auth = 4;  //
 }
 message GovernanceAuth
@@ -347,7 +349,8 @@ message QuashTXN{
     string contract_id = 2;
     bytes txn_hash = 3;
 }
-message QuashResult{
+message QuashResult
+{
     bytes txn_hash = 1;
     repeated PublicKey public_keys = 2;
 }
@@ -439,9 +442,9 @@ message InstrumentContract{
     bool update_expense_ratio = 16;
     optional uint32 quash_threshold = 17;           //total number of quash txns to quash a time delay txn
     repeated TokenCompliance token_compliance = 18; //Compliance levels for each token that are manditory to transact with this contract
-    bool kyc_status = 19;
-    bool immutable_kyc_status = 20;
-    optional string cur_equiv_start = 21;
+    bool kyc_status = 19;                           //if true, this contract will require kyc to transact
+    bool immutable_kyc_status = 20;                 //if kyc_status is true, this will make it immutable
+    optional string cur_equiv_start = 21;           //1000000000000000000 = $1.00
 }
 message GovernanceVote{
     BaseTXN base = 1;
@@ -632,4 +635,5 @@ message TXNWrapper{
     TRANSACTION_TYPE txn_type = 26;
     repeated bytes proposal_ids = 27;
     repeated bytes proposal_contracts = 28;
+    optional bool smart_contract_txn = 29;
 }

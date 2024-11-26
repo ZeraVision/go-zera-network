@@ -106,10 +106,9 @@ enum TRANSACTION_TYPE
 }
 //ENUMS
 enum LANGUAGE{
-    CPLUSPLUS = 0;
-    RUST = 1;
-    PYTHON = 2;
-    JAVASCRIPT = 3;
+    COMPILED = 0;
+    PYTHON = 1;
+    JAVASCRIPT = 2;
 }
 
 enum PROPOSAL_PERIOD{
@@ -482,7 +481,7 @@ message SmartContractTXN{
 message SmartContractExecuteTXN{
     BaseTXN base = 1;
     string smart_contract_name = 2;
-    uint32 nonce = 3;
+    uint32 instance = 3;
     string function = 74;
     repeated bytes parameters = 4; 
     repeated string parameters_types = 5; 
@@ -490,7 +489,7 @@ message SmartContractExecuteTXN{
 message SmartContractInstantiateTXN{
     BaseTXN base = 1;
     string smart_contract_name = 2;
-    uint32 nonce = 3;
+    uint32 instance = 3;
 }
 //key = generated public key
 message Validator{

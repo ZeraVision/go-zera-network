@@ -478,13 +478,17 @@ message SmartContractTXN{
     repeated string functions = 5;
     repeated string dependencies = 6;
 }
+message Parameters
+{
+    bytes value = 1;
+    string type = 2;
+}
 message SmartContractExecuteTXN{
     BaseTXN base = 1;
     string smart_contract_name = 2;
     uint32 instance = 3;
-    string function = 74;
-    repeated bytes parameters = 4; 
-    repeated string parameters_types = 5; 
+    string function = 4;
+    repeated Parameters parameters = 5;
 }
 message SmartContractInstantiateTXN{
     BaseTXN base = 1;
@@ -600,6 +604,8 @@ message TXNStatusFees{
     bool smart_contract = 9;
     repeated bytes smart_contract_result = 10;
     repeated string misc = 11;
+    string smart_contract_fees = 12;
+    string smart_contract_id = 13;
 }
 
 message TXNWrapper{

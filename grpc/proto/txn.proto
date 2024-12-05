@@ -494,6 +494,7 @@ message SmartContractInstantiateTXN{
     BaseTXN base = 1;
     string smart_contract_name = 2;
     uint32 instance = 3;
+    repeated Parameters parameters = 4;
 }
 //key = generated public key
 message Validator{
@@ -604,8 +605,8 @@ message TXNStatusFees{
     bool smart_contract = 9;
     repeated bytes smart_contract_result = 10;
     repeated string misc = 11;
-    string smart_contract_fees = 12;
-    string smart_contract_id = 13;
+    string native_function_fees = 12;
+    string gas_fees = 13;
 }
 
 message TXNWrapper{

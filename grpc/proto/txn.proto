@@ -607,6 +607,7 @@ message TXNStatusFees{
     repeated string misc = 11;
     optional string native_function_fees = 12;
     optional string gas_fees = 13;
+    optional uint64 gas = 14;
 }
 
 message TXNWrapper{

@@ -606,8 +606,7 @@ message TXNStatusFees{
     repeated bytes smart_contract_result = 10;
     repeated string misc = 11;
     optional string native_function_fees = 12;
-    optional string gas_fees = 13;
-    optional uint64 gas = 14;
+    optional uint64 gas = 13;
 }
 
 message TXNWrapper{

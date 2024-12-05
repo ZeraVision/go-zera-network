@@ -605,8 +605,8 @@ message TXNStatusFees{
     bool smart_contract = 9;
     repeated bytes smart_contract_result = 10;
     repeated string misc = 11;
-    string native_function_fees = 12;
-    string gas_fees = 13;
+    optional string native_function_fees = 12;
+    optional string gas_fees = 13;
 }
 
 message TXNWrapper{

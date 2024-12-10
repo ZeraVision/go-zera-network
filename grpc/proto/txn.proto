@@ -75,6 +75,7 @@ enum TXN_STATUS{
     DUPLICATE_SMART_CONTRACT_NONCE =37;
     INVALID_SMART_CONTRACT = 38;
     FAULTY_TXN = 39;
+    OUT_OF_GAS = 40;
 }
 enum TRANSACTION_TYPE
 {
@@ -474,10 +475,10 @@ message SmartContractTXN{
     BaseTXN base = 1;
     string smart_contract_name = 4;
     bytes binary_code = 2;
-    bytes source_code = 7;
+    //bytes source_code = 7;
     LANGUAGE language = 3;
     repeated string functions = 5;
-    repeated string dependencies = 6;
+    //repeated string dependencies = 6;
 }
 message Parameters
 {

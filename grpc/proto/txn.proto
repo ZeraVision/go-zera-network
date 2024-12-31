@@ -257,6 +257,7 @@ message ExpenseRatioTXN{
     BaseTXN base = 1;
     string contract_id = 2;
     repeated bytes addresses = 3;
+    bytes output_address = 4;
 }
 message PreMintWallet{
     bytes address = 1;

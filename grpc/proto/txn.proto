@@ -597,11 +597,9 @@ message TokenFees{
     bytes address = 1;
     repeated Token tokens = 2;
 }
-message DelegatedFees
-{
+message DelegatedFees{
     bytes address = 1;
-    TokenFees token_fees = 2;
-
+    Token fee = 2;
 }
 message TXNStatusFees{
     bytes txn_hash = 1;

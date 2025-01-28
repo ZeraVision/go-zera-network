@@ -600,7 +600,7 @@ message TokenFees{
 message DelegatedFees
 {
     bytes address = 1;
-    repeated TokenFees token_fees = 2;
+    TokenFees token_fees = 2;
 
 }
 message TXNStatusFees{

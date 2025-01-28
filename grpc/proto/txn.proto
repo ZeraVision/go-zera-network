@@ -597,7 +597,12 @@ message TokenFees{
     bytes address = 1;
     repeated Token tokens = 2;
 }
+message DelegatedFees
+{
+    bytes address = 1;
+    repeated TokenFees token_fees = 2;
 
+}
 message TXNStatusFees{
     bytes txn_hash = 1;
     TXN_STATUS status = 2;
@@ -610,6 +615,7 @@ message TXNStatusFees{
     repeated string misc = 11;
     optional string native_function_fees = 12;
     optional uint64 gas = 13;
+    repeated DelegatedFees delegated_fees = 14;
 }
 
 message TXNWrapper{

@@ -5582,7 +5582,7 @@ func (x *TokenFees) GetTokens() []*Token {
 	return nil
 }
 
-type DelegatedFees struct {
+type DelegatedData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -5591,8 +5591,8 @@ type DelegatedFees struct {
 	Fee     *Token `protobuf:"bytes,2,opt,name=fee,proto3" json:"fee,omitempty"`
 }
 
-func (x *DelegatedFees) Reset() {
-	*x = DelegatedFees{}
+func (x *DelegatedData) Reset() {
+	*x = DelegatedData{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_txn_proto_msgTypes[63]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5600,13 +5600,13 @@ func (x *DelegatedFees) Reset() {
 	}
 }
 
-func (x *DelegatedFees) String() string {
+func (x *DelegatedData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DelegatedFees) ProtoMessage() {}
+func (*DelegatedData) ProtoMessage() {}
 
-func (x *DelegatedFees) ProtoReflect() protoreflect.Message {
+func (x *DelegatedData) ProtoReflect() protoreflect.Message {
 	mi := &file_txn_proto_msgTypes[63]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5618,19 +5618,19 @@ func (x *DelegatedFees) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DelegatedFees.ProtoReflect.Descriptor instead.
-func (*DelegatedFees) Descriptor() ([]byte, []int) {
+// Deprecated: Use DelegatedData.ProtoReflect.Descriptor instead.
+func (*DelegatedData) Descriptor() ([]byte, []int) {
 	return file_txn_proto_rawDescGZIP(), []int{63}
 }
 
-func (x *DelegatedFees) GetAddress() []byte {
+func (x *DelegatedData) GetAddress() []byte {
 	if x != nil {
 		return x.Address
 	}
 	return nil
 }
 
-func (x *DelegatedFees) GetFee() *Token {
+func (x *DelegatedData) GetFee() *Token {
 	if x != nil {
 		return x.Fee
 	}
@@ -5653,7 +5653,7 @@ type TXNStatusFees struct {
 	Misc                []string         `protobuf:"bytes,11,rep,name=misc,proto3" json:"misc,omitempty"`
 	NativeFunctionFees  *string          `protobuf:"bytes,12,opt,name=native_function_fees,json=nativeFunctionFees,proto3,oneof" json:"native_function_fees,omitempty"`
 	Gas                 *uint64          `protobuf:"varint,13,opt,name=gas,proto3,oneof" json:"gas,omitempty"`
-	DelegatedFees       []*DelegatedFees `protobuf:"bytes,14,rep,name=delegated_fees,json=delegatedFees,proto3" json:"delegated_fees,omitempty"`
+	DelegatedData       []*DelegatedData `protobuf:"bytes,14,rep,name=delegated_data,json=delegatedData,proto3" json:"delegated_data,omitempty"`
 }
 
 func (x *TXNStatusFees) Reset() {
@@ -5765,9 +5765,9 @@ func (x *TXNStatusFees) GetGas() uint64 {
 	return 0
 }
 
-func (x *TXNStatusFees) GetDelegatedFees() []*DelegatedFees {
+func (x *TXNStatusFees) GetDelegatedData() []*DelegatedData {
 	if x != nil {
-		return x.DelegatedFees
+		return x.DelegatedData
 	}
 	return nil
 }
@@ -7166,7 +7166,7 @@ var file_txn_proto_rawDesc = []byte{
 	0x73, 0x73, 0x12, 0x27, 0x0a, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03,
 	0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x54, 0x6f,
 	0x6b, 0x65, 0x6e, 0x52, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x22, 0x4c, 0x0a, 0x0d, 0x44,
-	0x65, 0x6c, 0x65, 0x67, 0x61, 0x74, 0x65, 0x64, 0x46, 0x65, 0x65, 0x73, 0x12, 0x18, 0x0a, 0x07,
+	0x65, 0x6c, 0x65, 0x67, 0x61, 0x74, 0x65, 0x64, 0x44, 0x61, 0x74, 0x61, 0x12, 0x18, 0x0a, 0x07,
 	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x61,
 	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x21, 0x0a, 0x03, 0x66, 0x65, 0x65, 0x18, 0x02, 0x20,
 	0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x54,
@@ -7199,10 +7199,10 @@ var file_txn_proto_rawDesc = []byte{
 	0x69, 0x76, 0x65, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x46, 0x65, 0x65, 0x73, 0x88,
 	0x01, 0x01, 0x12, 0x15, 0x0a, 0x03, 0x67, 0x61, 0x73, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x04, 0x48,
 	0x03, 0x52, 0x03, 0x67, 0x61, 0x73, 0x88, 0x01, 0x01, 0x12, 0x3e, 0x0a, 0x0e, 0x64, 0x65, 0x6c,
-	0x65, 0x67, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x66, 0x65, 0x65, 0x73, 0x18, 0x0e, 0x20, 0x03, 0x28,
+	0x65, 0x67, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x18, 0x0e, 0x20, 0x03, 0x28,
 	0x0b, 0x32, 0x17, 0x2e, 0x7a, 0x65, 0x72, 0x61, 0x5f, 0x74, 0x78, 0x6e, 0x2e, 0x44, 0x65, 0x6c,
-	0x65, 0x67, 0x61, 0x74, 0x65, 0x64, 0x46, 0x65, 0x65, 0x73, 0x52, 0x0d, 0x64, 0x65, 0x6c, 0x65,
-	0x67, 0x61, 0x74, 0x65, 0x64, 0x46, 0x65, 0x65, 0x73, 0x42, 0x10, 0x0a, 0x0e, 0x5f, 0x63, 0x6f,
+	0x65, 0x67, 0x61, 0x74, 0x65, 0x64, 0x44, 0x61, 0x74, 0x61, 0x52, 0x0d, 0x64, 0x65, 0x6c, 0x65,
+	0x67, 0x61, 0x74, 0x65, 0x64, 0x44, 0x61, 0x74, 0x61, 0x42, 0x10, 0x0a, 0x0e, 0x5f, 0x63, 0x6f,
 	0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x5f, 0x66, 0x65, 0x65, 0x73, 0x42, 0x17, 0x0a, 0x15, 0x5f,
 	0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63,
 	0x74, 0x5f, 0x69, 0x64, 0x42, 0x17, 0x0a, 0x15, 0x5f, 0x6e, 0x61, 0x74, 0x69, 0x76, 0x65, 0x5f,
@@ -7637,7 +7637,7 @@ var file_txn_proto_goTypes = []interface{}{
 	(*TXNS)(nil),                        // 68: zera_txn.TXNS
 	(*Token)(nil),                       // 69: zera_txn.Token
 	(*TokenFees)(nil),                   // 70: zera_txn.TokenFees
-	(*DelegatedFees)(nil),               // 71: zera_txn.DelegatedFees
+	(*DelegatedData)(nil),               // 71: zera_txn.DelegatedData
 	(*TXNStatusFees)(nil),               // 72: zera_txn.TXNStatusFees
 	(*TXNWrapper)(nil),                  // 73: zera_txn.TXNWrapper
 	(*timestamppb.Timestamp)(nil),       // 74: google.protobuf.Timestamp
@@ -7759,9 +7759,9 @@ var file_txn_proto_depIdxs = []int32{
 	59,  // 112: zera_txn.TXNS.smart_contract_instantiate_txns:type_name -> zera_txn.SmartContractInstantiateTXN
 	66,  // 113: zera_txn.TXNS.required_version_txn:type_name -> zera_txn.RequiredVersion
 	69,  // 114: zera_txn.TokenFees.tokens:type_name -> zera_txn.Token
-	69,  // 115: zera_txn.DelegatedFees.fee:type_name -> zera_txn.Token
+	69,  // 115: zera_txn.DelegatedData.fee:type_name -> zera_txn.Token
 	0,   // 116: zera_txn.TXNStatusFees.status:type_name -> zera_txn.TXN_STATUS
-	71,  // 117: zera_txn.TXNStatusFees.delegated_fees:type_name -> zera_txn.DelegatedFees
+	71,  // 117: zera_txn.TXNStatusFees.delegated_data:type_name -> zera_txn.DelegatedData
 	44,  // 118: zera_txn.TXNWrapper.coin_txn:type_name -> zera_txn.CoinTXN
 	48,  // 119: zera_txn.TXNWrapper.mint_txn:type_name -> zera_txn.MintTXN
 	50,  // 120: zera_txn.TXNWrapper.item_mint_txn:type_name -> zera_txn.ItemizedMintTXN
@@ -8599,7 +8599,7 @@ func file_txn_proto_init() {
 			}
 		}
 		file_txn_proto_msgTypes[63].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DelegatedFees); i {
+			switch v := v.(*DelegatedData); i {
 			case 0:
 				return &v.state
 			case 1:

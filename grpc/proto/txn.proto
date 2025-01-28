@@ -597,7 +597,7 @@ message TokenFees{
     bytes address = 1;
     repeated Token tokens = 2;
 }
-message DelegatedFees{
+message DelegatedData{
     bytes address = 1;
     Token fee = 2;
 }
@@ -613,7 +613,7 @@ message TXNStatusFees{
     repeated string misc = 11;
     optional string native_function_fees = 12;
     optional uint64 gas = 13;
-    repeated DelegatedFees delegated_fees = 14;
+    repeated DelegatedData delegated_data = 14;
 }
 
 message TXNWrapper{

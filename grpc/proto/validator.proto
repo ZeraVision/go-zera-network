@@ -34,7 +34,7 @@ service ValidatorService{
     rpc ValidatorContractUpdate(zera_txn.ContractUpdateTXN) returns (google.protobuf.Empty);
     rpc ValidatorHeartbeat(zera_txn.ValidatorHeartbeat) returns (google.protobuf.Empty);
     rpc ValidatorFoundation(zera_txn.FoundationTXN) returns (google.protobuf.Empty);
-    rpc ValidatorDelegatedVoting(zera_txn.DelegatedVotingTXN) returns (google.protobuf.Empty);
+    rpc ValidatorDelegatedVoting(zera_txn.DelegatedTXN) returns (google.protobuf.Empty);
     rpc IndexerVoting(IndexerVotingRequest) returns (IndexerVotingResponse);
     rpc ValidatorQuash(zera_txn.QuashTXN) returns (google.protobuf.Empty);
     rpc ValidatorFastQuorum(zera_txn.FastQuorumTXN) returns (google.protobuf.Empty);

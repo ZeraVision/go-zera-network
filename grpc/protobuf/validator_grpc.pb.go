@@ -80,7 +80,7 @@ type ValidatorServiceClient interface {
 	ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
 	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorFastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -363,7 +363,7 @@ func (c *validatorServiceClient) ValidatorFoundation(ctx context.Context, in *Fo
 	return out, nil
 }
 
-func (c *validatorServiceClient) ValidatorDelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *validatorServiceClient) ValidatorDelegatedVoting(ctx context.Context, in *DelegatedTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorDelegatedVoting_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -532,7 +532,7 @@ type ValidatorServiceServer interface {
 	ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*emptypb.Empty, error)
 	ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
-	ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
+	ValidatorDelegatedVoting(context.Context, *DelegatedTXN) (*emptypb.Empty, error)
 	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
 	ValidatorQuash(context.Context, *QuashTXN) (*emptypb.Empty, error)
 	ValidatorFastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
@@ -613,7 +613,7 @@ func (UnimplementedValidatorServiceServer) ValidatorHeartbeat(context.Context, *
 func (UnimplementedValidatorServiceServer) ValidatorFoundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFoundation not implemented")
 }
-func (UnimplementedValidatorServiceServer) ValidatorDelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
+func (UnimplementedValidatorServiceServer) ValidatorDelegatedVoting(context.Context, *DelegatedTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorDelegatedVoting not implemented")
 }
 func (UnimplementedValidatorServiceServer) IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error) {
@@ -1057,7 +1057,7 @@ func _ValidatorService_ValidatorFoundation_Handler(srv interface{}, ctx context.
 }
 
 func _ValidatorService_ValidatorDelegatedVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelegatedVotingTXN)
+	in := new(DelegatedTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1069,7 +1069,7 @@ func _ValidatorService_ValidatorDelegatedVoting_Handler(srv interface{}, ctx con
 		FullMethod: ValidatorService_ValidatorDelegatedVoting_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorDelegatedVoting(ctx, req.(*DelegatedVotingTXN))
+		return srv.(ValidatorServiceServer).ValidatorDelegatedVoting(ctx, req.(*DelegatedTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }

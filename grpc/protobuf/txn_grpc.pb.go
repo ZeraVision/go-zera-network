@@ -62,7 +62,7 @@ type TXNServiceClient interface {
 	NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DelegatedVoting(ctx context.Context, in *DelegatedTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Quash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Revoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -213,7 +213,7 @@ func (c *tXNServiceClient) Foundation(ctx context.Context, in *FoundationTXN, op
 	return out, nil
 }
 
-func (c *tXNServiceClient) DelegatedVoting(ctx context.Context, in *DelegatedVotingTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *tXNServiceClient) DelegatedVoting(ctx context.Context, in *DelegatedTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, TXNService_DelegatedVoting_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -286,7 +286,7 @@ type TXNServiceServer interface {
 	NFT(context.Context, *NFTTXN) (*emptypb.Empty, error)
 	ContractUpdate(context.Context, *ContractUpdateTXN) (*emptypb.Empty, error)
 	Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error)
-	DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error)
+	DelegatedVoting(context.Context, *DelegatedTXN) (*emptypb.Empty, error)
 	Quash(context.Context, *QuashTXN) (*emptypb.Empty, error)
 	FastQuorum(context.Context, *FastQuorumTXN) (*emptypb.Empty, error)
 	Revoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
@@ -344,7 +344,7 @@ func (UnimplementedTXNServiceServer) ContractUpdate(context.Context, *ContractUp
 func (UnimplementedTXNServiceServer) Foundation(context.Context, *FoundationTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Foundation not implemented")
 }
-func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *DelegatedVotingTXN) (*emptypb.Empty, error) {
+func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *DelegatedTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelegatedVoting not implemented")
 }
 func (UnimplementedTXNServiceServer) Quash(context.Context, *QuashTXN) (*emptypb.Empty, error) {
@@ -646,7 +646,7 @@ func _TXNService_Foundation_Handler(srv interface{}, ctx context.Context, dec fu
 }
 
 func _TXNService_DelegatedVoting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelegatedVotingTXN)
+	in := new(DelegatedTXN)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -658,7 +658,7 @@ func _TXNService_DelegatedVoting_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: TXNService_DelegatedVoting_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).DelegatedVoting(ctx, req.(*DelegatedVotingTXN))
+		return srv.(TXNServiceServer).DelegatedVoting(ctx, req.(*DelegatedTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -25,7 +25,7 @@ service TXNService{
     rpc NFT(NFTTXN) returns (google.protobuf.Empty);
     rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
     rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
-    rpc DelegatedVoting(DelegatedVotingTXN) returns (google.protobuf.Empty);
+    rpc DelegatedVoting(DelegatedTXN) returns (google.protobuf.Empty);
     rpc Quash(QuashTXN) returns (google.protobuf.Empty);
     rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
     rpc Revoke(RevokeTXN) returns (google.protobuf.Empty);
@@ -148,7 +148,7 @@ message DelegateContract{
     int32 priority= 1;
     string contract_id = 2;
 }
-message DelegatedVotingTXN{
+message DelegatedTXN{
     BaseTXN base = 1;
     repeated DelegateVote delegate_votes = 2;
     repeated DelegateFees delegate_fees = 3;
@@ -578,7 +578,7 @@ message TXNS{
     repeated ProposalResult proposal_result_txns = 18; //
     repeated ExpenseRatioResult expense_ratio_result_txns = 19;
     repeated FoundationTXN foundation_txns = 20;
-    repeated DelegatedVotingTXN delegated_voting_txns = 21;
+    repeated DelegatedTXN delegated_voting_txns = 21;
     repeated QuashTXN quash_txns = 22;
     repeated FastQuorumTXN fast_quorum_txns = 23;
     repeated QuashResult quash_results = 24;
@@ -634,7 +634,7 @@ message TXNWrapper{
         ValidatorRegistration validator_registration_txn = 14;
         ValidatorHeartbeat validator_heartbeat_txn = 15;
         FoundationTXN foundation_txn = 16;
-        DelegatedVotingTXN delegated_voting_txn = 17;
+        DelegatedTXN delegated_voting_txn = 17;
         QuashTXN quash_txn = 18;
         FastQuorumTXN fast_quorum_txn = 19;
         RevokeTXN revoke_txn = 20;

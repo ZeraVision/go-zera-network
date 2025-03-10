@@ -45,6 +45,7 @@ service ValidatorService{
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
     rpc StreamBlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc StreamRequestSlashed(stream SlashedRequest) returns (stream DataChunk);
+    rpc Balance(BalanceRequest) returns (BalanceResponse);
 }
 
 message StakeMultipliers
@@ -284,9 +285,11 @@ message Delegator{
     zera_txn.PublicKey public_key = 1; 
     uint32 priority = 2;
 }
+
 message DelegatedFees{
     repeated string contract_ids = 1;  
 }
+
 message Delegators{
     repeated Delegator delegator = 1; 
 }
@@ -358,4 +361,21 @@ message ContractPrice{
     string symbol = 1;
     uint32 number_of_symbols = 2;
     string multiplier = 3;
+}
+
+message BalanceTracker{
+    repeated bytes wallet_addresses = 1;
+    repeated string balances = 2;
+}
+
+message TokenLookup{
+    repeated string tokens = 1;
+}
+message BalanceRequest{
+    bytes wallet_address = 1;
+    string contract_id = 2;
+    bool encoded = 3;
+}
+message BalanceResponse{
+    string balance = 1;
 }

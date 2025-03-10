@@ -52,6 +52,7 @@ const (
 	ValidatorService_ValidatorCoin_FullMethodName                     = "/zera_validator.ValidatorService/ValidatorCoin"
 	ValidatorService_StreamBlockAttestation_FullMethodName            = "/zera_validator.ValidatorService/StreamBlockAttestation"
 	ValidatorService_StreamRequestSlashed_FullMethodName              = "/zera_validator.ValidatorService/StreamRequestSlashed"
+	ValidatorService_Balance_FullMethodName                           = "/zera_validator.ValidatorService/Balance"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -91,6 +92,7 @@ type ValidatorServiceClient interface {
 	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	StreamBlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBlockAttestationClient, error)
 	StreamRequestSlashed(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamRequestSlashedClient, error)
+	Balance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
 }
 
 type validatorServiceClient struct {
@@ -506,6 +508,15 @@ func (x *validatorServiceStreamRequestSlashedClient) Recv() (*DataChunk, error) 
 	return m, nil
 }
 
+func (c *validatorServiceClient) Balance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
+	out := new(BalanceResponse)
+	err := c.cc.Invoke(ctx, ValidatorService_Balance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -543,6 +554,7 @@ type ValidatorServiceServer interface {
 	ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error)
 	StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error
 	StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error
+	Balance(context.Context, *BalanceRequest) (*BalanceResponse, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -645,6 +657,9 @@ func (UnimplementedValidatorServiceServer) StreamBlockAttestation(ValidatorServi
 }
 func (UnimplementedValidatorServiceServer) StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamRequestSlashed not implemented")
+}
+func (UnimplementedValidatorServiceServer) Balance(context.Context, *BalanceRequest) (*BalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Balance not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -1270,6 +1285,24 @@ func (x *validatorServiceStreamRequestSlashedServer) Recv() (*SlashedRequest, er
 	return m, nil
 }
 
+func _ValidatorService_Balance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).Balance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_Balance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).Balance(ctx, req.(*BalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1384,6 +1417,10 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorCoin",
 			Handler:    _ValidatorService_ValidatorCoin_Handler,
+		},
+		{
+			MethodName: "Balance",
+			Handler:    _ValidatorService_Balance_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

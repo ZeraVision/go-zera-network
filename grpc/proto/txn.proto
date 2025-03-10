@@ -447,6 +447,11 @@ message InstrumentContract{
     bool kyc_status = 19;                           //if true, this contract will require kyc to transact
     bool immutable_kyc_status = 20;                 //if kyc_status is true, this will make it immutable
     optional string cur_equiv_start = 21;           //1000000000000000000 = $1.00
+    repeated MaxSupplyRelease max_supply_release = 22;
+}
+message MaxSupplyRelease{
+    google.protobuf.Timestamp release_date = 1;
+    string amount = 2;
 }
 message GovernanceVote{
     BaseTXN base = 1;

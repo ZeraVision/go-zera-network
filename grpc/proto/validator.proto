@@ -99,13 +99,6 @@ message ValidatorSupport{
     bytes signature = 2;                     //signature of block_hash
     google.protobuf.Timestamp timestamp = 3; //timestamp of support
 }
-message NonceRequest{
-    bytes wallet_address = 1;
-}
-
-message NonceResponse{
-    uint64 nonce = 1;
-}
 
 message DataChunk{
     bytes chunk_data = 1;
@@ -368,12 +361,4 @@ message BalanceTracker{
 
 message TokenLookup{
     repeated string tokens = 1;
-}
-message BalanceRequest{
-    bytes wallet_address = 1;
-    string contract_id = 2;
-    bool encoded = 3;
-}
-message BalanceResponse{
-    string balance = 1;
 }

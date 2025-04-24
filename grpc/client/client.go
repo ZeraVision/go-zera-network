@@ -22,6 +22,11 @@ type NetworkClient struct {
 	client zera_pb.TXNServiceClient
 }
 
+// struct for client implementation of grpcs
+type APIClient struct {
+	client zera_pb.APIServiceClient
+}
+
 // constructor for client implementation of grpcs
 func NewNetworkClient(conn *grpc.ClientConn) *NetworkClient {
 	client := zera_pb.NewTXNServiceClient(conn)
@@ -32,6 +37,12 @@ func NewNetworkClient(conn *grpc.ClientConn) *NetworkClient {
 func NewValidatorNetworkClient(conn *grpc.ClientConn) *ValidatorNetworkClient {
 	client := zera_pb.NewValidatorServiceClient(conn)
 	return &ValidatorNetworkClient{client: client}
+}
+
+// constructor for client implementation of grpcs
+func APINetworkClient(conn *grpc.ClientConn) *APIClient {
+	client := zera_pb.NewAPIServiceClient(conn)
+	return &APIClient{client: client}
 }
 
 // SendBlocksyncRequest sends a block sync request and returns the received block batch.

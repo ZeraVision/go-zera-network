@@ -41,11 +41,9 @@ service ValidatorService{
     rpc ValidatorRevoke(zera_txn.RevokeTXN) returns (google.protobuf.Empty);
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
     rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
-    rpc Nonce(NonceRequest) returns (NonceResponse);
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
     rpc StreamBlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc StreamRequestSlashed(stream SlashedRequest) returns (stream DataChunk);
-    rpc Balance(BalanceRequest) returns (BalanceResponse);
 }
 
 message StakeMultipliers

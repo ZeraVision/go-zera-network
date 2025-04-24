@@ -48,11 +48,9 @@ const (
 	ValidatorService_ValidatorRevoke_FullMethodName                   = "/zera_validator.ValidatorService/ValidatorRevoke"
 	ValidatorService_ValidatorCompliance_FullMethodName               = "/zera_validator.ValidatorService/ValidatorCompliance"
 	ValidatorService_ValidatorBurnSBT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorBurnSBT"
-	ValidatorService_Nonce_FullMethodName                             = "/zera_validator.ValidatorService/Nonce"
 	ValidatorService_ValidatorCoin_FullMethodName                     = "/zera_validator.ValidatorService/ValidatorCoin"
 	ValidatorService_StreamBlockAttestation_FullMethodName            = "/zera_validator.ValidatorService/StreamBlockAttestation"
 	ValidatorService_StreamRequestSlashed_FullMethodName              = "/zera_validator.ValidatorService/StreamRequestSlashed"
-	ValidatorService_Balance_FullMethodName                           = "/zera_validator.ValidatorService/Balance"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -88,11 +86,9 @@ type ValidatorServiceClient interface {
 	ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	StreamBlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBlockAttestationClient, error)
 	StreamRequestSlashed(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamRequestSlashedClient, error)
-	Balance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
 }
 
 type validatorServiceClient struct {
@@ -428,15 +424,6 @@ func (c *validatorServiceClient) ValidatorBurnSBT(ctx context.Context, in *BurnS
 	return out, nil
 }
 
-func (c *validatorServiceClient) Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error) {
-	out := new(NonceResponse)
-	err := c.cc.Invoke(ctx, ValidatorService_Nonce_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *validatorServiceClient) ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorCoin_FullMethodName, in, out, opts...)
@@ -508,15 +495,6 @@ func (x *validatorServiceStreamRequestSlashedClient) Recv() (*DataChunk, error) 
 	return m, nil
 }
 
-func (c *validatorServiceClient) Balance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
-	out := new(BalanceResponse)
-	err := c.cc.Invoke(ctx, ValidatorService_Balance_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -550,11 +528,9 @@ type ValidatorServiceServer interface {
 	ValidatorRevoke(context.Context, *RevokeTXN) (*emptypb.Empty, error)
 	ValidatorCompliance(context.Context, *ComplianceTXN) (*emptypb.Empty, error)
 	ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error)
-	Nonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error)
 	StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error
 	StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error
-	Balance(context.Context, *BalanceRequest) (*BalanceResponse, error)
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -646,9 +622,6 @@ func (UnimplementedValidatorServiceServer) ValidatorCompliance(context.Context, 
 func (UnimplementedValidatorServiceServer) ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorBurnSBT not implemented")
 }
-func (UnimplementedValidatorServiceServer) Nonce(context.Context, *NonceRequest) (*NonceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Nonce not implemented")
-}
 func (UnimplementedValidatorServiceServer) ValidatorCoin(context.Context, *CoinTXN) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCoin not implemented")
 }
@@ -657,9 +630,6 @@ func (UnimplementedValidatorServiceServer) StreamBlockAttestation(ValidatorServi
 }
 func (UnimplementedValidatorServiceServer) StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamRequestSlashed not implemented")
-}
-func (UnimplementedValidatorServiceServer) Balance(context.Context, *BalanceRequest) (*BalanceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Balance not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -1197,24 +1167,6 @@ func _ValidatorService_ValidatorBurnSBT_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ValidatorService_Nonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NonceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ValidatorServiceServer).Nonce(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ValidatorService_Nonce_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).Nonce(ctx, req.(*NonceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ValidatorService_ValidatorCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CoinTXN)
 	if err := dec(in); err != nil {
@@ -1283,24 +1235,6 @@ func (x *validatorServiceStreamRequestSlashedServer) Recv() (*SlashedRequest, er
 		return nil, err
 	}
 	return m, nil
-}
-
-func _ValidatorService_Balance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BalanceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ValidatorServiceServer).Balance(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ValidatorService_Balance_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).Balance(ctx, req.(*BalanceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
@@ -1411,16 +1345,8 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ValidatorService_ValidatorBurnSBT_Handler,
 		},
 		{
-			MethodName: "Nonce",
-			Handler:    _ValidatorService_Nonce_Handler,
-		},
-		{
 			MethodName: "ValidatorCoin",
 			Handler:    _ValidatorService_ValidatorCoin_Handler,
-		},
-		{
-			MethodName: "Balance",
-			Handler:    _ValidatorService_Balance_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -3,6 +3,8 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "txn.proto";
 
+package zera_api;
+
 option go_package = "./grpc/protobuf";
 
 option optimize_for = SPEED;

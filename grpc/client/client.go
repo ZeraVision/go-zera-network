@@ -317,26 +317,6 @@ func SendCoinTXN(coin *zera_pb.CoinTXN, destAddr string) (*emptypb.Empty, error)
 
 	return response, nil
 }
-func GetNonce(nonce *zera_pb.NonceRequest, destAddr string) (*uint64, error) {
-	// Create a gRPC connection to the server
-	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
-	if err != nil {
-		fmt.Printf("Failed to connect to the server: %v", err)
-		return nil, err
-	}
-	defer conn.Close()
 
-	// Create a new instance of ValidatorNetworkClient
-	client := NewValidatorNetworkClient(conn)
 
-	response, err := client.client.Nonce(context.Background(), nonce)
-
-	if err != nil {
-		return nil, err
-	}
-	
-	nonceResponse := response.GetNonce()
-
-	return &nonceResponse, nil
-}
 

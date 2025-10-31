@@ -4,9 +4,7 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 package zera_txn;
-
 option go_package = "./grpc/protobuf";
-
 option optimize_for = SPEED;
 
 service TXNService{
@@ -19,12 +17,9 @@ service TXNService{
     rpc SmartContract(SmartContractTXN) returns (google.protobuf.Empty);
     rpc SmartContractExecute(SmartContractExecuteTXN) returns (google.protobuf.Empty);
     rpc SmartContractInstantiate(SmartContractInstantiateTXN) returns (google.protobuf.Empty);
-    rpc CurrencyEquiv(SelfCurrencyEquiv) returns (google.protobuf.Empty);
-    rpc AuthCurrencyEquiv(AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
-    rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty);
+    rpc ExpenseRatio(ExpenseRatioTXN) returns (google.protobuf.Empty); 
     rpc NFT(NFTTXN) returns (google.protobuf.Empty);
     rpc ContractUpdate(ContractUpdateTXN) returns (google.protobuf.Empty); 
-    rpc Foundation(FoundationTXN) returns (google.protobuf.Empty);
     rpc DelegatedVoting(DelegatedTXN) returns (google.protobuf.Empty);
     rpc Quash(QuashTXN) returns (google.protobuf.Empty);
     rpc FastQuorum(FastQuorumTXN) returns (google.protobuf.Empty);
@@ -80,33 +75,30 @@ enum TXN_STATUS{
 }
 enum TRANSACTION_TYPE
 {
-    COIN_TYPE = 0;
-    FOUNDATION_TYPE = 2;
-    MINT_TYPE = 1;
+    UKNOWN_TYPE = 0;
+    COIN_TYPE = 1;
+    MINT_TYPE = 2;
     ITEM_MINT_TYPE = 3;
     CONTRACT_TXN_TYPE = 4;
     VOTE_TYPE = 5;
     PROPOSAL_TYPE = 6;
     SMART_CONTRACT_TYPE = 7;
     SMART_CONTRACT_EXECUTE_TYPE = 8;
-    SELF_CURRENCY_EQUIV_TYPE = 9;
-    AUTHORIZED_CURRENCY_EQUIV_TYPE = 10;
-    EXPENSE_RATIO_TYPE = 11;
-    NFT_TYPE = 12;
-    UPDATE_CONTRACT_TYPE = 13;
-    VALIDATOR_REGISTRATION_TYPE = 14;
-    VALIDATOR_HEARTBEAT_TYPE = 15;
-    PROPOSAL_RESULT_TYPE = 16;
-    DELEGATED_VOTING_TYPE = 17;
-    REVOKE_TYPE = 18;
-    QUASH_TYPE = 19;
-    FAST_QUORUM_TYPE = 20;
-    COMPLIANCE_TYPE = 21;
-    SBT_BURN_TYPE = 22;
-    REQUIRED_VERSION = 23;
-    SMART_CONTRACT_INSTANTIATE_TYPE = 24;
-    UKNOWN_TYPE = 25;
-    ALLOWANCE_TYPE = 26;        //CHANGE - Allowance transaction type
+    EXPENSE_RATIO_TYPE = 9;
+    NFT_TYPE = 10;
+    UPDATE_CONTRACT_TYPE = 11;
+    VALIDATOR_REGISTRATION_TYPE = 12;
+    VALIDATOR_HEARTBEAT_TYPE = 13;
+    PROPOSAL_RESULT_TYPE = 14;
+    DELEGATED_VOTING_TYPE = 15;
+    REVOKE_TYPE = 16;
+    QUASH_TYPE = 17;
+    FAST_QUORUM_TYPE = 18;
+    COMPLIANCE_TYPE = 19;
+    SBT_BURN_TYPE = 20;
+    REQUIRED_VERSION = 21;
+    SMART_CONTRACT_INSTANTIATE_TYPE = 22;
+    ALLOWANCE_TYPE = 23;        //CHANGE - Allowance transaction type
 }
 //ENUMS
 enum LANGUAGE{
@@ -185,12 +177,6 @@ message ByteMultiplier{
     TRANSACTION_TYPE txn_type = 1;
     string multiplier = 2;
 }
-message FoundationTXN{
-    BaseTXN base = 1;
-    repeated string restricted_symbols = 2;
-    repeated ByteMultiplier byte_multiplier = 3;
-    optional string fee_ISO4217 = 4;
-}
 message RevokeTXN{
     BaseTXN base = 1;
     string contract_id = 2;
@@ -253,9 +239,8 @@ message RestrictedKey{
     bool propose = 9;
     bool compliance = 10;
     bool expense_ratio = 11;
-    bool cur_equiv = 12;
-    bool revoke = 13;
-    uint32 key_weight = 14;
+    bool revoke = 12;
+    uint32 key_weight = 13;
 }
 message ExpenseRatioTXN{
     BaseTXN base = 1;
@@ -292,6 +277,9 @@ message BaseTXN{
     optional string memo = 8;
     optional bool safe_send = 9;
     uint64 nonce = 10;
+    optional string interface_fee = 11;
+    optional string interface_fee_id = 12;
+    optional bytes interface_address = 13;
 }
 message PublicKey{
     bytes single = 1;
@@ -313,20 +301,6 @@ message MultiKey{
 message MultiPatterns{
     repeated uint32 class = 1;                   //these are a parrellel array of classes and how many of these classes are required to create a valid multi key
     repeated uint32 required = 2;
-}
-message SelfCurrencyEquiv{
-    BaseTXN base = 1;
-    repeated CurrencyEquiv cur_equiv = 2;
-}
-message AuthorizedCurrencyEquiv{
-    BaseTXN base = 1;
-    repeated CurrencyEquiv cur_equiv = 2;
-}
-message CurrencyEquiv{
-    string contract_id = 1;
-    string rate = 2; //1000000000000000000 = $1.00
-    optional bool authorized = 3; 
-    optional string max_stake = 4; //1000000000000000000 = $1.00
 }
 message ExpenseRatioResult{
     string contract_id = 1;
@@ -452,8 +426,7 @@ message InstrumentContract{
     repeated TokenCompliance token_compliance = 18; //Compliance levels for each token that are manditory to transact with this contract
     bool kyc_status = 19;                           //if true, this contract will require kyc to transact
     bool immutable_kyc_status = 20;                 //if kyc_status is true, this will make it immutable
-    optional string cur_equiv_start = 21;           //1000000000000000000 = $1.00
-    repeated MaxSupplyRelease max_supply_release = 22;
+    repeated MaxSupplyRelease max_supply_release = 21;
 }
 message MaxSupplyRelease{
     google.protobuf.Timestamp release_date = 1;
@@ -587,28 +560,25 @@ message TXNS{
     repeated GovernanceProposal governance_proposals = 6;
     repeated SmartContractTXN smart_contracts = 7;
     repeated SmartContractExecuteTXN smart_contract_executes = 8;
-    repeated SelfCurrencyEquiv self_cur_equivs = 9;
-    repeated AuthorizedCurrencyEquiv auth_cur_equivs = 10;
-    repeated ExpenseRatioTXN expense_ratios = 11;
-    repeated TXNStatusFees txn_fees_and_status = 12;
-    repeated TokenFees token_fees = 13;
-    repeated NFTTXN nft_txns = 14;
-    repeated ContractUpdateTXN contract_update_txns = 15;
-    repeated ValidatorRegistration validator_registration_txns = 16;
-    repeated ValidatorHeartbeat validator_heartbeat_txns = 17;
-    repeated ProposalResult proposal_result_txns = 18; //
-    repeated ExpenseRatioResult expense_ratio_result_txns = 19;
-    repeated FoundationTXN foundation_txns = 20;
-    repeated DelegatedTXN delegated_voting_txns = 21;
-    repeated QuashTXN quash_txns = 22;
-    repeated FastQuorumTXN fast_quorum_txns = 23;
-    repeated QuashResult quash_results = 24;
-    repeated RevokeTXN revoke_txns = 25;
-    repeated ComplianceTXN compliance_txns = 26;
-    repeated BurnSBTTXN burn_sbt_txns = 27;
-    repeated SmartContractInstantiateTXN smart_contract_instantiate_txns = 28;
-    optional RequiredVersion required_version_txn = 29;
-    repeated AllowanceTXN allowance_txns = 30;
+    repeated ExpenseRatioTXN expense_ratios = 9;
+    repeated TXNStatusFees txn_fees_and_status = 10;
+    repeated TokenFees token_fees = 11;
+    repeated NFTTXN nft_txns = 12;
+    repeated ContractUpdateTXN contract_update_txns = 13;
+    repeated ValidatorRegistration validator_registration_txns = 14;
+    repeated ValidatorHeartbeat validator_heartbeat_txns = 15;
+    repeated ProposalResult proposal_result_txns = 16; //
+    repeated ExpenseRatioResult expense_ratio_result_txns = 17;
+    repeated DelegatedTXN delegated_voting_txns = 18;
+    repeated QuashTXN quash_txns = 19;
+    repeated FastQuorumTXN fast_quorum_txns = 20;
+    repeated QuashResult quash_results = 21;
+    repeated RevokeTXN revoke_txns = 22;
+    repeated ComplianceTXN compliance_txns = 23;
+    repeated BurnSBTTXN burn_sbt_txns = 24;
+    repeated SmartContractInstantiateTXN smart_contract_instantiate_txns = 25;
+    optional RequiredVersion required_version_txn = 26;
+    repeated AllowanceTXN allowance_txns = 27;
 }
 
 message Token{
@@ -636,6 +606,14 @@ message TXNStatusFees{
     optional string native_function_fees = 12;
     optional uint64 gas = 13;
     repeated DelegatedData delegated_data = 14;
+    optional string interface_fee = 15;
+    optional string interface_fee_id = 16;
+}
+message ProposalContract
+{
+    string contract_id = 1;
+    repeated bytes proposal_ids = 2;
+    uint32 stage = 3;
 }
 
 message TXNWrapper{
@@ -648,28 +626,25 @@ message TXNWrapper{
         GovernanceProposal governance_proposal = 6;
         SmartContractTXN smart_contract = 7;
         SmartContractExecuteTXN smart_contract_execute = 8;
-        SelfCurrencyEquiv self_cur_equivs = 9;
-        AuthorizedCurrencyEquiv auth_cur_equivs = 10;
-        ExpenseRatioTXN expense_ratios = 11;
-        NFTTXN nft_txn = 12;
-        ContractUpdateTXN contract_update_txn = 13;
-        ValidatorRegistration validator_registration_txn = 14;
-        ValidatorHeartbeat validator_heartbeat_txn = 15;
-        FoundationTXN foundation_txn = 16;
-        DelegatedTXN delegated_voting_txn = 17;
-        QuashTXN quash_txn = 18;
-        FastQuorumTXN fast_quorum_txn = 19;
-        RevokeTXN revoke_txn = 20;
-        ComplianceTXN compliance_txn = 21;
-        bool proposal_result_txn = 22;
-        BurnSBTTXN burn_sbt_txn = 23;
-        RequiredVersion required_version_txn = 24;
-        SmartContractInstantiateTXN smart_contract_instantiate_txn = 25;
-        AllowanceTXN allowance_txn = 30;
+        ExpenseRatioTXN expense_ratios = 9;
+        NFTTXN nft_txn = 10;
+        ContractUpdateTXN contract_update_txn = 11;
+        ValidatorRegistration validator_registration_txn = 12;
+        ValidatorHeartbeat validator_heartbeat_txn = 13;
+        DelegatedTXN delegated_voting_txn = 14;
+        QuashTXN quash_txn = 15;
+        FastQuorumTXN fast_quorum_txn = 16;
+        RevokeTXN revoke_txn = 17;
+        ComplianceTXN compliance_txn = 18;
+        bool proposal_result_txn = 19;
+        BurnSBTTXN burn_sbt_txn = 20;
+        RequiredVersion required_version_txn = 21;
+        SmartContractInstantiateTXN smart_contract_instantiate_txn = 22;
+        AllowanceTXN allowance_txn = 23;
     }
     
-    TRANSACTION_TYPE txn_type = 26;
-    repeated bytes proposal_ids = 27;
-    repeated bytes proposal_contracts = 28;
-    optional bool smart_contract_txn = 29;
+    TRANSACTION_TYPE txn_type = 24;
+    repeated bytes proposal_ids = 25;
+    repeated ProposalContract proposal_contracts = 26;
+    optional bool smart_contract_txn = 27;
 }

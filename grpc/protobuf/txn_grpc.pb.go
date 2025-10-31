@@ -29,12 +29,9 @@ const (
 	TXNService_SmartContract_FullMethodName            = "/zera_txn.TXNService/SmartContract"
 	TXNService_SmartContractExecute_FullMethodName     = "/zera_txn.TXNService/SmartContractExecute"
 	TXNService_SmartContractInstantiate_FullMethodName = "/zera_txn.TXNService/SmartContractInstantiate"
-	TXNService_CurrencyEquiv_FullMethodName            = "/zera_txn.TXNService/CurrencyEquiv"
-	TXNService_AuthCurrencyEquiv_FullMethodName        = "/zera_txn.TXNService/AuthCurrencyEquiv"
 	TXNService_ExpenseRatio_FullMethodName             = "/zera_txn.TXNService/ExpenseRatio"
 	TXNService_NFT_FullMethodName                      = "/zera_txn.TXNService/NFT"
 	TXNService_ContractUpdate_FullMethodName           = "/zera_txn.TXNService/ContractUpdate"
-	TXNService_Foundation_FullMethodName               = "/zera_txn.TXNService/Foundation"
 	TXNService_DelegatedVoting_FullMethodName          = "/zera_txn.TXNService/DelegatedVoting"
 	TXNService_Quash_FullMethodName                    = "/zera_txn.TXNService/Quash"
 	TXNService_FastQuorum_FullMethodName               = "/zera_txn.TXNService/FastQuorum"
@@ -57,12 +54,9 @@ type TXNServiceClient interface {
 	SmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	SmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	SmartContractInstantiate(ctx context.Context, in *SmartContractInstantiateTXN, opts ...grpc.CallOption) (*empty.Empty, error)
-	CurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error)
-	AuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error)
 	ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	NFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*empty.Empty, error)
-	Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	DelegatedVoting(ctx context.Context, in *DelegatedTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	Quash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	FastQuorum(ctx context.Context, in *FastQuorumTXN, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -161,24 +155,6 @@ func (c *tXNServiceClient) SmartContractInstantiate(ctx context.Context, in *Sma
 	return out, nil
 }
 
-func (c *tXNServiceClient) CurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, TXNService_CurrencyEquiv_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tXNServiceClient) AuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, TXNService_AuthCurrencyEquiv_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *tXNServiceClient) ExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, TXNService_ExpenseRatio_FullMethodName, in, out, opts...)
@@ -200,15 +176,6 @@ func (c *tXNServiceClient) NFT(ctx context.Context, in *NFTTXN, opts ...grpc.Cal
 func (c *tXNServiceClient) ContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, TXNService_ContractUpdate_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tXNServiceClient) Foundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, TXNService_Foundation_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -291,12 +258,9 @@ type TXNServiceServer interface {
 	SmartContract(context.Context, *SmartContractTXN) (*empty.Empty, error)
 	SmartContractExecute(context.Context, *SmartContractExecuteTXN) (*empty.Empty, error)
 	SmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*empty.Empty, error)
-	CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*empty.Empty, error)
-	AuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*empty.Empty, error)
 	ExpenseRatio(context.Context, *ExpenseRatioTXN) (*empty.Empty, error)
 	NFT(context.Context, *NFTTXN) (*empty.Empty, error)
 	ContractUpdate(context.Context, *ContractUpdateTXN) (*empty.Empty, error)
-	Foundation(context.Context, *FoundationTXN) (*empty.Empty, error)
 	DelegatedVoting(context.Context, *DelegatedTXN) (*empty.Empty, error)
 	Quash(context.Context, *QuashTXN) (*empty.Empty, error)
 	FastQuorum(context.Context, *FastQuorumTXN) (*empty.Empty, error)
@@ -338,12 +302,6 @@ func (UnimplementedTXNServiceServer) SmartContractExecute(context.Context, *Smar
 func (UnimplementedTXNServiceServer) SmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SmartContractInstantiate not implemented")
 }
-func (UnimplementedTXNServiceServer) CurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CurrencyEquiv not implemented")
-}
-func (UnimplementedTXNServiceServer) AuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthCurrencyEquiv not implemented")
-}
 func (UnimplementedTXNServiceServer) ExpenseRatio(context.Context, *ExpenseRatioTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExpenseRatio not implemented")
 }
@@ -352,9 +310,6 @@ func (UnimplementedTXNServiceServer) NFT(context.Context, *NFTTXN) (*empty.Empty
 }
 func (UnimplementedTXNServiceServer) ContractUpdate(context.Context, *ContractUpdateTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ContractUpdate not implemented")
-}
-func (UnimplementedTXNServiceServer) Foundation(context.Context, *FoundationTXN) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Foundation not implemented")
 }
 func (UnimplementedTXNServiceServer) DelegatedVoting(context.Context, *DelegatedTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelegatedVoting not implemented")
@@ -552,42 +507,6 @@ func _TXNService_SmartContractInstantiate_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TXNService_CurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SelfCurrencyEquiv)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TXNServiceServer).CurrencyEquiv(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TXNService_CurrencyEquiv_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).CurrencyEquiv(ctx, req.(*SelfCurrencyEquiv))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TXNService_AuthCurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthorizedCurrencyEquiv)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TXNServiceServer).AuthCurrencyEquiv(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TXNService_AuthCurrencyEquiv_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).AuthCurrencyEquiv(ctx, req.(*AuthorizedCurrencyEquiv))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _TXNService_ExpenseRatio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ExpenseRatioTXN)
 	if err := dec(in); err != nil {
@@ -638,24 +557,6 @@ func _TXNService_ContractUpdate_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TXNServiceServer).ContractUpdate(ctx, req.(*ContractUpdateTXN))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TXNService_Foundation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FoundationTXN)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TXNServiceServer).Foundation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TXNService_Foundation_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXNServiceServer).Foundation(ctx, req.(*FoundationTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -830,14 +731,6 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TXNService_SmartContractInstantiate_Handler,
 		},
 		{
-			MethodName: "CurrencyEquiv",
-			Handler:    _TXNService_CurrencyEquiv_Handler,
-		},
-		{
-			MethodName: "AuthCurrencyEquiv",
-			Handler:    _TXNService_AuthCurrencyEquiv_Handler,
-		},
-		{
 			MethodName: "ExpenseRatio",
 			Handler:    _TXNService_ExpenseRatio_Handler,
 		},
@@ -848,10 +741,6 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ContractUpdate",
 			Handler:    _TXNService_ContractUpdate_Handler,
-		},
-		{
-			MethodName: "Foundation",
-			Handler:    _TXNService_Foundation_Handler,
 		},
 		{
 			MethodName: "DelegatedVoting",

@@ -35,13 +35,10 @@ const (
 	ValidatorService_ValidatorSmartContract_FullMethodName            = "/zera_validator.ValidatorService/ValidatorSmartContract"
 	ValidatorService_ValidatorSmartContractInstantiate_FullMethodName = "/zera_validator.ValidatorService/ValidatorSmartContractInstantiate"
 	ValidatorService_ValidatorSmartContractExecute_FullMethodName     = "/zera_validator.ValidatorService/ValidatorSmartContractExecute"
-	ValidatorService_ValidatorCurrencyEquiv_FullMethodName            = "/zera_validator.ValidatorService/ValidatorCurrencyEquiv"
-	ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName        = "/zera_validator.ValidatorService/ValidatorAuthCurrencyEquiv"
 	ValidatorService_ValidatorExpenseRatio_FullMethodName             = "/zera_validator.ValidatorService/ValidatorExpenseRatio"
 	ValidatorService_ValidatorNFT_FullMethodName                      = "/zera_validator.ValidatorService/ValidatorNFT"
 	ValidatorService_ValidatorContractUpdate_FullMethodName           = "/zera_validator.ValidatorService/ValidatorContractUpdate"
 	ValidatorService_ValidatorHeartbeat_FullMethodName                = "/zera_validator.ValidatorService/ValidatorHeartbeat"
-	ValidatorService_ValidatorFoundation_FullMethodName               = "/zera_validator.ValidatorService/ValidatorFoundation"
 	ValidatorService_ValidatorDelegatedVoting_FullMethodName          = "/zera_validator.ValidatorService/ValidatorDelegatedVoting"
 	ValidatorService_IndexerVoting_FullMethodName                     = "/zera_validator.ValidatorService/IndexerVoting"
 	ValidatorService_ValidatorQuash_FullMethodName                    = "/zera_validator.ValidatorService/ValidatorQuash"
@@ -49,9 +46,11 @@ const (
 	ValidatorService_ValidatorRevoke_FullMethodName                   = "/zera_validator.ValidatorService/ValidatorRevoke"
 	ValidatorService_ValidatorCompliance_FullMethodName               = "/zera_validator.ValidatorService/ValidatorCompliance"
 	ValidatorService_ValidatorBurnSBT_FullMethodName                  = "/zera_validator.ValidatorService/ValidatorBurnSBT"
+	ValidatorService_Nonce_FullMethodName                             = "/zera_validator.ValidatorService/Nonce"
 	ValidatorService_ValidatorCoin_FullMethodName                     = "/zera_validator.ValidatorService/ValidatorCoin"
 	ValidatorService_StreamBlockAttestation_FullMethodName            = "/zera_validator.ValidatorService/StreamBlockAttestation"
 	ValidatorService_StreamRequestSlashed_FullMethodName              = "/zera_validator.ValidatorService/StreamRequestSlashed"
+	ValidatorService_Balance_FullMethodName                           = "/zera_validator.ValidatorService/Balance"
 	ValidatorService_Gossip_FullMethodName                            = "/zera_validator.ValidatorService/Gossip"
 	ValidatorService_ValidatorAllowance_FullMethodName                = "/zera_validator.ValidatorService/ValidatorAllowance"
 )
@@ -76,13 +75,10 @@ type ValidatorServiceClient interface {
 	ValidatorSmartContract(ctx context.Context, in *SmartContractTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorSmartContractInstantiate(ctx context.Context, in *SmartContractInstantiateTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorSmartContractExecute(ctx context.Context, in *SmartContractExecuteTXN, opts ...grpc.CallOption) (*empty.Empty, error)
-	ValidatorCurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error)
-	ValidatorAuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorNFT(ctx context.Context, in *NFTTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorContractUpdate(ctx context.Context, in *ContractUpdateTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*empty.Empty, error)
-	ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorDelegatedVoting(ctx context.Context, in *DelegatedTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	IndexerVoting(ctx context.Context, in *IndexerVotingRequest, opts ...grpc.CallOption) (*IndexerVotingResponse, error)
 	ValidatorQuash(ctx context.Context, in *QuashTXN, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -90,9 +86,11 @@ type ValidatorServiceClient interface {
 	ValidatorRevoke(ctx context.Context, in *RevokeTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorCompliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*empty.Empty, error)
+	Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	ValidatorCoin(ctx context.Context, in *CoinTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	StreamBlockAttestation(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamBlockAttestationClient, error)
 	StreamRequestSlashed(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamRequestSlashedClient, error)
+	Balance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
 	Gossip(ctx context.Context, in *TXNGossip, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorAllowance(ctx context.Context, in *AllowanceTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 }
@@ -338,24 +336,6 @@ func (c *validatorServiceClient) ValidatorSmartContractExecute(ctx context.Conte
 	return out, nil
 }
 
-func (c *validatorServiceClient) ValidatorCurrencyEquiv(ctx context.Context, in *SelfCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, ValidatorService_ValidatorCurrencyEquiv_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *validatorServiceClient) ValidatorAuthCurrencyEquiv(ctx context.Context, in *AuthorizedCurrencyEquiv, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *validatorServiceClient) ValidatorExpenseRatio(ctx context.Context, in *ExpenseRatioTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorExpenseRatio_FullMethodName, in, out, opts...)
@@ -386,15 +366,6 @@ func (c *validatorServiceClient) ValidatorContractUpdate(ctx context.Context, in
 func (c *validatorServiceClient) ValidatorHeartbeat(ctx context.Context, in *ValidatorHeartbeat, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorHeartbeat_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *validatorServiceClient) ValidatorFoundation(ctx context.Context, in *FoundationTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, ValidatorService_ValidatorFoundation_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -458,6 +429,15 @@ func (c *validatorServiceClient) ValidatorCompliance(ctx context.Context, in *Co
 func (c *validatorServiceClient) ValidatorBurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_ValidatorBurnSBT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error) {
+	out := new(NonceResponse)
+	err := c.cc.Invoke(ctx, ValidatorService_Nonce_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -535,6 +515,15 @@ func (x *validatorServiceStreamRequestSlashedClient) Recv() (*DataChunk, error) 
 	return m, nil
 }
 
+func (c *validatorServiceClient) Balance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
+	out := new(BalanceResponse)
+	err := c.cc.Invoke(ctx, ValidatorService_Balance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *validatorServiceClient) Gossip(ctx context.Context, in *TXNGossip, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ValidatorService_Gossip_FullMethodName, in, out, opts...)
@@ -573,13 +562,10 @@ type ValidatorServiceServer interface {
 	ValidatorSmartContract(context.Context, *SmartContractTXN) (*empty.Empty, error)
 	ValidatorSmartContractInstantiate(context.Context, *SmartContractInstantiateTXN) (*empty.Empty, error)
 	ValidatorSmartContractExecute(context.Context, *SmartContractExecuteTXN) (*empty.Empty, error)
-	ValidatorCurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*empty.Empty, error)
-	ValidatorAuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*empty.Empty, error)
 	ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*empty.Empty, error)
 	ValidatorNFT(context.Context, *NFTTXN) (*empty.Empty, error)
 	ValidatorContractUpdate(context.Context, *ContractUpdateTXN) (*empty.Empty, error)
 	ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*empty.Empty, error)
-	ValidatorFoundation(context.Context, *FoundationTXN) (*empty.Empty, error)
 	ValidatorDelegatedVoting(context.Context, *DelegatedTXN) (*empty.Empty, error)
 	IndexerVoting(context.Context, *IndexerVotingRequest) (*IndexerVotingResponse, error)
 	ValidatorQuash(context.Context, *QuashTXN) (*empty.Empty, error)
@@ -587,9 +573,11 @@ type ValidatorServiceServer interface {
 	ValidatorRevoke(context.Context, *RevokeTXN) (*empty.Empty, error)
 	ValidatorCompliance(context.Context, *ComplianceTXN) (*empty.Empty, error)
 	ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*empty.Empty, error)
+	Nonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	ValidatorCoin(context.Context, *CoinTXN) (*empty.Empty, error)
 	StreamBlockAttestation(ValidatorService_StreamBlockAttestationServer) error
 	StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error
+	Balance(context.Context, *BalanceRequest) (*BalanceResponse, error)
 	Gossip(context.Context, *TXNGossip) (*empty.Empty, error)
 	ValidatorAllowance(context.Context, *AllowanceTXN) (*empty.Empty, error)
 	mustEmbedUnimplementedValidatorServiceServer()
@@ -644,12 +632,6 @@ func (UnimplementedValidatorServiceServer) ValidatorSmartContractInstantiate(con
 func (UnimplementedValidatorServiceServer) ValidatorSmartContractExecute(context.Context, *SmartContractExecuteTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSmartContractExecute not implemented")
 }
-func (UnimplementedValidatorServiceServer) ValidatorCurrencyEquiv(context.Context, *SelfCurrencyEquiv) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCurrencyEquiv not implemented")
-}
-func (UnimplementedValidatorServiceServer) ValidatorAuthCurrencyEquiv(context.Context, *AuthorizedCurrencyEquiv) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidatorAuthCurrencyEquiv not implemented")
-}
 func (UnimplementedValidatorServiceServer) ValidatorExpenseRatio(context.Context, *ExpenseRatioTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorExpenseRatio not implemented")
 }
@@ -661,9 +643,6 @@ func (UnimplementedValidatorServiceServer) ValidatorContractUpdate(context.Conte
 }
 func (UnimplementedValidatorServiceServer) ValidatorHeartbeat(context.Context, *ValidatorHeartbeat) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorHeartbeat not implemented")
-}
-func (UnimplementedValidatorServiceServer) ValidatorFoundation(context.Context, *FoundationTXN) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidatorFoundation not implemented")
 }
 func (UnimplementedValidatorServiceServer) ValidatorDelegatedVoting(context.Context, *DelegatedTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorDelegatedVoting not implemented")
@@ -686,6 +665,9 @@ func (UnimplementedValidatorServiceServer) ValidatorCompliance(context.Context, 
 func (UnimplementedValidatorServiceServer) ValidatorBurnSBT(context.Context, *BurnSBTTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorBurnSBT not implemented")
 }
+func (UnimplementedValidatorServiceServer) Nonce(context.Context, *NonceRequest) (*NonceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Nonce not implemented")
+}
 func (UnimplementedValidatorServiceServer) ValidatorCoin(context.Context, *CoinTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCoin not implemented")
 }
@@ -694,6 +676,9 @@ func (UnimplementedValidatorServiceServer) StreamBlockAttestation(ValidatorServi
 }
 func (UnimplementedValidatorServiceServer) StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamRequestSlashed not implemented")
+}
+func (UnimplementedValidatorServiceServer) Balance(context.Context, *BalanceRequest) (*BalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Balance not implemented")
 }
 func (UnimplementedValidatorServiceServer) Gossip(context.Context, *TXNGossip) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Gossip not implemented")
@@ -1011,42 +996,6 @@ func _ValidatorService_ValidatorSmartContractExecute_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ValidatorService_ValidatorCurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SelfCurrencyEquiv)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ValidatorServiceServer).ValidatorCurrencyEquiv(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ValidatorService_ValidatorCurrencyEquiv_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorCurrencyEquiv(ctx, req.(*SelfCurrencyEquiv))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ValidatorService_ValidatorAuthCurrencyEquiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthorizedCurrencyEquiv)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ValidatorServiceServer).ValidatorAuthCurrencyEquiv(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ValidatorService_ValidatorAuthCurrencyEquiv_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorAuthCurrencyEquiv(ctx, req.(*AuthorizedCurrencyEquiv))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ValidatorService_ValidatorExpenseRatio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ExpenseRatioTXN)
 	if err := dec(in); err != nil {
@@ -1115,24 +1064,6 @@ func _ValidatorService_ValidatorHeartbeat_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ValidatorServiceServer).ValidatorHeartbeat(ctx, req.(*ValidatorHeartbeat))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ValidatorService_ValidatorFoundation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FoundationTXN)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ValidatorServiceServer).ValidatorFoundation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ValidatorService_ValidatorFoundation_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ValidatorServiceServer).ValidatorFoundation(ctx, req.(*FoundationTXN))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1263,6 +1194,24 @@ func _ValidatorService_ValidatorBurnSBT_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_Nonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NonceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).Nonce(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_Nonce_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).Nonce(ctx, req.(*NonceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ValidatorService_ValidatorCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CoinTXN)
 	if err := dec(in); err != nil {
@@ -1331,6 +1280,24 @@ func (x *validatorServiceStreamRequestSlashedServer) Recv() (*SlashedRequest, er
 		return nil, err
 	}
 	return m, nil
+}
+
+func _ValidatorService_Balance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).Balance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_Balance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).Balance(ctx, req.(*BalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ValidatorService_Gossip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1421,14 +1388,6 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ValidatorService_ValidatorSmartContractExecute_Handler,
 		},
 		{
-			MethodName: "ValidatorCurrencyEquiv",
-			Handler:    _ValidatorService_ValidatorCurrencyEquiv_Handler,
-		},
-		{
-			MethodName: "ValidatorAuthCurrencyEquiv",
-			Handler:    _ValidatorService_ValidatorAuthCurrencyEquiv_Handler,
-		},
-		{
 			MethodName: "ValidatorExpenseRatio",
 			Handler:    _ValidatorService_ValidatorExpenseRatio_Handler,
 		},
@@ -1443,10 +1402,6 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorHeartbeat",
 			Handler:    _ValidatorService_ValidatorHeartbeat_Handler,
-		},
-		{
-			MethodName: "ValidatorFoundation",
-			Handler:    _ValidatorService_ValidatorFoundation_Handler,
 		},
 		{
 			MethodName: "ValidatorDelegatedVoting",
@@ -1477,8 +1432,16 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ValidatorService_ValidatorBurnSBT_Handler,
 		},
 		{
+			MethodName: "Nonce",
+			Handler:    _ValidatorService_Nonce_Handler,
+		},
+		{
 			MethodName: "ValidatorCoin",
 			Handler:    _ValidatorService_ValidatorCoin_Handler,
+		},
+		{
+			MethodName: "Balance",
+			Handler:    _ValidatorService_Balance_Handler,
 		},
 		{
 			MethodName: "Gossip",

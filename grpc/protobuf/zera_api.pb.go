@@ -506,7 +506,7 @@ func (x *BaseFeeRequest) GetTxnType() TRANSACTION_TYPE {
 	if x != nil {
 		return x.TxnType
 	}
-	return TRANSACTION_TYPE_COIN_TYPE
+	return TRANSACTION_TYPE_UKNOWN_TYPE
 }
 
 type BaseFeeResponse struct {

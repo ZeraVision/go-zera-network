@@ -4,9 +4,9 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 import "txn.proto";
 
-package zera_validator;
-
 option go_package = "./grpc/protobuf";
+
+package zera_validator;
 
 option optimize_for = SPEED;
 
@@ -28,13 +28,10 @@ service ValidatorService{
     rpc ValidatorSmartContract(zera_txn.SmartContractTXN) returns (google.protobuf.Empty);
     rpc ValidatorSmartContractInstantiate(zera_txn.SmartContractInstantiateTXN) returns (google.protobuf.Empty);
     rpc ValidatorSmartContractExecute(zera_txn.SmartContractExecuteTXN) returns (google.protobuf.Empty);
-    rpc ValidatorCurrencyEquiv(zera_txn.SelfCurrencyEquiv) returns (google.protobuf.Empty);
-    rpc ValidatorAuthCurrencyEquiv(zera_txn.AuthorizedCurrencyEquiv) returns (google.protobuf.Empty);
     rpc ValidatorExpenseRatio(zera_txn.ExpenseRatioTXN) returns (google.protobuf.Empty);
     rpc ValidatorNFT(zera_txn.NFTTXN) returns (google.protobuf.Empty);
     rpc ValidatorContractUpdate(zera_txn.ContractUpdateTXN) returns (google.protobuf.Empty);
     rpc ValidatorHeartbeat(zera_txn.ValidatorHeartbeat) returns (google.protobuf.Empty);
-    rpc ValidatorFoundation(zera_txn.FoundationTXN) returns (google.protobuf.Empty);
     rpc ValidatorDelegatedVoting(zera_txn.DelegatedTXN) returns (google.protobuf.Empty);
     rpc IndexerVoting(IndexerVotingRequest) returns (IndexerVotingResponse);
     rpc ValidatorQuash(zera_txn.QuashTXN) returns (google.protobuf.Empty);
@@ -42,16 +39,18 @@ service ValidatorService{
     rpc ValidatorRevoke(zera_txn.RevokeTXN) returns (google.protobuf.Empty);
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
     rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
+    rpc Nonce(NonceRequest) returns (NonceResponse);
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
     rpc StreamBlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc StreamRequestSlashed(stream SlashedRequest) returns (stream DataChunk);
+    rpc Balance(BalanceRequest) returns (BalanceResponse);
     rpc Gossip(TXNGossip) returns (google.protobuf.Empty);
     rpc ValidatorAllowance(zera_txn.AllowanceTXN) returns (google.protobuf.Empty);
 }
 
 message AllowanceState{
-    optional string allowed_currency_equivelent = 1; //1000000000000000000 = $1.00 can only have either this or allowed_amount
-    optional string allowed_amount = 2;              //Amount of parts of token can only have either this or allowed_currency_equivelent
+    optional string allowed_currency_equivalent = 1; //1000000000000000000 = $1.00 can only have either this or allowed_amount
+    optional string allowed_amount = 2;              //Amount of parts of token can only have either this or allowed_currency_equivalent
     optional uint32 period_months = 3;               //How many months until this allowance resets, can only have this or period_seconds
     optional uint32 period_seconds = 4;              //How many seconds until this allowance resets, can only have this or period_months
     google.protobuf.Timestamp period_end = 5;        //When the allowance period ends, and will reset
@@ -64,6 +63,7 @@ message StakeMultipliers
     map<string, string> contract_multipliers = 1; //key = contract_id, value = multiplier (multiplier 100 000 = 100%)
     string default_multiplier = 2;                //default multiplier for all contracts based off of % of zera staked
 }
+
 //Key = Block Height
 message ValidatorArchive
 {
@@ -111,6 +111,13 @@ message ValidatorSupport{
     zera_txn.PublicKey public_key = 1;       //public key of validator in favour
     bytes signature = 2;                     //signature of block_hash
     google.protobuf.Timestamp timestamp = 3; //timestamp of support
+}
+message NonceRequest{
+    bytes wallet_address = 1;
+}
+
+message NonceResponse{
+    uint64 nonce = 1;
 }
 
 message DataChunk{
@@ -183,6 +190,13 @@ message NFT{
     optional zera_txn.ItemContractFees contract_fees = 5;
 }
 
+message Item{
+    string contract_id = 1;
+    string item_id = 2;
+}
+message WalletItems{
+    repeated Item items = 1;
+}
 message ProcessLedger{
     repeated bytes cycle_contract_ids = 1; //all contracts that need proposals processed
     repeated bytes proposal_ids = 2;       //all staggered proposals that need to be processed
@@ -208,6 +222,7 @@ message Voter{
     optional bool support = 1;
     optional uint32 option = 2;
     bool delegated = 3;
+    optional uint64 stage = 4;
 }
 
 //which proposals have been voted on with this wallet.
@@ -254,10 +269,6 @@ message ExpenseTracker{
     int32 day = 1;
     int32 month = 2;
 }
-message RestrictedSymbols{
-    repeated string symbols = 1;
-}
-
 message IndexerVotingRequest{
     bytes proposal_id = 1;
 }
@@ -372,9 +383,16 @@ message BalanceTracker{
     // repeated bytes wallet_addresses = 1;
     // repeated string balances = 2;
 }
-
 message TokenLookup{
     repeated string tokens = 1;
+}
+message BalanceRequest{
+    bytes wallet_address = 1;
+    string contract_id = 2;
+    bool encoded = 3;
+}
+message BalanceResponse{
+    string balance = 1;
 }
 
 message TXN{

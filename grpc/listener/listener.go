@@ -27,8 +27,6 @@ type ValidatorGovernProposalHandler func(ctx context.Context, proposal *zera_pb.
 type ValidatorGovernVoteHandler func(ctx context.Context, vote *zera_pb.GovernanceVote) (*emptypb.Empty, error)
 type ValidatorSmartContractHandler func(ctx context.Context, txn *zera_pb.SmartContractTXN) (*emptypb.Empty, error)
 type ValidatorSmartContractExecuteHandler func(ctx context.Context, txn *zera_pb.SmartContractExecuteTXN) (*emptypb.Empty, error)
-type ValidatorCurrencyEquivHandler func(ctx context.Context, equiv *zera_pb.SelfCurrencyEquiv) (*emptypb.Empty, error)
-type ValidatorAuthCurrencyEquivHandler func(ctx context.Context, equiv *zera_pb.AuthorizedCurrencyEquiv) (*emptypb.Empty, error)
 type ValidatorExpenseRatioHandler func(ctx context.Context, ratio *zera_pb.ExpenseRatioTXN) (*emptypb.Empty, error)
 type ValidatorCoinHandler func(ctx context.Context, txn *zera_pb.CoinTXN) (*emptypb.Empty, error)
 
@@ -45,8 +43,6 @@ type ValidatorService struct {
 	HandleValidatorGovernVote        ValidatorGovernVoteHandler
 	HandleValidatorSmartContract     ValidatorSmartContractHandler
 	HandleValidatorSmartContractExec ValidatorSmartContractExecuteHandler
-	HandleValidatorCurrencyEquiv     ValidatorCurrencyEquivHandler
-	HandleValidatorAuthCurrencyEquiv ValidatorAuthCurrencyEquivHandler
 	HandleValidatorExpenseRatio      ValidatorExpenseRatioHandler
 	HandleValidatorCoin		     	 ValidatorCoinHandler
 	zera_pb.UnimplementedValidatorServiceServer
@@ -190,20 +186,6 @@ func (c *ValidatorService) ValidatorSmartContractExecute(ctx context.Context, in
 		return nil, errors.New("ValidatorService is not initialized")
 	}
 	return c.HandleValidatorSmartContractExec(ctx, in)
-}
-
-func (c *ValidatorService) ValidatorCurrencyEquiv(ctx context.Context, in *zera_pb.SelfCurrencyEquiv) (*emptypb.Empty, error) {
-	if c.HandleValidatorCurrencyEquiv == nil {
-		return nil, errors.New("ValidatorService is not initialized")
-	}
-	return c.HandleValidatorCurrencyEquiv(ctx, in)
-}
-
-func (c *ValidatorService) ValidatorAuthCurrencyEquiv(ctx context.Context, in *zera_pb.AuthorizedCurrencyEquiv) (*emptypb.Empty, error) {
-	if c.HandleValidatorAuthCurrencyEquiv == nil {
-		return nil, errors.New("ValidatorService is not initialized")
-	}
-	return c.HandleValidatorAuthCurrencyEquiv(ctx, in)
 }
 
 func (c *ValidatorService) ValidatorExpenseRatio(ctx context.Context, in *zera_pb.ExpenseRatioTXN) (*emptypb.Empty, error) {

@@ -151,27 +151,6 @@ func SendItemMintTXN(mintTXN *zera_pb.ItemizedMintTXN, destAddr string) (*emptyp
 	return response, nil
 }
 
-func SendFoundationalTXN(foundationTxn *zera_pb.FoundationTXN, destAddr string) (*emptypb.Empty, error) {
-	// Create a gRPC connection to the server
-	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
-	if err != nil {
-		fmt.Printf("Failed to connect to the server: %v", err)
-		return nil, err
-	}
-	defer conn.Close()
-
-	// Create a new instance of ValidatorNetworkClient
-	client := NewNetworkClient(conn)
-
-	response, err := client.client.Foundation(context.Background(), foundationTxn)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
 func SendGovernanceProposal(proposal *zera_pb.GovernanceProposal, destAddr string) (*emptypb.Empty, error) {
 	// Create a gRPC connection to the server
 	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
@@ -206,47 +185,6 @@ func SendGovernanceVote(vote *zera_pb.GovernanceVote, destAddr string) (*emptypb
 	client := NewNetworkClient(conn)
 
 	response, err := client.client.GovernVote(context.Background(), vote)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func SendAuthorizedCurrencyEquiv(authCur *zera_pb.AuthorizedCurrencyEquiv, destAddr string) (*emptypb.Empty, error) {
-	// Create a gRPC connection to the server
-	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
-	if err != nil {
-		fmt.Printf("Failed to connect to the server: %v", err)
-		return nil, err
-	}
-	defer conn.Close()
-
-	// Create a new instance of ValidatorNetworkClient
-	client := NewNetworkClient(conn)
-
-	response, err := client.client.AuthCurrencyEquiv(context.Background(), authCur)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-func SendCurrencyEquiv(curEquiv *zera_pb.SelfCurrencyEquiv, destAddr string) (*emptypb.Empty, error) {
-	// Create a gRPC connection to the server
-	conn, err := grpc.Dial(destAddr, grpc.WithInsecure())
-	if err != nil {
-		fmt.Printf("Failed to connect to the server: %v", err)
-		return nil, err
-	}
-	defer conn.Close()
-
-	// Create a new instance of ValidatorNetworkClient
-	client := NewNetworkClient(conn)
-
-	response, err := client.client.CurrencyEquiv(context.Background(), curEquiv)
 
 	if err != nil {
 		return nil, err

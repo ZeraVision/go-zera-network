@@ -20,14 +20,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	APIService_Balance_FullMethodName      = "/zera_api.APIService/Balance"
-	APIService_Nonce_FullMethodName        = "/zera_api.APIService/Nonce"
-	APIService_ContractFee_FullMethodName  = "/zera_api.APIService/ContractFee"
-	APIService_BaseFee_FullMethodName      = "/zera_api.APIService/BaseFee"
-	APIService_ACETokens_FullMethodName    = "/zera_api.APIService/ACETokens"
-	APIService_Items_FullMethodName        = "/zera_api.APIService/Items"
-	APIService_Denomination_FullMethodName = "/zera_api.APIService/Denomination"
-	APIService_Database_FullMethodName     = "/zera_api.APIService/Database"
+	APIService_Balance_FullMethodName                      = "/zera_api.APIService/Balance"
+	APIService_Nonce_FullMethodName                        = "/zera_api.APIService/Nonce"
+	APIService_ContractFee_FullMethodName                  = "/zera_api.APIService/ContractFee"
+	APIService_BaseFee_FullMethodName                      = "/zera_api.APIService/BaseFee"
+	APIService_GetTokenFeeInfo_FullMethodName              = "/zera_api.APIService/GetTokenFeeInfo"
+	APIService_Items_FullMethodName                        = "/zera_api.APIService/Items"
+	APIService_Denomination_FullMethodName                 = "/zera_api.APIService/Denomination"
+	APIService_Database_FullMethodName                     = "/zera_api.APIService/Database"
+	APIService_Block_FullMethodName                        = "/zera_api.APIService/Block"
+	APIService_ProposalLedger_FullMethodName               = "/zera_api.APIService/ProposalLedger"
+	APIService_SmartContractActivityRequest_FullMethodName = "/zera_api.APIService/SmartContractActivityRequest"
+	APIService_SmartContractEvents_FullMethodName          = "/zera_api.APIService/SmartContractEvents"
+	APIService_Contract_FullMethodName                     = "/zera_api.APIService/Contract"
+	APIService_SmartContractEventsSearch_FullMethodName    = "/zera_api.APIService/SmartContractEventsSearch"
 )
 
 // APIServiceClient is the client API for APIService service.
@@ -38,10 +44,16 @@ type APIServiceClient interface {
 	Nonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	ContractFee(ctx context.Context, in *ContractFeeRequest, opts ...grpc.CallOption) (*ContractFeeResponse, error)
 	BaseFee(ctx context.Context, in *BaseFeeRequest, opts ...grpc.CallOption) (*BaseFeeResponse, error)
-	ACETokens(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*ACETokensResponse, error)
+	GetTokenFeeInfo(ctx context.Context, in *TokenFeeInfoRequest, opts ...grpc.CallOption) (*TokenFeeInfoResponse, error)
 	Items(ctx context.Context, in *ItemRequest, opts ...grpc.CallOption) (*ItemResponse, error)
 	Denomination(ctx context.Context, in *DenominationRequest, opts ...grpc.CallOption) (*DenominationResponse, error)
 	Database(ctx context.Context, in *DatabaseRequest, opts ...grpc.CallOption) (*DatabaseResponse, error)
+	Block(ctx context.Context, in *BlockRequest, opts ...grpc.CallOption) (*BlockResponse, error)
+	ProposalLedger(ctx context.Context, in *ProposalLedgerRequest, opts ...grpc.CallOption) (*ProposalLedgerResponse, error)
+	SmartContractActivityRequest(ctx context.Context, in *ActivityRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	SmartContractEvents(ctx context.Context, in *SmartContractEventsResponse, opts ...grpc.CallOption) (*empty.Empty, error)
+	Contract(ctx context.Context, in *ContractRequest, opts ...grpc.CallOption) (*ContractResponse, error)
+	SmartContractEventsSearch(ctx context.Context, in *SmartContractEventsSearchRequest, opts ...grpc.CallOption) (*SmartContractEventsSearchResponse, error)
 }
 
 type aPIServiceClient struct {
@@ -88,9 +100,9 @@ func (c *aPIServiceClient) BaseFee(ctx context.Context, in *BaseFeeRequest, opts
 	return out, nil
 }
 
-func (c *aPIServiceClient) ACETokens(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*ACETokensResponse, error) {
-	out := new(ACETokensResponse)
-	err := c.cc.Invoke(ctx, APIService_ACETokens_FullMethodName, in, out, opts...)
+func (c *aPIServiceClient) GetTokenFeeInfo(ctx context.Context, in *TokenFeeInfoRequest, opts ...grpc.CallOption) (*TokenFeeInfoResponse, error) {
+	out := new(TokenFeeInfoResponse)
+	err := c.cc.Invoke(ctx, APIService_GetTokenFeeInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -124,6 +136,60 @@ func (c *aPIServiceClient) Database(ctx context.Context, in *DatabaseRequest, op
 	return out, nil
 }
 
+func (c *aPIServiceClient) Block(ctx context.Context, in *BlockRequest, opts ...grpc.CallOption) (*BlockResponse, error) {
+	out := new(BlockResponse)
+	err := c.cc.Invoke(ctx, APIService_Block_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIServiceClient) ProposalLedger(ctx context.Context, in *ProposalLedgerRequest, opts ...grpc.CallOption) (*ProposalLedgerResponse, error) {
+	out := new(ProposalLedgerResponse)
+	err := c.cc.Invoke(ctx, APIService_ProposalLedger_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIServiceClient) SmartContractActivityRequest(ctx context.Context, in *ActivityRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, APIService_SmartContractActivityRequest_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIServiceClient) SmartContractEvents(ctx context.Context, in *SmartContractEventsResponse, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, APIService_SmartContractEvents_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIServiceClient) Contract(ctx context.Context, in *ContractRequest, opts ...grpc.CallOption) (*ContractResponse, error) {
+	out := new(ContractResponse)
+	err := c.cc.Invoke(ctx, APIService_Contract_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIServiceClient) SmartContractEventsSearch(ctx context.Context, in *SmartContractEventsSearchRequest, opts ...grpc.CallOption) (*SmartContractEventsSearchResponse, error) {
+	out := new(SmartContractEventsSearchResponse)
+	err := c.cc.Invoke(ctx, APIService_SmartContractEventsSearch_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // APIServiceServer is the server API for APIService service.
 // All implementations must embed UnimplementedAPIServiceServer
 // for forward compatibility
@@ -132,10 +198,16 @@ type APIServiceServer interface {
 	Nonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	ContractFee(context.Context, *ContractFeeRequest) (*ContractFeeResponse, error)
 	BaseFee(context.Context, *BaseFeeRequest) (*BaseFeeResponse, error)
-	ACETokens(context.Context, *empty.Empty) (*ACETokensResponse, error)
+	GetTokenFeeInfo(context.Context, *TokenFeeInfoRequest) (*TokenFeeInfoResponse, error)
 	Items(context.Context, *ItemRequest) (*ItemResponse, error)
 	Denomination(context.Context, *DenominationRequest) (*DenominationResponse, error)
 	Database(context.Context, *DatabaseRequest) (*DatabaseResponse, error)
+	Block(context.Context, *BlockRequest) (*BlockResponse, error)
+	ProposalLedger(context.Context, *ProposalLedgerRequest) (*ProposalLedgerResponse, error)
+	SmartContractActivityRequest(context.Context, *ActivityRequest) (*empty.Empty, error)
+	SmartContractEvents(context.Context, *SmartContractEventsResponse) (*empty.Empty, error)
+	Contract(context.Context, *ContractRequest) (*ContractResponse, error)
+	SmartContractEventsSearch(context.Context, *SmartContractEventsSearchRequest) (*SmartContractEventsSearchResponse, error)
 	mustEmbedUnimplementedAPIServiceServer()
 }
 
@@ -155,8 +227,8 @@ func (UnimplementedAPIServiceServer) ContractFee(context.Context, *ContractFeeRe
 func (UnimplementedAPIServiceServer) BaseFee(context.Context, *BaseFeeRequest) (*BaseFeeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BaseFee not implemented")
 }
-func (UnimplementedAPIServiceServer) ACETokens(context.Context, *empty.Empty) (*ACETokensResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ACETokens not implemented")
+func (UnimplementedAPIServiceServer) GetTokenFeeInfo(context.Context, *TokenFeeInfoRequest) (*TokenFeeInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTokenFeeInfo not implemented")
 }
 func (UnimplementedAPIServiceServer) Items(context.Context, *ItemRequest) (*ItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Items not implemented")
@@ -166,6 +238,24 @@ func (UnimplementedAPIServiceServer) Denomination(context.Context, *Denomination
 }
 func (UnimplementedAPIServiceServer) Database(context.Context, *DatabaseRequest) (*DatabaseResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Database not implemented")
+}
+func (UnimplementedAPIServiceServer) Block(context.Context, *BlockRequest) (*BlockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Block not implemented")
+}
+func (UnimplementedAPIServiceServer) ProposalLedger(context.Context, *ProposalLedgerRequest) (*ProposalLedgerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProposalLedger not implemented")
+}
+func (UnimplementedAPIServiceServer) SmartContractActivityRequest(context.Context, *ActivityRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SmartContractActivityRequest not implemented")
+}
+func (UnimplementedAPIServiceServer) SmartContractEvents(context.Context, *SmartContractEventsResponse) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SmartContractEvents not implemented")
+}
+func (UnimplementedAPIServiceServer) Contract(context.Context, *ContractRequest) (*ContractResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Contract not implemented")
+}
+func (UnimplementedAPIServiceServer) SmartContractEventsSearch(context.Context, *SmartContractEventsSearchRequest) (*SmartContractEventsSearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SmartContractEventsSearch not implemented")
 }
 func (UnimplementedAPIServiceServer) mustEmbedUnimplementedAPIServiceServer() {}
 
@@ -252,20 +342,20 @@ func _APIService_BaseFee_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _APIService_ACETokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(empty.Empty)
+func _APIService_GetTokenFeeInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenFeeInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(APIServiceServer).ACETokens(ctx, in)
+		return srv.(APIServiceServer).GetTokenFeeInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: APIService_ACETokens_FullMethodName,
+		FullMethod: APIService_GetTokenFeeInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(APIServiceServer).ACETokens(ctx, req.(*empty.Empty))
+		return srv.(APIServiceServer).GetTokenFeeInfo(ctx, req.(*TokenFeeInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,6 +414,114 @@ func _APIService_Database_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _APIService_Block_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).Block(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_Block_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).Block(ctx, req.(*BlockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIService_ProposalLedger_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProposalLedgerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).ProposalLedger(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_ProposalLedger_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).ProposalLedger(ctx, req.(*ProposalLedgerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIService_SmartContractActivityRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).SmartContractActivityRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_SmartContractActivityRequest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).SmartContractActivityRequest(ctx, req.(*ActivityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIService_SmartContractEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SmartContractEventsResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).SmartContractEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_SmartContractEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).SmartContractEvents(ctx, req.(*SmartContractEventsResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIService_Contract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ContractRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).Contract(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_Contract_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).Contract(ctx, req.(*ContractRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIService_SmartContractEventsSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SmartContractEventsSearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).SmartContractEventsSearch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_SmartContractEventsSearch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).SmartContractEventsSearch(ctx, req.(*SmartContractEventsSearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // APIService_ServiceDesc is the grpc.ServiceDesc for APIService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -348,8 +546,8 @@ var APIService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _APIService_BaseFee_Handler,
 		},
 		{
-			MethodName: "ACETokens",
-			Handler:    _APIService_ACETokens_Handler,
+			MethodName: "GetTokenFeeInfo",
+			Handler:    _APIService_GetTokenFeeInfo_Handler,
 		},
 		{
 			MethodName: "Items",
@@ -362,6 +560,30 @@ var APIService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Database",
 			Handler:    _APIService_Database_Handler,
+		},
+		{
+			MethodName: "Block",
+			Handler:    _APIService_Block_Handler,
+		},
+		{
+			MethodName: "ProposalLedger",
+			Handler:    _APIService_ProposalLedger_Handler,
+		},
+		{
+			MethodName: "SmartContractActivityRequest",
+			Handler:    _APIService_SmartContractActivityRequest_Handler,
+		},
+		{
+			MethodName: "SmartContractEvents",
+			Handler:    _APIService_SmartContractEvents_Handler,
+		},
+		{
+			MethodName: "Contract",
+			Handler:    _APIService_Contract_Handler,
+		},
+		{
+			MethodName: "SmartContractEventsSearch",
+			Handler:    _APIService_SmartContractEventsSearch_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

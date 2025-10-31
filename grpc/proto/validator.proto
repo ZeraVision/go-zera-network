@@ -39,11 +39,9 @@ service ValidatorService{
     rpc ValidatorRevoke(zera_txn.RevokeTXN) returns (google.protobuf.Empty);
     rpc ValidatorCompliance(zera_txn.ComplianceTXN) returns (google.protobuf.Empty);
     rpc ValidatorBurnSBT(zera_txn.BurnSBTTXN) returns (google.protobuf.Empty);
-    rpc Nonce(NonceRequest) returns (NonceResponse);
     rpc ValidatorCoin(zera_txn.CoinTXN) returns (google.protobuf.Empty);
     rpc StreamBlockAttestation(stream DataChunk) returns (stream DataChunk);
     rpc StreamRequestSlashed(stream SlashedRequest) returns (stream DataChunk);
-    rpc Balance(BalanceRequest) returns (BalanceResponse);
     rpc Gossip(TXNGossip) returns (google.protobuf.Empty);
     rpc ValidatorAllowance(zera_txn.AllowanceTXN) returns (google.protobuf.Empty);
 }
@@ -112,14 +110,6 @@ message ValidatorSupport{
     bytes signature = 2;                     //signature of block_hash
     google.protobuf.Timestamp timestamp = 3; //timestamp of support
 }
-message NonceRequest{
-    bytes wallet_address = 1;
-}
-
-message NonceResponse{
-    uint64 nonce = 1;
-}
-
 message DataChunk{
     bytes chunk_data = 1;
     int32 chunk_number = 2;
@@ -386,15 +376,6 @@ message BalanceTracker{
 message TokenLookup{
     repeated string tokens = 1;
 }
-message BalanceRequest{
-    bytes wallet_address = 1;
-    string contract_id = 2;
-    bool encoded = 3;
-}
-message BalanceResponse{
-    string balance = 1;
-}
-
 message TXN{
     zera_txn.TRANSACTION_TYPE txn_type = 1;
     bytes serialized_txn = 2;

@@ -39,6 +39,7 @@ const (
 	TXNService_Compliance_FullMethodName               = "/zera_txn.TXNService/Compliance"
 	TXNService_BurnSBT_FullMethodName                  = "/zera_txn.TXNService/BurnSBT"
 	TXNService_Allowance_FullMethodName                = "/zera_txn.TXNService/Allowance"
+	TXNService_ProposalCancel_FullMethodName           = "/zera_txn.TXNService/ProposalCancel"
 )
 
 // TXNServiceClient is the client API for TXNService service.
@@ -64,6 +65,7 @@ type TXNServiceClient interface {
 	Compliance(ctx context.Context, in *ComplianceTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	BurnSBT(ctx context.Context, in *BurnSBTTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 	Allowance(ctx context.Context, in *AllowanceTXN, opts ...grpc.CallOption) (*empty.Empty, error)
+	ProposalCancel(ctx context.Context, in *ProposalCancelTXN, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type tXNServiceClient struct {
@@ -245,6 +247,15 @@ func (c *tXNServiceClient) Allowance(ctx context.Context, in *AllowanceTXN, opts
 	return out, nil
 }
 
+func (c *tXNServiceClient) ProposalCancel(ctx context.Context, in *ProposalCancelTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, TXNService_ProposalCancel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXNServiceServer is the server API for TXNService service.
 // All implementations must embed UnimplementedTXNServiceServer
 // for forward compatibility
@@ -268,6 +279,7 @@ type TXNServiceServer interface {
 	Compliance(context.Context, *ComplianceTXN) (*empty.Empty, error)
 	BurnSBT(context.Context, *BurnSBTTXN) (*empty.Empty, error)
 	Allowance(context.Context, *AllowanceTXN) (*empty.Empty, error)
+	ProposalCancel(context.Context, *ProposalCancelTXN) (*empty.Empty, error)
 	mustEmbedUnimplementedTXNServiceServer()
 }
 
@@ -331,6 +343,9 @@ func (UnimplementedTXNServiceServer) BurnSBT(context.Context, *BurnSBTTXN) (*emp
 }
 func (UnimplementedTXNServiceServer) Allowance(context.Context, *AllowanceTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Allowance not implemented")
+}
+func (UnimplementedTXNServiceServer) ProposalCancel(context.Context, *ProposalCancelTXN) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProposalCancel not implemented")
 }
 func (UnimplementedTXNServiceServer) mustEmbedUnimplementedTXNServiceServer() {}
 
@@ -687,6 +702,24 @@ func _TXNService_Allowance_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXNService_ProposalCancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProposalCancelTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXNServiceServer).ProposalCancel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TXNService_ProposalCancel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXNServiceServer).ProposalCancel(ctx, req.(*ProposalCancelTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXNService_ServiceDesc is the grpc.ServiceDesc for TXNService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -769,6 +802,10 @@ var TXNService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Allowance",
 			Handler:    _TXNService_Allowance_Handler,
+		},
+		{
+			MethodName: "ProposalCancel",
+			Handler:    _TXNService_ProposalCancel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

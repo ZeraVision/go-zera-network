@@ -34,6 +34,7 @@ const (
 	APIService_SmartContractEvents_FullMethodName          = "/zera_api.APIService/SmartContractEvents"
 	APIService_Contract_FullMethodName                     = "/zera_api.APIService/Contract"
 	APIService_SmartContractEventsSearch_FullMethodName    = "/zera_api.APIService/SmartContractEventsSearch"
+	APIService_TotalBalance_FullMethodName                 = "/zera_api.APIService/TotalBalance"
 )
 
 // APIServiceClient is the client API for APIService service.
@@ -54,6 +55,7 @@ type APIServiceClient interface {
 	SmartContractEvents(ctx context.Context, in *SmartContractEventsResponse, opts ...grpc.CallOption) (*empty.Empty, error)
 	Contract(ctx context.Context, in *ContractRequest, opts ...grpc.CallOption) (*ContractResponse, error)
 	SmartContractEventsSearch(ctx context.Context, in *SmartContractEventsSearchRequest, opts ...grpc.CallOption) (*SmartContractEventsSearchResponse, error)
+	TotalBalance(ctx context.Context, in *TotalBalanceRequest, opts ...grpc.CallOption) (*TotalBalanceResponse, error)
 }
 
 type aPIServiceClient struct {
@@ -190,6 +192,15 @@ func (c *aPIServiceClient) SmartContractEventsSearch(ctx context.Context, in *Sm
 	return out, nil
 }
 
+func (c *aPIServiceClient) TotalBalance(ctx context.Context, in *TotalBalanceRequest, opts ...grpc.CallOption) (*TotalBalanceResponse, error) {
+	out := new(TotalBalanceResponse)
+	err := c.cc.Invoke(ctx, APIService_TotalBalance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // APIServiceServer is the server API for APIService service.
 // All implementations must embed UnimplementedAPIServiceServer
 // for forward compatibility
@@ -208,6 +219,7 @@ type APIServiceServer interface {
 	SmartContractEvents(context.Context, *SmartContractEventsResponse) (*empty.Empty, error)
 	Contract(context.Context, *ContractRequest) (*ContractResponse, error)
 	SmartContractEventsSearch(context.Context, *SmartContractEventsSearchRequest) (*SmartContractEventsSearchResponse, error)
+	TotalBalance(context.Context, *TotalBalanceRequest) (*TotalBalanceResponse, error)
 	mustEmbedUnimplementedAPIServiceServer()
 }
 
@@ -256,6 +268,9 @@ func (UnimplementedAPIServiceServer) Contract(context.Context, *ContractRequest)
 }
 func (UnimplementedAPIServiceServer) SmartContractEventsSearch(context.Context, *SmartContractEventsSearchRequest) (*SmartContractEventsSearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SmartContractEventsSearch not implemented")
+}
+func (UnimplementedAPIServiceServer) TotalBalance(context.Context, *TotalBalanceRequest) (*TotalBalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalBalance not implemented")
 }
 func (UnimplementedAPIServiceServer) mustEmbedUnimplementedAPIServiceServer() {}
 
@@ -522,6 +537,24 @@ func _APIService_SmartContractEventsSearch_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _APIService_TotalBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TotalBalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).TotalBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_TotalBalance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).TotalBalance(ctx, req.(*TotalBalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // APIService_ServiceDesc is the grpc.ServiceDesc for APIService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -584,6 +617,10 @@ var APIService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SmartContractEventsSearch",
 			Handler:    _APIService_SmartContractEventsSearch_Handler,
+		},
+		{
+			MethodName: "TotalBalance",
+			Handler:    _APIService_TotalBalance_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

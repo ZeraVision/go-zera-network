@@ -51,6 +51,9 @@ const (
 	ValidatorService_StreamRequestSlashed_FullMethodName              = "/zera_validator.ValidatorService/StreamRequestSlashed"
 	ValidatorService_Gossip_FullMethodName                            = "/zera_validator.ValidatorService/Gossip"
 	ValidatorService_ValidatorAllowance_FullMethodName                = "/zera_validator.ValidatorService/ValidatorAllowance"
+	ValidatorService_ValidatorProposalCancel_FullMethodName           = "/zera_validator.ValidatorService/ValidatorProposalCancel"
+	ValidatorService_GetCheckpointInfo_FullMethodName                 = "/zera_validator.ValidatorService/GetCheckpointInfo"
+	ValidatorService_StreamCheckpoint_FullMethodName                  = "/zera_validator.ValidatorService/StreamCheckpoint"
 )
 
 // ValidatorServiceClient is the client API for ValidatorService service.
@@ -89,6 +92,10 @@ type ValidatorServiceClient interface {
 	StreamRequestSlashed(ctx context.Context, opts ...grpc.CallOption) (ValidatorService_StreamRequestSlashedClient, error)
 	Gossip(ctx context.Context, in *TXNGossip, opts ...grpc.CallOption) (*empty.Empty, error)
 	ValidatorAllowance(ctx context.Context, in *AllowanceTXN, opts ...grpc.CallOption) (*empty.Empty, error)
+	ValidatorProposalCancel(ctx context.Context, in *ProposalCancelTXN, opts ...grpc.CallOption) (*empty.Empty, error)
+	// Checkpoint sync for new validators
+	GetCheckpointInfo(ctx context.Context, in *CheckpointInfoRequest, opts ...grpc.CallOption) (*CheckpointInfo, error)
+	StreamCheckpoint(ctx context.Context, in *CheckpointRequest, opts ...grpc.CallOption) (ValidatorService_StreamCheckpointClient, error)
 }
 
 type validatorServiceClient struct {
@@ -520,6 +527,56 @@ func (c *validatorServiceClient) ValidatorAllowance(ctx context.Context, in *All
 	return out, nil
 }
 
+func (c *validatorServiceClient) ValidatorProposalCancel(ctx context.Context, in *ProposalCancelTXN, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, ValidatorService_ValidatorProposalCancel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) GetCheckpointInfo(ctx context.Context, in *CheckpointInfoRequest, opts ...grpc.CallOption) (*CheckpointInfo, error) {
+	out := new(CheckpointInfo)
+	err := c.cc.Invoke(ctx, ValidatorService_GetCheckpointInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *validatorServiceClient) StreamCheckpoint(ctx context.Context, in *CheckpointRequest, opts ...grpc.CallOption) (ValidatorService_StreamCheckpointClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ValidatorService_ServiceDesc.Streams[6], ValidatorService_StreamCheckpoint_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &validatorServiceStreamCheckpointClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ValidatorService_StreamCheckpointClient interface {
+	Recv() (*CheckpointChunk, error)
+	grpc.ClientStream
+}
+
+type validatorServiceStreamCheckpointClient struct {
+	grpc.ClientStream
+}
+
+func (x *validatorServiceStreamCheckpointClient) Recv() (*CheckpointChunk, error) {
+	m := new(CheckpointChunk)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ValidatorServiceServer is the server API for ValidatorService service.
 // All implementations must embed UnimplementedValidatorServiceServer
 // for forward compatibility
@@ -556,6 +613,10 @@ type ValidatorServiceServer interface {
 	StreamRequestSlashed(ValidatorService_StreamRequestSlashedServer) error
 	Gossip(context.Context, *TXNGossip) (*empty.Empty, error)
 	ValidatorAllowance(context.Context, *AllowanceTXN) (*empty.Empty, error)
+	ValidatorProposalCancel(context.Context, *ProposalCancelTXN) (*empty.Empty, error)
+	// Checkpoint sync for new validators
+	GetCheckpointInfo(context.Context, *CheckpointInfoRequest) (*CheckpointInfo, error)
+	StreamCheckpoint(*CheckpointRequest, ValidatorService_StreamCheckpointServer) error
 	mustEmbedUnimplementedValidatorServiceServer()
 }
 
@@ -655,6 +716,15 @@ func (UnimplementedValidatorServiceServer) Gossip(context.Context, *TXNGossip) (
 }
 func (UnimplementedValidatorServiceServer) ValidatorAllowance(context.Context, *AllowanceTXN) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorAllowance not implemented")
+}
+func (UnimplementedValidatorServiceServer) ValidatorProposalCancel(context.Context, *ProposalCancelTXN) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorProposalCancel not implemented")
+}
+func (UnimplementedValidatorServiceServer) GetCheckpointInfo(context.Context, *CheckpointInfoRequest) (*CheckpointInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCheckpointInfo not implemented")
+}
+func (UnimplementedValidatorServiceServer) StreamCheckpoint(*CheckpointRequest, ValidatorService_StreamCheckpointServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamCheckpoint not implemented")
 }
 func (UnimplementedValidatorServiceServer) mustEmbedUnimplementedValidatorServiceServer() {}
 
@@ -1270,6 +1340,63 @@ func _ValidatorService_ValidatorAllowance_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ValidatorService_ValidatorProposalCancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProposalCancelTXN)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).ValidatorProposalCancel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_ValidatorProposalCancel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).ValidatorProposalCancel(ctx, req.(*ProposalCancelTXN))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_GetCheckpointInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckpointInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidatorServiceServer).GetCheckpointInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ValidatorService_GetCheckpointInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidatorServiceServer).GetCheckpointInfo(ctx, req.(*CheckpointInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ValidatorService_StreamCheckpoint_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(CheckpointRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ValidatorServiceServer).StreamCheckpoint(m, &validatorServiceStreamCheckpointServer{stream})
+}
+
+type ValidatorService_StreamCheckpointServer interface {
+	Send(*CheckpointChunk) error
+	grpc.ServerStream
+}
+
+type validatorServiceStreamCheckpointServer struct {
+	grpc.ServerStream
+}
+
+func (x *validatorServiceStreamCheckpointServer) Send(m *CheckpointChunk) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // ValidatorService_ServiceDesc is the grpc.ServiceDesc for ValidatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1377,6 +1504,14 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ValidatorAllowance",
 			Handler:    _ValidatorService_ValidatorAllowance_Handler,
 		},
+		{
+			MethodName: "ValidatorProposalCancel",
+			Handler:    _ValidatorService_ValidatorProposalCancel_Handler,
+		},
+		{
+			MethodName: "GetCheckpointInfo",
+			Handler:    _ValidatorService_GetCheckpointInfo_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1410,6 +1545,11 @@ var ValidatorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:       _ValidatorService_StreamRequestSlashed_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "StreamCheckpoint",
+			Handler:       _ValidatorService_StreamCheckpoint_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "validator.proto",

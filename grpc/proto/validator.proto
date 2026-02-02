@@ -193,13 +193,6 @@ message NFT{
     optional zera_txn.ItemContractFees contract_fees = 5;
 }
 
-message Item{
-    string contract_id = 1;
-    string item_id = 2;
-}
-message WalletItems{
-    repeated Item items = 1;
-}
 message ProcessLedger{
     repeated bytes cycle_contract_ids = 1; //all contracts that need proposals processed
     repeated bytes proposal_ids = 2;       //all staggered proposals that need to be processed
